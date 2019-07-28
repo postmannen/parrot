@@ -126,7 +126,7 @@ func (d *Drone) readNetworkUDPPacketsD2C() {
 	defer localConn.Close()
 
 	for {
-		buf := make([]byte, 1024)
+		buf := make([]byte, 16384) //NB: buf might be to small ?
 
 		n, addr, err := localConn.ReadFrom(buf)
 		if err != nil {
@@ -219,7 +219,8 @@ func decodeARNetworkALpacket(packet networkUDPPacket, frameStartPos int) network
 	fmt.Println("---- frameStartPos+frame.size+headerSize = ", frameStartPos+frame.size+headerSize)
 	fmt.Println("---- packet.size = ", packet.size)
 	if frameStartPos+frame.size+headerSize <= packet.size {
-		fmt.Println("--- ANOTHER PACKAGE FOLLOWS ---")
+		fmt.Println("--------------- ANOTHER PACKAGE FOLLOWS at position = ", frameStartPos+frame.size)
+		fmt.Println("---- Next package is = ", packet.data[15:packet.size])
 	}
 
 	return frame
