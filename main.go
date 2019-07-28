@@ -213,6 +213,14 @@ func decodeARNetworkALpacket(packet networkUDPPacket, frameStartPos int) network
 	frame.dataARNetwork = packet.data[7:frame.size]
 
 	//Figure out if there are another frame after this one.
+	// This can be checked if there are a complete header
+	// of 7bytes following directly afte the current frame.
+	const headerSize = 7
+	fmt.Println("---- frameStartPos+frame.size+headerSize = ", frameStartPos+frame.size+headerSize)
+	fmt.Println("---- packet.size = ", packet.size)
+	if frameStartPos+frame.size+headerSize <= packet.size {
+		fmt.Println("--- ANOTHER PACKAGE FOLLOWS ---")
+	}
 
 	return frame
 }
