@@ -158,7 +158,7 @@ func (d *Drone) writeNetworkPacketsC2D() {
 // - dataType 1 byte,
 // - targetBufferID 1 byte,
 // - sequeneNumber 1 Byte,
-// - frameSize 4 Bytes (little endian),
+// - frameSize 4 Bytes (little endian) for the whole ARNetworkAL frame including 7bit header,
 // - data n bytes (this is the actual drone data ARNetwork),
 //
 //	Example of size:
@@ -180,35 +180,39 @@ type networkFrame struct {
 	//• [0; 9]: Reserved values for ARNetwork internal use.
 	//• [10; 127]: Data buffers.
 	//• [128; 255]: Acknowledge buffers.
-	targetBufferID  int
-	sequenceNR      int
-	size            int
-	dataARNetworkAL []byte
+	targetBufferID int
+	sequenceNR     int
+	size           int
+	dataARNetwork  []byte
 }
 
 func encodeNetworkFrame(dataType int, targetBufferID int, sequenceNR int, size int, dataARNetworkAL []byte) {
-
+	// TODO:.........................
 }
 
-//decodeARNetworkFrame will decode one single frame of the ARNetworkAL protocol.
-// NB: If the packet consists of more than one frame eg. the length of the
+//decodeARNetworkALpacket will decode the UDP packet given as input, return a frame of the ARNetworkAL
+// protocol,
+// NB: If the packet consists of more than one frame eg, the length of the
 // packet is longer than the length of the frame, then the function must be
 // run again
-func decodeARNetworkFrame(buf []byte, startPosition int) networkFrame {
+func decodeARNetworkALpacket(packet networkUDPPacket, frameStartPos int) networkFrame {
 	frame := networkFrame{
-		dataType:        int(buf[0]),
-		targetBufferID:  int(buf[1]),
-		sequenceNR:      int(buf[2]),
-		dataARNetworkAL: []byte{},
+		dataType:       int(packet.data[0]),
+		targetBufferID: int(packet.data[1]),
+		sequenceNR:     int(packet.data[2]),
+		dataARNetwork:  []byte{},
 	}
 
+	//Get the size of the ARNetworkAL frame. Size includes the header of 7bytes.
 	var size uint32
-	err := binary.Read(bytes.NewReader(buf[3:7]), binary.LittleEndian, &size)
+	err := binary.Read(bytes.NewReader(packet.data[3:7]), binary.LittleEndian, &size)
 	if err != nil {
 		log.Println("error: NewNetworkFrame, binary.Read: ", err)
 	}
 	frame.size = int(size)
-	frame.dataARNetworkAL = buf[7:frame.size]
+	frame.dataARNetwork = packet.data[7:frame.size]
+
+	//Figure out if there are another frame after this one.
 
 	return frame
 }
@@ -228,10 +232,11 @@ func main() {
 	for {
 		//Get a packet
 		packet := <-drone.chReceivedUDPPacket
+		fmt.Println("-----------------------------------------------------------")
 		fmt.Println("info: main: packet size = ", packet.size)
-		fmt.Println("info: main: packet data = ", packet.data[:packet.size])
+		fmt.Println("info: main: packet data ARNetworkAL= ", packet.data[:packet.size])
 
-		frame := decodeARNetworkFrame(packet.data, 0)
+		frame := decodeARNetworkALpacket(packet, 0)
 		//• Ack(1): Acknowledgment of previously received data
 		//• Data(2): Normal data (no ack requested)
 		//• Low latency data(3): Treated as normal data on the network, but are
@@ -241,7 +246,8 @@ func main() {
 		fmt.Println("info: main: frame: data type: ", frame.dataType)
 		fmt.Println("info: main: frame: target buffer id: ", frame.targetBufferID)
 		fmt.Println("info: main: frame: size of whole frame = ", frame.size)
-		fmt.Println("info: main: frame: dataARNetworkAL = ", frame.dataARNetworkAL)
+		fmt.Println("info: main: frame: data_ARNetwork = ", frame.dataARNetwork)
+		fmt.Println("-----------------------------------------------------------")
 	}
 
 	//time.Sleep(time.Second * 2)
