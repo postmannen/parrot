@@ -5,6 +5,7 @@ import (
 	"encoding/binary"
 	"encoding/json"
 	"fmt"
+	"io"
 	"log"
 	"net"
 	"strconv"
@@ -130,6 +131,9 @@ func (d *Drone) readNetworkUDPPacketsD2C() {
 		p := networkUDPPacket{
 			size: n,
 			data: buf,
+			//Since this is a new UDP packet, and we want to start reading
+			// the first frame from the start we set the start position to 0.
+			framePos: 0,
 		}
 
 		//send the packet received over a channel to later parse out ARNetworkAL/frames.
@@ -190,7 +194,7 @@ type networkUDPPacket struct {
 	// UDP packet this value will be 0. If there are more than one frame in
 	// the packet the value will be set to the start position of the next
 	// frame in the slice.
-	startPos int
+	framePos int
 }
 
 func encodeNetworkFrame(dataType int, targetBufferID int, sequenceNR int, size int, dataARNetworkAL []byte) {
@@ -203,35 +207,39 @@ func encodeNetworkFrame(dataType int, targetBufferID int, sequenceNR int, size i
 // If the there are more than one ARNetworkAL frame in the UDP packet the
 // method will return error == nil, and the method should be run over again
 // until io.EOF is received.
-func (packet *networkUDPPacket) decodeARNetworkALpacket(frameStartPos int) networkFrame {
+func (packet *networkUDPPacket) decode() (networkFrame, error) {
 	frame := networkFrame{
-		dataType:       int(packet.data[0]),
-		targetBufferID: int(packet.data[1]),
-		sequenceNR:     int(packet.data[2]),
+		dataType:       int(packet.data[packet.framePos+0]),
+		targetBufferID: int(packet.data[packet.framePos+1]),
+		sequenceNR:     int(packet.data[packet.framePos+2]),
 		dataARNetwork:  []byte{},
 	}
 
 	//Get the size of the ARNetworkAL frame. Size includes the header of 7bytes.
 	var size uint32
-	err := binary.Read(bytes.NewReader(packet.data[3:7]), binary.LittleEndian, &size)
+	err := binary.Read(bytes.NewReader(packet.data[packet.framePos+3:packet.framePos+7]), binary.LittleEndian, &size)
 	if err != nil {
 		log.Println("error: NewNetworkFrame, binary.Read: ", err)
 	}
 	frame.size = int(size)
-	frame.dataARNetwork = packet.data[7:frame.size]
+	frame.dataARNetwork = packet.data[packet.framePos+7 : packet.framePos+frame.size]
 
 	//Figure out if there are another frame after this one.
 	// This can be checked if there are a complete header
 	// of 7bytes following directly afte the current frame.
 	const headerSize = 7
-	fmt.Println("---- frameStartPos+frame.size+headerSize = ", frameStartPos+frame.size+headerSize)
+	fmt.Println("---- frameStartPos+frame.size+headerSize = ", packet.framePos+frame.size+headerSize)
 	fmt.Println("---- packet.size = ", packet.size)
-	if frameStartPos+frame.size+headerSize <= packet.size {
-		fmt.Println("--------------- ANOTHER PACKAGE FOLLOWS at position = ", frameStartPos+frame.size)
+	if packet.framePos+frame.size+headerSize <= packet.size {
+		fmt.Println("----### ANOTHER PACKAGE FOLLOWS at position = ", packet.framePos+frame.size)
 		fmt.Println("---- Next package is = ", packet.data[15:packet.size])
+		packet.framePos = packet.framePos + frame.size
+
+		return frame, nil
+
 	}
 
-	return frame
+	return frame, io.EOF
 }
 
 func main() {
@@ -253,18 +261,24 @@ func main() {
 		fmt.Println("info: main: packet size = ", packet.size)
 		fmt.Println("info: main: packet data ARNetworkAL= ", packet.data[:packet.size])
 
-		frame := packet.decodeARNetworkALpacket(0)
-		//• Ack(1): Acknowledgment of previously received data
-		//• Data(2): Normal data (no ack requested)
-		//• Low latency data(3): Treated as normal data on the network, but are
-		//  given higher priority internally
-		//• Data with ack(4): Data requesting an ack. The receiver must send an
-		//  ack for this data !
-		fmt.Println("info: main: frame: data type: ", frame.dataType)
-		fmt.Println("info: main: frame: target buffer id: ", frame.targetBufferID)
-		fmt.Println("info: main: frame: size of whole frame = ", frame.size)
-		fmt.Println("info: main: frame: data_ARNetwork = ", frame.dataARNetwork)
-		fmt.Println("-----------------------------------------------------------")
+		for {
+			frame, err := packet.decode()
+			//• Ack(1): Acknowledgment of previously received data
+			//• Data(2): Normal data (no ack requested)
+			//• Low latency data(3): Treated as normal data on the network, but are
+			//  given higher priority internally
+			//• Data with ack(4): Data requesting an ack. The receiver must send an
+			//  ack for this data !
+			fmt.Println("info: main: frame: data type: ", frame.dataType)
+			fmt.Println("info: main: frame: target buffer id: ", frame.targetBufferID)
+			fmt.Println("info: main: frame: size of current frame = ", frame.size)
+			fmt.Println("info: main: frame: data_ARNetwork = ", frame.dataARNetwork)
+			fmt.Println("-----------------------------------------------------------")
+
+			if err == io.EOF {
+				break
+			}
+		}
 	}
 
 	//time.Sleep(time.Second * 2)
