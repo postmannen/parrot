@@ -106,13 +106,6 @@ func (d *Drone) Discover() error {
 	return discoverConn.Close()
 }
 
-//networkPacket is the main UDP packet read from the network.
-// A network packet can contain multiple ARNetworkAL/frames.
-type networkUDPPacket struct {
-	size int
-	data []byte
-}
-
 //getNetworkPacketsD2C gets the raw UDP packets from the drone sent to the controller.
 // Will read the raw UDP packets from the network, and put them on a channel to be
 // picked up by the frame decoder.
@@ -186,16 +179,31 @@ type networkFrame struct {
 	dataARNetwork  []byte
 }
 
+//networkPacket is the main UDP packet read from the network.
+// A network packet can contain multiple ARNetworkAL/frames.
+type networkUDPPacket struct {
+	//The total size of the UDP packet
+	size int
+	//The actual UDP data
+	data []byte
+	//Where to start reading. If there is only one ARNetworkAL frame in the
+	// UDP packet this value will be 0. If there are more than one frame in
+	// the packet the value will be set to the start position of the next
+	// frame in the slice.
+	startPos int
+}
+
 func encodeNetworkFrame(dataType int, targetBufferID int, sequenceNR int, size int, dataARNetworkAL []byte) {
 	// TODO:.........................
 }
 
-//decodeARNetworkALpacket will decode the UDP packet given as input, return a frame of the ARNetworkAL
-// protocol,
-// NB: If the packet consists of more than one frame eg, the length of the
-// packet is longer than the length of the frame, then the function must be
-// run again
-func decodeARNetworkALpacket(packet networkUDPPacket, frameStartPos int) networkFrame {
+//decodeARNetworkALpacket will decode a whole UDP packet given as input,
+// and return a frame of the ARNetworkAL protocol, it will return error==
+// io.EOF when decoding of the whole packet is done.
+// If the there are more than one ARNetworkAL frame in the UDP packet the
+// method will return error == nil, and the method should be run over again
+// until io.EOF is received.
+func (packet *networkUDPPacket) decodeARNetworkALpacket(frameStartPos int) networkFrame {
 	frame := networkFrame{
 		dataType:       int(packet.data[0]),
 		targetBufferID: int(packet.data[1]),
@@ -245,7 +253,7 @@ func main() {
 		fmt.Println("info: main: packet size = ", packet.size)
 		fmt.Println("info: main: packet data ARNetworkAL= ", packet.data[:packet.size])
 
-		frame := decodeARNetworkALpacket(packet, 0)
+		frame := packet.decodeARNetworkALpacket(0)
 		//• Ack(1): Acknowledgment of previously received data
 		//• Data(2): Normal data (no ack requested)
 		//• Low latency data(3): Treated as normal data on the network, but are
