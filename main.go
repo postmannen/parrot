@@ -278,6 +278,8 @@ func main() {
 			if err == io.EOF {
 				break
 			}
+
+			fmt.Println("-------------Working the next frame in the UDP package-----")
 		}
 	}
 
