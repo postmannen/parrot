@@ -161,7 +161,7 @@ func (d *Drone) writeNetworkPacketsC2D() {
 //	Example of size:
 //	01 ba 27 08000000 42, 02 0b c3 0b000000 12345678
 //  --size 0x08=8byte---, --size 0x0b=11byte--------
-type networkFrame struct {
+type protocolARNetworkAL struct {
 	// Data types
 	// • Ack(1): Acknowledgment of previously received data
 	//   To Ack a frame, set type to 1,
@@ -201,14 +201,14 @@ func encodeNetworkFrame(dataType int, targetBufferID int, sequenceNR int, size i
 	// TODO:.........................
 }
 
-// decodeARNetworkALpacket will decode a whole UDP packet given as input,
+// decode will decode a whole UDP packet given as input,
 // and return a frame of the ARNetworkAL protocol, it will return error==
 // io.EOF when decoding of the whole packet is done.
 // If the there are more than one ARNetworkAL frame in the UDP packet the
 // method will return error == nil, and the method should be run over again
 // until io.EOF is received.
-func (packet *networkUDPPacket) decode() (networkFrame, error) {
-	frame := networkFrame{
+func (packet *networkUDPPacket) decode() (protocolARNetworkAL, error) {
+	frame := protocolARNetworkAL{
 		dataType:       int(packet.data[packet.framePos+0]),
 		targetBufferID: int(packet.data[packet.framePos+1]),
 		sequenceNR:     int(packet.data[packet.framePos+2]),
@@ -240,6 +240,41 @@ func (packet *networkUDPPacket) decode() (networkFrame, error) {
 	}
 
 	return frame, io.EOF
+}
+
+// • Project or Feature ID (1 byte)
+// • Class ID in the project/feature (1 byte)
+// • Command ID in the class (2 bytes)
+type protocolARCommands struct {
+	project int
+	class   int
+	command int
+}
+
+// decode will try to decode the command found in the ARNetworkAL frame,
+// if it fails it will return an empty protocolARCommands struct, and the
+// error
+func (p *protocolARNetworkAL) decode() (protocolARCommands, error) {
+	command := protocolARCommands{
+		project: int(p.dataARNetwork[0]),
+		class:   int(p.dataARNetwork[1]),
+	}
+
+	err := binary.Read(bytes.NewReader(p.dataARNetwork[2:4]), binary.LittleEndian, command.command)
+	if err != nil {
+		log.Printf("error: binary read of command failed %v\n", err)
+		return protocolARCommands{}, err
+	}
+
+	fmt.Println("******************Parsing of command*************************")
+	fmt.Printf("* project = %v\n", command.project)
+	fmt.Printf("* class = %v\n", command.class)
+	fmt.Printf("* command = %v\n", command.command)
+	fmt.Println("******************End Parsing of command*********************")
+
+	// ... TODO:
+	// Decode the ARCommands here
+	return command, nil
 }
 
 func main() {
