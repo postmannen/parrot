@@ -255,16 +255,30 @@ type protocolARCommands struct {
 // if it fails it will return an empty protocolARCommands struct, and the
 // error
 func (p *protocolARNetworkAL) decode() (protocolARCommands, error) {
+	fmt.Println("$$$$$$$$ THE COMMAND BYTES: ",
+		p.dataARNetwork,
+		int(p.dataARNetwork[0]),
+		int(p.dataARNetwork[1]))
+
 	command := protocolARCommands{
 		project: int(p.dataARNetwork[0]),
 		class:   int(p.dataARNetwork[1]),
 	}
 
-	err := binary.Read(bytes.NewReader(p.dataARNetwork[2:4]), binary.LittleEndian, command.command)
+	fmt.Println("1. inside command contains = ", command)
+
+	// Since we read and slice out 2 bytes, we need to use an uint16 to
+	// write into. We then convert the uint16 to int, and store the
+	// value in the command field of the struct.
+	var tmpCommand uint16
+	err := binary.Read(bytes.NewReader(p.dataARNetwork[2:4]), binary.LittleEndian, &tmpCommand)
 	if err != nil {
 		log.Printf("error: binary read of command failed %v\n", err)
 		return protocolARCommands{}, err
 	}
+	fmt.Printf("tmpCommand = %v, %T\n", tmpCommand, tmpCommand)
+	command.command = int(tmpCommand)
+	fmt.Println("2. inside command contains = ", command)
 
 	fmt.Println("******************Parsing of command*************************")
 	fmt.Printf("* project = %v\n", command.project)
@@ -296,21 +310,51 @@ func main() {
 		fmt.Println("info: main: packet size = ", packet.size)
 		fmt.Println("info: main: packet data ARNetworkAL= ", packet.data[:packet.size])
 
+		var lastFrame bool
 		for {
-			frame, err := packet.decode()
+			frameARNetworkAL, err := packet.decode()
+			// Check if it was the last frame in the UDP packet.
+			if err == io.EOF {
+				lastFrame = true
+			}
 			// • Ack(1): Acknowledgment of previously received data
 			// • Data(2): Normal data (no ack requested)
 			// • Low latency data(3): Treated as normal data on the network, but are
 			//   given higher priority internally
 			// • Data with ack(4): Data requesting an ack. The receiver must send an
 			//   ack for this data !
-			fmt.Println("info: main: frame: data type: ", frame.dataType)
-			fmt.Println("info: main: frame: target buffer id: ", frame.targetBufferID)
-			fmt.Println("info: main: frame: size of current frame = ", frame.size)
-			fmt.Println("info: main: frame: data_ARNetwork = ", frame.dataARNetwork)
+			fmt.Println("info: main: frame: data type: ", frameARNetworkAL.dataType)
+			fmt.Println("info: main: frame: target buffer id: ", frameARNetworkAL.targetBufferID)
+			fmt.Println("info: main: frame: size of current frame = ", frameARNetworkAL.size)
+			fmt.Println("info: main: frame: data_ARNetwork = ", frameARNetworkAL.dataARNetwork)
 			fmt.Println("-----------------------------------------------------------")
 
-			if err == io.EOF {
+			// TODO: Putting in a continue here to skip decoding of ping packets
+			// which have a buffer ID of 0 or 1.
+			// Replace this with a proper ping detection later.
+			pingDetected := false
+			if frameARNetworkAL.targetBufferID == 0 || frameARNetworkAL.targetBufferID == 1 {
+				fmt.Println("PING DETECTED, PING DETECTED, PING DETECTED,PING DETECTED,")
+				fmt.Println("NOT DECODING THE CONTENT OF THE FRAME")
+				pingDetected = true
+			}
+
+			// If the package was not a ping package, then decode the ARCommand
+			// from it.
+			if !pingDetected {
+				cmd, err := frameARNetworkAL.decode()
+				if err != nil {
+					log.Println("error: frame.decode: ", err)
+					break
+				}
+				fmt.Println("----------COMMAND-------------------------------------------")
+				fmt.Printf("%v+\n", cmd)
+				fmt.Println("-----------------------------------------------------------")
+
+			}
+
+			// If no more frames, break out.
+			if lastFrame {
 				break
 			}
 
