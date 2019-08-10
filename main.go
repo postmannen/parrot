@@ -260,12 +260,12 @@ func (p *protocolARNetworkAL) decode() (protocolARCommands, error) {
 		int(p.dataARNetwork[0]),
 		int(p.dataARNetwork[1]))
 
-	command := protocolARCommands{
+	cmd := protocolARCommands{
 		project: int(p.dataARNetwork[0]),
 		class:   int(p.dataARNetwork[1]),
 	}
 
-	fmt.Println("1. inside command contains = ", command)
+	fmt.Println("1. inside command contains = ", cmd)
 
 	// Since we read and slice out 2 bytes, we need to use an uint16 to
 	// write into. We then convert the uint16 to int, and store the
@@ -277,18 +277,32 @@ func (p *protocolARNetworkAL) decode() (protocolARCommands, error) {
 		return protocolARCommands{}, err
 	}
 	fmt.Printf("tmpCommand = %v, %T\n", tmpCommand, tmpCommand)
-	command.command = int(tmpCommand)
-	fmt.Println("2. inside command contains = ", command)
+	cmd.command = int(tmpCommand)
+	fmt.Println("2. inside command contains = ", cmd)
 
 	fmt.Println("******************Parsing of command*************************")
-	fmt.Printf("* project = %v\n", command.project)
-	fmt.Printf("* class = %v\n", command.class)
-	fmt.Printf("* command = %v\n", command.command)
+	fmt.Printf("* project = %v\n", cmd.project)
+	fmt.Printf("* class = %v\n", cmd.class)
+	fmt.Printf("* command = %v\n", cmd.command)
+	fmt.Println()
+	//... testing from here
+	c := command{
+		project: projectDef(cmd.project),
+		class:   classDef(cmd.class),
+		cmd:     cmdDef(cmd.command),
+	}
+	fmt.Printf("c = %+v\n", c)
+	v, ok := commandMap[c]
+	if ok {
+		fmt.Printf("Content of v = %+v\n", v)
+		v.decode()
+	}
+
 	fmt.Println("******************End Parsing of command*********************")
 
 	// ... TODO:
 	// Decode the ARCommands here
-	return command, nil
+	return cmd, nil
 }
 
 func main() {
@@ -364,3 +378,5 @@ func main() {
 
 	//time.Sleep(time.Second * 2)
 }
+
+//--------------------
