@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/binary"
 	"encoding/json"
+	"flag"
 	"fmt"
 	"io"
 	"log"
@@ -13,6 +14,7 @@ import (
 
 // Drone holds the data and methods specific for the drone
 type Drone struct {
+	testingMode         bool   // used for testing the package without connecting to the drone
 	addressDrone        string // The ip address of the drone
 	portDiscover        string // Used for initializing the connection to the drone over TCP
 	portC2D             string // TODO: Make this one to be filled with port value from discover.
@@ -105,6 +107,29 @@ func (d *Drone) Discover() error {
 	fmt.Printf("portC2D is of type = %T, and value = %s \n", d.portC2D, d.portC2D)
 
 	return discoverConn.Close()
+}
+
+// getNetworkTestingPacketsD2C gets the raw UDP packets from the test data.
+// Will read the raw testing UDP packets, and put them on a channel to be
+// picked up by the frame decoder.
+func (d *Drone) readNetworkUDPTestingPacketsD2C() {
+	// the simulated testing data to use for reading
+	buf := []byte{
+		2, 127, 28, 38, 0, 0, 0, 1, 4, 9, 0, 0, 0, 0, 0, 0, 64, 127, 64, 0, 0, 0, 0, 0, 64, 127, 64, 0, 0, 0, 0, 0, 64, 127, 64, 83, 83, 83,
+		2, 127, 32, 13, 0, 0, 0, 1, 25, 0, 0, 243, 0,
+		2, 127, 8, 23, 0, 0, 0, 1, 4, 6, 0, 154, 221, 45, 61, 44, 209, 73, 188, 121, 230, 52, 64}
+
+	p := networkUDPPacket{
+		size: len(buf),
+		data: buf,
+		// Since this is a new UDP packet, and we want to start reading
+		// the first frame from the start we set the start position to 0.
+		framePos: 0,
+	}
+
+	// send the packet received over a channel to later parse out ARNetworkAL/frames.
+	d.chReceivedUDPPacket <- p
+
 }
 
 // getNetworkPacketsD2C gets the raw UDP packets from the drone sent to the controller.
@@ -308,14 +333,25 @@ func (p *protocolARNetworkAL) decode() (protocolARCommands, error) {
 func main() {
 	drone := NewDrone()
 
-	err := drone.Discover()
-	if err != nil {
-		log.Println("error: client Discover failed:", err)
-	}
+	testingMode := flag.Bool("testingMode", false, "set to true to test without connecting to the drone")
+	flag.Parse()
+	drone.testingMode = *testingMode
 
-	// Will start the reading of whole UDP packets from the network,
-	// and put them on the chReceivedPacket channel.
-	go drone.readNetworkUDPPacketsD2C()
+	// If not in testingMode, initialize the network connection to the drone
+	if drone.testingMode {
+		log.Println("Initializing the traffic with the drone, and starting controller UDP listener.")
+		err := drone.Discover()
+		if err != nil {
+			log.Println("error: client Discover failed:", err)
+		}
+
+		// Will start the reading of whole UDP packets from the network,
+		// and put them on the chReceivedPacket channel.
+		go drone.readNetworkUDPPacketsD2C()
+	} else {
+		// It is testing mode, start the fake UDP reader.
+		go drone.readNetworkUDPTestingPacketsD2C()
+	}
 
 	for {
 		// Get a packet
