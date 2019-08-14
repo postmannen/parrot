@@ -168,6 +168,8 @@ func main() {
 
 	// TODO:........how to get the values into a struct with types for
 	// all elements in the slice ?
+	// Maybe I should remove the argumentSlice of type []interface{},
+	// and also make argDecode not return an empty interface ??????
 
 	for i := range argumentSlice {
 		fmt.Printf("%v, of type %T\n", argumentSlice[i], argumentSlice[i])
