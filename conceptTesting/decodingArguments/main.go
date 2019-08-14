@@ -1,10 +1,8 @@
 package main
 
 import (
-	"bytes"
-	"encoding/binary"
 	"fmt"
-	"log"
+	"reflect"
 )
 
 /*
@@ -27,7 +25,7 @@ enum 4 Per command defined enum
 // The value is for storing the parsed value, length tells the length of bytes it
 // is made of.
 type float32Type struct {
-	value  float32
+	value  []byte
 	length int
 }
 
@@ -47,20 +45,17 @@ func (f *float32Type) getLength() int {
 
 // argDecode will decode the []byte given as input, and store it
 // into f.
-func (f *float32Type) argDecode(b []byte) (value interface{}, err error) {
+func (f *float32Type) argDecode(b []byte) (value []byte, err error) {
 	fmt.Printf("running the float32.argDecode method, b = %v\n", b)
-	bReader := bytes.NewReader(b)
-	var val float32
 
-	err = binary.Read(bReader, binary.LittleEndian, &val)
-	if err != nil {
-		log.Println("error: failed binary.Read: ", err)
-		return nil, err
+	// reverse the byte order to little endian
+	for i := len(b)/2 - 1; i >= 0; i-- {
+		opp := len(b) - 1 - i
+		b[i], b[opp] = b[opp], b[i]
 	}
 
-	f.value = val
-
-	fmt.Printf("Content of f = %#v\n", *f)
+	f.value = b
+	fmt.Printf("Content of f = %+v\n", *f)
 
 	return f.value, nil
 }
@@ -71,7 +66,7 @@ func (f *float32Type) argDecode(b []byte) (value interface{}, err error) {
 // The value is for storing the parsed value, length tells the length of bytes it
 // is made of.
 type int8Type struct {
-	value  int8
+	value  []byte
 	length int
 }
 
@@ -89,22 +84,41 @@ func (f *int8Type) getLength() int {
 
 // argDecode will decode the []byte given as input, and store it
 // into f.
-func (f *int8Type) argDecode(b []byte) (value interface{}, err error) {
+func (f *int8Type) argDecode(b []byte) (value []byte, err error) {
 	fmt.Printf("running the int8Type.argDecode method, b = %v\n", b)
-	bReader := bytes.NewReader(b)
-	var val int8
 
-	err = binary.Read(bReader, binary.LittleEndian, &val)
-	if err != nil {
-		log.Println("error: failed binary.Read: ", err)
-		return nil, err
-	}
+	f.value = b
 
-	f.value = val
-
-	fmt.Printf("Content of f = %#v\n", *f)
+	fmt.Printf("Content of f = %+v\n", *f)
 
 	return f.value, nil
+}
+
+// ------------------------------------------------------------------------------------
+
+func insertArgumentsInStruct(d interface{}) {
+	value := reflect.ValueOf(d)
+	if value.Kind() != reflect.Ptr {
+		panic("not a pointer")
+	}
+
+	elements := value.Elem()
+
+	//this loops through the fields
+	for i := 0; i < elements.NumField(); i++ { // iterates through every struct type field
+		//k := elements.Kind()
+		t := elements.Type().Field(i).Type // returns the tag string
+
+		field := elements.Field(i) // returns the content of the struct type field
+		switch t.String() {
+		case "int":
+			field.SetInt(20)
+		case "float64":
+			field.SetFloat(20.5)
+		case "float32":
+			field.SetFloat(30.5)
+		}
+	}
 }
 
 // ------------------------------------------------------------------------------------
@@ -113,7 +127,7 @@ func (f *int8Type) argDecode(b []byte) (value interface{}, err error) {
 // have the methods argDecode([]byte) error, and getLength() int
 // is of the interface type argDecoder.
 type argDecoder interface {
-	argDecode([]byte) (interface{}, error)
+	argDecode([]byte) ([]byte, error)
 	getLength() int
 }
 
@@ -133,26 +147,36 @@ type argumentsState struct {
 // TODO: Make logic check if there are given the correct amount of argDecoders to
 // handle the length of the data slice given as input, and return error if they don't
 // match.
-func (as *argumentsState) argumentsToDecode(d []byte, a ...argDecoder) ([]interface{}, error) {
+func (as *argumentsState) argumentsToDecode(s interface{}, d []byte, a ...argDecoder) error {
 	as.position = 0
-	argumentSlice := []interface{}{}
+
 	for _, v := range a {
 		fmt.Println("------------------Decoding byte or bytes----------------------")
 		val, err := v.argDecode(d[as.position : as.position+v.getLength()])
 		if err != nil {
-			return nil, err
+			return err
 		}
 
-		// testing putting the valius into a slice, to iterate later.
-		argumentSlice = append(argumentSlice, val)
 		fmt.Printf("val = %+v, type = %T\n", val, val)
 
 		l := v.getLength()
 		as.position += l
 	}
 
-	return argumentSlice, nil
+	return nil
 }
+
+type argument struct {
+	byteData   []byte
+	typeOfData string
+}
+
+type arg1 struct {
+	myInt8    argument
+	myFloat32 argument
+}
+
+var openInterface interface{}
 
 func main() {
 	//The data below should decode
@@ -160,20 +184,14 @@ func main() {
 	//byte 5 = an int8
 	tmpData := []byte{154, 221, 45, 61, 83}
 
-	a := argumentsState{}
-	argumentSlice, err := a.argumentsToDecode(tmpData, &float, &i8)
+	a1 := arg1{}
+
+	as := argumentsState{}
+	err := as.argumentsToDecode(a1, tmpData, &float, &i8)
 	if err != nil {
 		fmt.Println("error: argumentsToDecode: failed looping over v ", err)
 	}
 
-	// TODO:........how to get the values into a struct with types for
-	// all elements in the slice ?
-	// Maybe I should remove the argumentSlice of type []interface{},
-	// and also make argDecode not return an empty interface ??????
-
-	for i := range argumentSlice {
-		fmt.Printf("%v, of type %T\n", argumentSlice[i], argumentSlice[i])
-	}
-
-	//fmt.Printf("%+v\n", a)
+	fmt.Println("-----------------------------------------------------------------------")
+	fmt.Printf("%+v\n", as)
 }
