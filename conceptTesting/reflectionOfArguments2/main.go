@@ -18,9 +18,6 @@ func checkSwitch(data interface{}, argValues []interface{}) {
 
 	dataElements := dataValue.Elem()
 
-	//argvValue := reflect.ValueOf(argValues)
-	//argvElements := argvValue.Elem()
-
 	//this loops through the fields
 	for i := 0; i < dataElements.NumField(); i++ { // iterates through every struct type field
 		//k := elements.Kind()
