@@ -450,6 +450,97 @@ func (f *float64Type) argDecode(b []byte) (value interface{}, err error) {
 
 // ------------------------------------------------------------------------------------
 
+// float64Type
+// The value is for storing the parsed value, length tells the length of bytes it
+// is made of.
+type stringType struct {
+	value  string
+	length int
+}
+
+// double makes a type for float64 data, and tells the length of bytes it
+// is made of.
+var stringx = stringType{
+	length: 0,
+}
+
+// getLength will get the length value of the type. We need this method
+// since we're working with interface type's in the final iteration, and
+// interface types is all about methods, and not concrete values stored
+// in a struct. Thats why we use a method to get that value from the struct.
+func (f *stringType) getLength() int {
+	return f.length
+}
+
+// argDecode will decode the []byte given as input, and store it
+// into f.
+func (f *stringType) argDecode(b []byte) (value interface{}, err error) {
+	//fmt.Printf("running the stringx.argDecode method, b = %v\n", b)
+	//bReader := bytes.NewReader(b)
+	//var val string
+	//
+	//err = binary.Read(bReader, binary.LittleEndian, &val)
+	//if err != nil {
+	//	log.Println("error: failed binary.Read: ", err)
+	//	return nil, err
+	//}
+	//
+	//f.value = val
+	//
+	//fmt.Printf("Content of f = %#v\n", *f)
+	//
+	//return f.value, nil
+
+	//TODO: Implement string argDecode logic !!!
+	return nil, nil
+}
+
+// ------------------------------------------------------------------------------------
+
+// enumType
+// The value is for storing the parsed value, length tells the length of bytes it
+// is made of.
+type enumType struct {
+	value  int32 //since enum is 4 bytes, we're using an int32
+	length int
+}
+
+// double makes a type for enum data, and tells the length of bytes it
+// is made of.
+var enum = enumType{
+	length: 4,
+}
+
+// getLength will get the length value of the type. We need this method
+// since we're working with interface type's in the final iteration, and
+// interface types is all about methods, and not concrete values stored
+// in a struct. Thats why we use a method to get that value from the struct.
+func (f *enumType) getLength() int {
+	return f.length
+}
+
+// argDecode will decode the []byte given as input, and store it
+// into f.
+func (f *enumType) argDecode(b []byte) (value interface{}, err error) {
+	fmt.Printf("running the enum.argDecode method, b = %v\n", b)
+	bReader := bytes.NewReader(b)
+	var val int32
+
+	err = binary.Read(bReader, binary.LittleEndian, &val)
+	if err != nil {
+		log.Println("error: failed binary.Read: ", err)
+		return nil, err
+	}
+
+	f.value = val
+
+	fmt.Printf("Content of f = %#v\n", *f)
+
+	return f.value, nil
+}
+
+// ------------------------------------------------------------------------------------
+
 // ------------------------------------------------------------------------------------
 
 // checkSwitch takes the struct to fill as a pointer value, and the arguments as a
