@@ -543,8 +543,12 @@ func (f *enumType) argDecode(b []byte) (value interface{}, err error) {
 
 // ------------------------------------------------------------------------------------
 
-// checkSwitch takes the struct to fill as a pointer value, and the arguments as a
-// slice of []interface{} as input.
+// insertArgValueIntoStruct takes the struct to fill as a pointer value,
+// and the arguments as a slice of []interface{} as input.
+// It will use reflect to loop over the struct fields, and set the correct
+// value for each field from the []argvalues.
+// NB: The order of the []argvalues have to be the same as the order of the
+// elements in the struct.
 func insertArgValueIntoStruct(argStruct interface{}, argValues []interface{}) {
 	dataValue := reflect.ValueOf(argStruct)
 	if dataValue.Kind() != reflect.Ptr {
@@ -628,6 +632,7 @@ func (as *argumentsState) argumentsToDecode(argStruct interface{}, d []byte, a .
 
 		l := v.getLength()
 		as.position += l
+		fmt.Println("--------------------------------------------------------------")
 	}
 
 	return argumentSlice, nil
