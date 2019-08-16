@@ -46,6 +46,11 @@ func (f *uint8Type) getLength() int {
 	return f.length
 }
 
+// setLength will set the value of the length field t.length for type.
+func (f *uint8Type) setLength(length int) {
+	f.length = length
+}
+
 // argDecode will decode the []byte given as input, and store it
 // into f.
 func (f *uint8Type) argDecode(b []byte) (value interface{}, err error) {
@@ -86,6 +91,11 @@ var i8 = int8Type{
 // in a struct. Thats why we use a method to get that value from the struct.
 func (f *int8Type) getLength() int {
 	return f.length
+}
+
+// setLength will set the value of the length field t.length for type.
+func (f *int8Type) setLength(length int) {
+	f.length = length
 }
 
 // argDecode will decode the []byte given as input, and store it
@@ -130,6 +140,11 @@ func (f *uint16Type) getLength() int {
 	return f.length
 }
 
+// setLength will set the value of the length field t.length for type.
+func (f *uint16Type) setLength(length int) {
+	f.length = length
+}
+
 // argDecode will decode the []byte given as input, and store it
 // into f.
 func (f *uint16Type) argDecode(b []byte) (value interface{}, err error) {
@@ -170,6 +185,11 @@ var i16 = uint16Type{
 // in a struct. Thats why we use a method to get that value from the struct.
 func (f *int16Type) getLength() int {
 	return f.length
+}
+
+// setLength will set the value of the length field t.length for type.
+func (f *int16Type) setLength(length int) {
+	f.length = length
 }
 
 // argDecode will decode the []byte given as input, and store it
@@ -214,6 +234,11 @@ func (f *uint32Type) getLength() int {
 	return f.length
 }
 
+// setLength will set the value of the length field t.length for type.
+func (f *uint32Type) setLength(length int) {
+	f.length = length
+}
+
 // argDecode will decode the []byte given as input, and store it
 // into f.
 func (f *uint32Type) argDecode(b []byte) (value interface{}, err error) {
@@ -244,7 +269,7 @@ type int32Type struct {
 	length int
 }
 
-var i32 = uint32Type{
+var i32 = int32Type{
 	length: 4,
 }
 
@@ -254,6 +279,11 @@ var i32 = uint32Type{
 // in a struct. Thats why we use a method to get that value from the struct.
 func (f *int32Type) getLength() int {
 	return f.length
+}
+
+// setLength will set the value of the length field t.length for type.
+func (f *int32Type) setLength(length int) {
+	f.length = length
 }
 
 // argDecode will decode the []byte given as input, and store it
@@ -298,6 +328,11 @@ func (f *uint64Type) getLength() int {
 	return f.length
 }
 
+// setLength will set the value of the length field t.length for type.
+func (f *uint64Type) setLength(length int) {
+	f.length = length
+}
+
 // argDecode will decode the []byte given as input, and store it
 // into f.
 func (f *uint64Type) argDecode(b []byte) (value interface{}, err error) {
@@ -338,6 +373,11 @@ var i64 = uint64Type{
 // in a struct. Thats why we use a method to get that value from the struct.
 func (f *int64Type) getLength() int {
 	return f.length
+}
+
+// setLength will set the value of the length field t.length for type.
+func (f *int64Type) setLength(length int) {
+	f.length = length
 }
 
 // argDecode will decode the []byte given as input, and store it
@@ -384,6 +424,11 @@ func (f *float32Type) getLength() int {
 	return f.length
 }
 
+// setLength will set the value of the length field t.length for type.
+func (f *float32Type) setLength(length int) {
+	f.length = length
+}
+
 // argDecode will decode the []byte given as input, and store it
 // into f.
 func (f *float32Type) argDecode(b []byte) (value interface{}, err error) {
@@ -428,6 +473,11 @@ func (f *float64Type) getLength() int {
 	return f.length
 }
 
+// setLength will set the value of the length field t.length for type.
+func (f *float64Type) setLength(length int) {
+	f.length = length
+}
+
 // argDecode will decode the []byte given as input, and store it
 // into f.
 func (f *float64Type) argDecode(b []byte) (value interface{}, err error) {
@@ -450,7 +500,7 @@ func (f *float64Type) argDecode(b []byte) (value interface{}, err error) {
 
 // ------------------------------------------------------------------------------------
 
-// float64Type
+// stringType
 // The value is for storing the parsed value, length tells the length of bytes it
 // is made of.
 type stringType struct {
@@ -472,27 +522,24 @@ func (f *stringType) getLength() int {
 	return f.length
 }
 
+// setLength will set the value of the length field t.length for type.
+func (f *stringType) setLength(length int) {
+	f.length = length
+}
+
 // argDecode will decode the []byte given as input, and store it
 // into f.
 func (f *stringType) argDecode(b []byte) (value interface{}, err error) {
-	//fmt.Printf("running the stringx.argDecode method, b = %v\n", b)
-	//bReader := bytes.NewReader(b)
-	//var val string
-	//
-	//err = binary.Read(bReader, binary.LittleEndian, &val)
-	//if err != nil {
-	//	log.Println("error: failed binary.Read: ", err)
-	//	return nil, err
-	//}
-	//
-	//f.value = val
-	//
-	//fmt.Printf("Content of f = %#v\n", *f)
-	//
-	//return f.value, nil
+	fmt.Printf("running the stringx.argDecode method, b = %v\n", b)
+
+	f.value = string(b)
+
+	fmt.Printf("Content of f = %#v\n", *f)
+
+	return f.value, nil
 
 	//TODO: Implement string argDecode logic !!!
-	return nil, nil
+
 }
 
 // ------------------------------------------------------------------------------------
@@ -509,6 +556,11 @@ type enumType struct {
 // is made of.
 var enum = enumType{
 	length: 4,
+}
+
+// setLength will set the value of the length field t.length for type.
+func (f *enumType) setLength(length int) {
+	f.length = length
 }
 
 // getLength will get the length value of the type. We need this method
@@ -549,13 +601,22 @@ func (f *enumType) argDecode(b []byte) (value interface{}, err error) {
 // value for each field from the []argvalues.
 // NB: The order of the []argvalues have to be the same as the order of the
 // elements in the struct.
-func insertArgValueIntoStruct(argStruct interface{}, argValues []interface{}) {
+func insertArgValueIntoStruct(argStruct interface{}, argValues []interface{}) error {
 	dataValue := reflect.ValueOf(argStruct)
 	if dataValue.Kind() != reflect.Ptr {
 		panic("not a pointer")
 	}
 
 	dataElements := dataValue.Elem()
+
+	// Check if the number of fields in the slice and the number of argValues
+	// match, return with an error.
+	if dataElements.NumField() != len(argValues) {
+		err := fmt.Errorf(
+			"Number of fields for argStruct and argValues are not the same, check length of both variables given as input to insertArgValueIntoStruct")
+
+		return err
+	}
 
 	//this loops through the fields
 	for i := 0; i < dataElements.NumField(); i++ { // iterates through every struct type field
@@ -574,21 +635,61 @@ func insertArgValueIntoStruct(argStruct interface{}, argValues []interface{}) {
 			v := argVal.Int()
 			//fmt.Printf("v = %+v, and type = %T\n", v(), v)
 			dataField.SetInt(v)
+		case "uint8":
+			fmt.Printf("Reflecting uint8\n")
+			v := argVal.Uint()
+			//fmt.Printf("v = %+v, and type = %T\n", v(), v)
+			dataField.SetUint(v)
 		case "int8":
 			fmt.Printf("Reflecting INT8\n")
 			v := argVal.Int()
 			//fmt.Printf("v = %+v, and type = %T\n", v(), v)
 			dataField.SetInt(v)
-		case "float64":
-			fmt.Printf("Reflecting float64\n")
-			v := argVal.Float()
-			dataField.SetFloat(v)
+		case "uint16":
+			fmt.Printf("Reflecting uint16\n")
+			v := argVal.Uint()
+			//fmt.Printf("v = %+v, and type = %T\n", v(), v)
+			dataField.SetUint(v)
+		case "int16":
+			fmt.Printf("Reflecting INT16\n")
+			v := argVal.Int()
+			//fmt.Printf("v = %+v, and type = %T\n", v(), v)
+			dataField.SetInt(v)
+		case "uint32":
+			fmt.Printf("Reflecting uint32\n")
+			v := argVal.Uint()
+			//fmt.Printf("v = %+v, and type = %T\n", v(), v)
+			dataField.SetUint(v)
+		case "int32":
+			fmt.Printf("Reflecting INT32\n")
+			v := argVal.Int()
+			//fmt.Printf("v = %+v, and type = %T\n", v(), v)
+			dataField.SetInt(v)
+		case "uint64":
+			fmt.Printf("Reflecting uint64\n")
+			v := argVal.Uint()
+			//fmt.Printf("v = %+v, and type = %T\n", v(), v)
+			dataField.SetUint(v)
+		case "int64":
+			fmt.Printf("Reflecting INT64\n")
+			v := argVal.Int()
+			//fmt.Printf("v = %+v, and type = %T\n", v(), v)
+			dataField.SetInt(v)
 		case "float32":
 			fmt.Printf("Reflecting float32\n")
 			v := argVal.Float()
 			dataField.SetFloat(v)
+		case "float64":
+			fmt.Printf("Reflecting float64\n")
+			v := argVal.Float()
+			dataField.SetFloat(v)
+		case "string":
+			fmt.Printf("Reflecting string\n")
+			v := argVal.String()
+			dataField.SetString(v)
 		}
 	}
+	return nil
 }
 
 // ------------------------------------------------------------------------------------
@@ -598,12 +699,32 @@ func insertArgValueIntoStruct(argStruct interface{}, argValues []interface{}) {
 type argDecoder interface {
 	argDecode([]byte) (interface{}, error)
 	getLength() int
+	setLength(int)
 }
 
 // argumentState is a type for keeping track of the start position of the
 // data to read in a slice.
 type argumentsState struct {
 	position int
+}
+
+func getLengthOfData(b []byte) (int, error) {
+	// Figure out the length of the string
+	for i := 0; i < cap(b); i++ {
+		//fmt.Printf("%+v, of type %T\n", b[i], b[i])
+
+		//fmt.Println("i = ", i)
+		if b[i] == 0 {
+			//fmt.Println("lengthString = ", i)
+
+			// add 1 to jump to the 0
+			return i + 1, nil
+		}
+
+	}
+
+	err := fmt.Errorf("no string bytes found, returning 0")
+	return 0, err
 }
 
 // argumentsToDecode takes a []byte and any number of the interface type argDecoder
@@ -616,21 +737,38 @@ type argumentsState struct {
 // TODO: Make logic check if there are given the correct amount of argDecoders to
 // handle the length of the data slice given as input, and return error if they don't
 // match.
-func (as *argumentsState) argumentsToDecode(argStruct interface{}, d []byte, a ...argDecoder) ([]interface{}, error) {
+func argumentsToDecode(as *argumentsState, argStruct interface{}, d []byte, a ...argDecoder) ([]interface{}, error) {
 	as.position = 0
 	argumentSlice := []interface{}{}
 	for _, v := range a {
 		fmt.Println("------------------Decoding byte or bytes----------------------")
-		val, err := v.argDecode(d[as.position : as.position+v.getLength()])
+
+		// The string type has initial length to 0. The reason is that we never know
+		// the length of a string since it ends with a value of 0 in the slice.
+		// We need to check if length = 0, and update the length for the type.
+		var length int
+		if v.getLength() == 0 {
+			l, err := getLengthOfData(d[as.position:])
+			if err != nil {
+				log.Println("error: argumentsToDecode: failed to get the length :", err)
+			}
+			length = l
+			//v.setLength(l)
+			fmt.Println("The value after setLength = ", length)
+		} else {
+			length = v.getLength()
+		}
+
+		val, err := v.argDecode(d[as.position : as.position+length])
 		if err != nil {
 			return nil, err
 		}
 
-		// testing putting the valius into a slice, to iterate later.
+		// Putting the values into a slice, to iterate later.
 		argumentSlice = append(argumentSlice, val)
 		fmt.Printf("val = %+v, type = %T\n", val, val)
 
-		l := v.getLength()
+		l := length
 		as.position += l
 		fmt.Println("--------------------------------------------------------------")
 	}
@@ -642,20 +780,45 @@ func main() {
 	//The data below should decode
 	//bytes 1->4 = a float32,
 	//byte 5 = an int8
-	tmpData := []byte{154, 221, 45, 61, 83}
+	//byte 6+ = a string = "Hello There !!!!", it is terminated with a zero at the end.
+	//						72 101 108 108 111 32 116 104 101 114 101 32 33 33 33 33 0
+
+	//WORKING FROM HERE
+	tmpData := []byte{154, 221, 45, 61, 83, 72, 101, 108, 108, 111, 32, 116, 104, 101, 114, 101, 32, 33, 33, 33, 33, 0, 72, 101, 108, 108, 111, 0, 83}
 
 	droneArguments := &struct {
-		SomeFloatValue float32
-		SomeIntValue   int8
+		SomeFloatValue   float32
+		SomeIntValue     int8
+		SomeStringValue  string
+		SomeStringValue2 string
+		SomeIntValue2    int8
 	}{}
 
 	a := argumentsState{}
-	argSlice, err := a.argumentsToDecode(droneArguments, tmpData, &float, &i8)
+
+	//HERE
+
+	//type argDecodeFunc func(*argumentsState, interface{}, []byte, ...argDecoder) ([]interface{}, error)
+
+	// -----------------
+	commandArgumentsMap := make(map[string]func() ([]interface{}, error))
+	commandArgumentsMap["cmd1"] = func() ([]interface{}, error) {
+		return argumentsToDecode(&a, droneArguments, tmpData, &float, &i8, &stringx, &stringx, &i8)
+	}
+
+	// -----------------
+
+	//argSlice, err := argumentsToDecode(&a, droneArguments, tmpData, &float, &i8, &stringx, &stringx, &i8)
+	fn := commandArgumentsMap["cmd1"]
+	argSlice, err := fn()
 	if err != nil {
 		fmt.Println("error: argumentsToDecode: failed looping over v ", err)
 	}
 
-	insertArgValueIntoStruct(droneArguments, argSlice)
+	err = insertArgValueIntoStruct(droneArguments, argSlice)
+	if err != nil {
+		log.Printf("error: insertArgValueIntoStruct: %v\n", err)
+	}
 
 	fmt.Printf("%+v\n", droneArguments)
 }
