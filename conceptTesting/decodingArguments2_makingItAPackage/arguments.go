@@ -30,7 +30,6 @@ enum 4 Per command defined enum
 // The value is for storing the parsed value, length tells the length of bytes it
 // is made of.
 type uint8Type struct {
-	value  uint8
 	length int
 }
 
@@ -65,11 +64,9 @@ func (f *uint8Type) argDecode(b []byte) (value interface{}, err error) {
 		return nil, err
 	}
 
-	f.value = val
+	fmt.Printf("Content = %#v\n", val)
 
-	fmt.Printf("Content of f = %#v\n", *f)
-
-	return f.value, nil
+	return val, nil
 }
 
 // ------------------------------------------------------------------------------------
@@ -78,7 +75,6 @@ func (f *uint8Type) argDecode(b []byte) (value interface{}, err error) {
 // The value is for storing the parsed value, length tells the length of bytes it
 // is made of.
 type int8Type struct {
-	value  int8
 	length int
 }
 
@@ -113,11 +109,9 @@ func (f *int8Type) argDecode(b []byte) (value interface{}, err error) {
 		return nil, err
 	}
 
-	f.value = val
+	fmt.Printf("Content = %#v\n", val)
 
-	fmt.Printf("Content of f = %#v\n", *f)
-
-	return f.value, nil
+	return val, nil
 }
 
 // ------------------------------------------------------------------------------------
@@ -126,7 +120,6 @@ func (f *int8Type) argDecode(b []byte) (value interface{}, err error) {
 // The value is for storing the parsed value, length tells the length of bytes it
 // is made of.
 type uint16Type struct {
-	value  uint16
 	length int
 }
 
@@ -161,11 +154,9 @@ func (f *uint16Type) argDecode(b []byte) (value interface{}, err error) {
 		return nil, err
 	}
 
-	f.value = val
+	fmt.Printf("Content = %#v\n", val)
 
-	fmt.Printf("Content of f = %#v\n", *f)
-
-	return f.value, nil
+	return val, nil
 }
 
 // ------------------------------------------------------------------------------------
@@ -174,7 +165,6 @@ func (f *uint16Type) argDecode(b []byte) (value interface{}, err error) {
 // The value is for storing the parsed value, length tells the length of bytes it
 // is made of.
 type int16Type struct {
-	value  int16
 	length int
 }
 
@@ -209,11 +199,9 @@ func (f *int16Type) argDecode(b []byte) (value interface{}, err error) {
 		return nil, err
 	}
 
-	f.value = val
+	fmt.Printf("Content = %#v\n", val)
 
-	fmt.Printf("Content of f = %#v\n", *f)
-
-	return f.value, nil
+	return val, nil
 }
 
 // ------------------------------------------------------------------------------------
@@ -222,7 +210,6 @@ func (f *int16Type) argDecode(b []byte) (value interface{}, err error) {
 // The value is for storing the parsed value, length tells the length of bytes it
 // is made of.
 type uint32Type struct {
-	value  uint32
 	length int
 }
 
@@ -257,11 +244,9 @@ func (f *uint32Type) argDecode(b []byte) (value interface{}, err error) {
 		return nil, err
 	}
 
-	f.value = val
+	fmt.Printf("Content = %#v\n", val)
 
-	fmt.Printf("Content of f = %#v\n", *f)
-
-	return f.value, nil
+	return val, nil
 }
 
 // ------------------------------------------------------------------------------------
@@ -270,7 +255,6 @@ func (f *uint32Type) argDecode(b []byte) (value interface{}, err error) {
 // The value is for storing the parsed value, length tells the length of bytes it
 // is made of.
 type int32Type struct {
-	value  int32
 	length int
 }
 
@@ -305,11 +289,9 @@ func (f *int32Type) argDecode(b []byte) (value interface{}, err error) {
 		return nil, err
 	}
 
-	f.value = val
+	fmt.Printf("Content = %#v\n", val)
 
-	fmt.Printf("Content of f = %#v\n", *f)
-
-	return f.value, nil
+	return val, nil
 }
 
 // ------------------------------------------------------------------------------------
@@ -318,7 +300,6 @@ func (f *int32Type) argDecode(b []byte) (value interface{}, err error) {
 // The value is for storing the parsed value, length tells the length of bytes it
 // is made of.
 type uint64Type struct {
-	value  uint64
 	length int
 }
 
@@ -353,11 +334,9 @@ func (f *uint64Type) argDecode(b []byte) (value interface{}, err error) {
 		return nil, err
 	}
 
-	f.value = val
+	fmt.Printf("Content = %#v\n", val)
 
-	fmt.Printf("Content of f = %#v\n", *f)
-
-	return f.value, nil
+	return val, nil
 }
 
 // ------------------------------------------------------------------------------------
@@ -366,7 +345,6 @@ func (f *uint64Type) argDecode(b []byte) (value interface{}, err error) {
 // The value is for storing the parsed value, length tells the length of bytes it
 // is made of.
 type int64Type struct {
-	value  int64
 	length int
 }
 
@@ -401,11 +379,9 @@ func (f *int64Type) argDecode(b []byte) (value interface{}, err error) {
 		return nil, err
 	}
 
-	f.value = val
+	fmt.Printf("Content = %#v\n", val)
 
-	fmt.Printf("Content of f = %#v\n", *f)
-
-	return f.value, nil
+	return val, nil
 }
 
 // ------------------------------------------------------------------------------------
@@ -414,7 +390,6 @@ func (f *int64Type) argDecode(b []byte) (value interface{}, err error) {
 // The value is for storing the parsed value, length tells the length of bytes it
 // is made of.
 type float32Type struct {
-	value  float32
 	length int
 }
 
@@ -450,11 +425,9 @@ func (f *float32Type) argDecode(b []byte) (value interface{}, err error) {
 		return nil, err
 	}
 
-	f.value = val
+	fmt.Printf("Content = %#v\n", val)
 
-	fmt.Printf("Content of f = %#v\n", *f)
-
-	return f.value, nil
+	return val, nil
 }
 
 // ------------------------------------------------------------------------------------
@@ -463,7 +436,6 @@ func (f *float32Type) argDecode(b []byte) (value interface{}, err error) {
 // The value is for storing the parsed value, length tells the length of bytes it
 // is made of.
 type float64Type struct {
-	value  float64
 	length int
 }
 
@@ -499,11 +471,9 @@ func (f *float64Type) argDecode(b []byte) (value interface{}, err error) {
 		return nil, err
 	}
 
-	f.value = val
+	fmt.Printf("Content = %#v\n", val)
 
-	fmt.Printf("Content of f = %#v\n", *f)
-
-	return f.value, nil
+	return val, nil
 }
 
 // ------------------------------------------------------------------------------------
@@ -512,7 +482,6 @@ func (f *float64Type) argDecode(b []byte) (value interface{}, err error) {
 // The value is for storing the parsed value, length tells the length of bytes it
 // is made of.
 type stringType struct {
-	value  string
 	length int
 }
 
@@ -539,11 +508,9 @@ func (f *stringType) setLength(length int) {
 func (f *stringType) argDecode(b []byte) (value interface{}, err error) {
 	fmt.Printf("running the stringx.argDecode method, b = %v\n", b)
 
-	f.value = string(b)
+	fmt.Printf("Content = %#v\n", string(b))
 
-	fmt.Printf("Content of f = %#v\n", *f)
-
-	return f.value, nil
+	return string(b), nil
 
 	//TODO: Implement string argDecode logic !!!
 
@@ -554,8 +521,8 @@ func (f *stringType) argDecode(b []byte) (value interface{}, err error) {
 // enumType
 // The value is for storing the parsed value, length tells the length of bytes it
 // is made of.
+// Since enum is 4 bytes, we use an int32
 type enumType struct {
-	value  int32 //since enum is 4 bytes, we're using an int32
 	length int
 }
 
@@ -590,11 +557,9 @@ func (f *enumType) argDecode(b []byte) (value interface{}, err error) {
 		return nil, err
 	}
 
-	f.value = val
+	fmt.Printf("Content = %#v\n", val)
 
-	fmt.Printf("Content of f = %#v\n", *f)
-
-	return f.value, nil
+	return val, nil
 }
 
 // ------------------------------------------------------------------------------------
