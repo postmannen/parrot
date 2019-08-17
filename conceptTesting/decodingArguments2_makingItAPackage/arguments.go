@@ -1,4 +1,4 @@
-package main
+package arguments
 
 import (
 	"bytes"
@@ -34,7 +34,8 @@ type uint8Type struct {
 	length int
 }
 
-var u8 = uint8Type{
+// U8 is the u8 type
+var U8 = uint8Type{
 	length: 1,
 }
 
@@ -81,7 +82,8 @@ type int8Type struct {
 	length int
 }
 
-var i8 = int8Type{
+// I8 is the i8 type
+var I8 = int8Type{
 	length: 1,
 }
 
@@ -128,7 +130,8 @@ type uint16Type struct {
 	length int
 }
 
-var u16 = uint16Type{
+// U16 is the u16 type
+var U16 = uint16Type{
 	length: 2,
 }
 
@@ -175,7 +178,8 @@ type int16Type struct {
 	length int
 }
 
-var i16 = uint16Type{
+// I16 is the i16 type
+var I16 = uint16Type{
 	length: 2,
 }
 
@@ -222,7 +226,8 @@ type uint32Type struct {
 	length int
 }
 
-var u32 = uint32Type{
+// U32 is the u32 type.
+var U32 = uint32Type{
 	length: 4,
 }
 
@@ -269,7 +274,8 @@ type int32Type struct {
 	length int
 }
 
-var i32 = int32Type{
+// I32 is the i32 type
+var I32 = int32Type{
 	length: 4,
 }
 
@@ -316,7 +322,8 @@ type uint64Type struct {
 	length int
 }
 
-var u64 = uint64Type{
+// U64 is the u64 type
+var U64 = uint64Type{
 	length: 8,
 }
 
@@ -363,7 +370,8 @@ type int64Type struct {
 	length int
 }
 
-var i64 = uint64Type{
+// I64 is the i64 type
+var I64 = int64Type{
 	length: 8,
 }
 
@@ -410,9 +418,9 @@ type float32Type struct {
 	length int
 }
 
-// float makes a type for float32 data, and tells the length of bytes it
+// Float makes a type for float32 data, and tells the length of bytes it
 // is made of.
-var float = float32Type{
+var Float = float32Type{
 	length: 4,
 }
 
@@ -459,9 +467,9 @@ type float64Type struct {
 	length int
 }
 
-// double makes a type for float64 data, and tells the length of bytes it
+// Double makes a type for float64 data, and tells the length of bytes it
 // is made of.
-var double = float64Type{
+var Double = float64Type{
 	length: 8,
 }
 
@@ -508,9 +516,8 @@ type stringType struct {
 	length int
 }
 
-// double makes a type for float64 data, and tells the length of bytes it
-// is made of.
-var stringx = stringType{
+// Stringx is the string type
+var Stringx = stringType{
 	length: 0,
 }
 
@@ -552,9 +559,8 @@ type enumType struct {
 	length int
 }
 
-// double makes a type for enum data, and tells the length of bytes it
-// is made of.
-var enum = enumType{
+// Enum is the enum type
+var Enum = enumType{
 	length: 4,
 }
 
@@ -595,13 +601,13 @@ func (f *enumType) argDecode(b []byte) (value interface{}, err error) {
 
 // ------------------------------------------------------------------------------------
 
-// insertArgValueIntoStruct takes the struct to fill as a pointer value,
+// InsertArgValueIntoStruct takes the struct to fill as a pointer value,
 // and the arguments as a slice of []interface{} as input.
 // It will use reflect to loop over the struct fields, and set the correct
 // value for each field from the []argvalues.
 // NB: The order of the []argvalues have to be the same as the order of the
 // elements in the struct.
-func insertArgValueIntoStruct(argStruct interface{}, argValues []interface{}) error {
+func InsertArgValueIntoStruct(argStruct interface{}, argValues []interface{}) error {
 	dataValue := reflect.ValueOf(argStruct)
 	if dataValue.Kind() != reflect.Ptr {
 		panic("not a pointer")
@@ -702,9 +708,9 @@ type argDecoder interface {
 	setLength(int)
 }
 
-// argumentState is a type for keeping track of the start position of the
+// ArgsState is a type for keeping track of the start position of the
 // data to read in a slice.
-type argumentsState struct {
+type ArgsState struct {
 	position int
 }
 
@@ -727,7 +733,7 @@ func getLengthOfData(b []byte) (int, error) {
 	return 0, err
 }
 
-// argumentsToDecode takes a []byte and any number of the interface type argDecoder
+// ArgsDecode takes a []byte and any number of the interface type argDecoder
 // is input.
 // It will loop through the argDecoder methods, and run the concrete types method,
 // one by one until all methods are done.
@@ -737,7 +743,7 @@ func getLengthOfData(b []byte) (int, error) {
 // TODO: Make logic check if there are given the correct amount of argDecoders to
 // handle the length of the data slice given as input, and return error if they don't
 // match.
-func argumentsToDecode(as *argumentsState, argStruct interface{}, d []byte, a ...argDecoder) ([]interface{}, error) {
+func ArgsDecode(as *ArgsState, argStruct interface{}, d []byte, a ...argDecoder) ([]interface{}, error) {
 	as.position = 0
 	argumentSlice := []interface{}{}
 	for _, v := range a {
@@ -774,51 +780,4 @@ func argumentsToDecode(as *argumentsState, argStruct interface{}, d []byte, a ..
 	}
 
 	return argumentSlice, nil
-}
-
-func main() {
-	//The data below should decode
-	//bytes 1->4 = a float32,
-	//byte 5 = an int8
-	//byte 6+ = a string = "Hello There !!!!", it is terminated with a zero at the end.
-	//						72 101 108 108 111 32 116 104 101 114 101 32 33 33 33 33 0
-
-	//WORKING FROM HERE
-	tmpData := []byte{154, 221, 45, 61, 83, 72, 101, 108, 108, 111, 32, 116, 104, 101, 114, 101, 32, 33, 33, 33, 33, 0, 72, 101, 108, 108, 111, 0, 83}
-
-	droneArguments := &struct {
-		SomeFloatValue   float32
-		SomeIntValue     int8
-		SomeStringValue  string
-		SomeStringValue2 string
-		SomeIntValue2    int8
-	}{}
-
-	a := argumentsState{}
-
-	//HERE
-
-	//type argDecodeFunc func(*argumentsState, interface{}, []byte, ...argDecoder) ([]interface{}, error)
-
-	// -----------------
-	commandArgumentsMap := make(map[string]func() ([]interface{}, error))
-	commandArgumentsMap["cmd1"] = func() ([]interface{}, error) {
-		return argumentsToDecode(&a, droneArguments, tmpData, &float, &i8, &stringx, &stringx, &i8)
-	}
-
-	// -----------------
-
-	//argSlice, err := argumentsToDecode(&a, droneArguments, tmpData, &float, &i8, &stringx, &stringx, &i8)
-	fn := commandArgumentsMap["cmd1"]
-	argSlice, err := fn()
-	if err != nil {
-		fmt.Println("error: argumentsToDecode: failed looping over v ", err)
-	}
-
-	err = insertArgValueIntoStruct(droneArguments, argSlice)
-	if err != nil {
-		log.Printf("error: insertArgValueIntoStruct: %v\n", err)
-	}
-
-	fmt.Printf("%+v\n", droneArguments)
 }
