@@ -20,7 +20,7 @@ func main() {
 	// This struct is to simulate the arguments belonging to a command.
 	// and we will fill a variable of this type with the arguments read
 	// from the byte slice above.
-	droneArguments := &struct {
+	commandArguments := &struct {
 		SomeFloatValue   float32
 		SomeIntValue     int8
 		SomeStringValue  string
@@ -35,7 +35,7 @@ func main() {
 	// that specific command
 	commandArgumentsMap := make(map[string]func() ([]interface{}, error))
 	commandArgumentsMap["cmd1"] = func() ([]interface{}, error) {
-		return argDecoder.DecodeArgs(droneArguments, tmpData, &arg.Float, &arg.I8, &arg.Stringx, &arg.Stringx, &arg.I8)
+		return argDecoder.DecodeArgs(commandArguments, tmpData, &arg.Float, &arg.I8, &arg.Stringx, &arg.Stringx, &arg.I8)
 	}
 
 	// Look up an argument function to execute for the command "cmd1"
@@ -46,10 +46,10 @@ func main() {
 	}
 
 	// Fill the argument struct with the differet values received.
-	err = arg.InsertArgValueIntoStruct(droneArguments, argSlice)
+	err = arg.InsertArgValueIntoStruct(commandArguments, argSlice)
 	if err != nil {
 		log.Printf("error: insertArgValueIntoStruct: %v\n", err)
 	}
 
-	fmt.Printf("%+v\n", droneArguments)
+	fmt.Printf("%+v\n", commandArguments)
 }
