@@ -703,7 +703,7 @@ func NewDecoder() *Decoder {
 	return &Decoder{}
 }
 
-// DecodeArgs takes a []byte and any number of the interface type argDecoder
+// DecodeArgs takes a []byte and any number of the interface type *argDecoder
 // is input.
 // It will loop through the argDecoder methods, and run the concrete types method,
 // one by one until all methods are done.
