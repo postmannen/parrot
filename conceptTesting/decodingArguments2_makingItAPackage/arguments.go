@@ -708,12 +708,6 @@ type argDecoder interface {
 	setLength(int)
 }
 
-// ArgsState is a type for keeping track of the start position of the
-// data to read in a slice.
-type ArgsState struct {
-	position int
-}
-
 func getLengthOfData(b []byte) (int, error) {
 	// Figure out the length of the string
 	for i := 0; i < cap(b); i++ {
@@ -733,7 +727,18 @@ func getLengthOfData(b []byte) (int, error) {
 	return 0, err
 }
 
-// ArgsDecode takes a []byte and any number of the interface type argDecoder
+// Decoder is a type for keeping track of the start position of the
+// data to read in a slice.
+type Decoder struct {
+	position int
+}
+
+// NewDecoder will return a new argument decoder type.
+func NewDecoder() *Decoder {
+	return &Decoder{}
+}
+
+// DecodeArgs takes a []byte and any number of the interface type argDecoder
 // is input.
 // It will loop through the argDecoder methods, and run the concrete types method,
 // one by one until all methods are done.
@@ -743,7 +748,7 @@ func getLengthOfData(b []byte) (int, error) {
 // TODO: Make logic check if there are given the correct amount of argDecoders to
 // handle the length of the data slice given as input, and return error if they don't
 // match.
-func ArgsDecode(as *ArgsState, argStruct interface{}, d []byte, a ...argDecoder) ([]interface{}, error) {
+func (as *Decoder) DecodeArgs(argStruct interface{}, d []byte, a ...argDecoder) ([]interface{}, error) {
 	as.position = 0
 	argumentSlice := []interface{}{}
 	for _, v := range a {

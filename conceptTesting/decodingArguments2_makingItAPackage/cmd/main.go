@@ -28,14 +28,14 @@ func main() {
 		SomeIntValue2    int8
 	}{}
 
-	a := arg.ArgsState{}
+	argDecoder := arg.NewDecoder()
 
 	// Create a map where the key is all the possible commands for the drone,
 	// and the values are a function who will decode all the arguments for
 	// that specific command
 	commandArgumentsMap := make(map[string]func() ([]interface{}, error))
 	commandArgumentsMap["cmd1"] = func() ([]interface{}, error) {
-		return arg.ArgsDecode(&a, droneArguments, tmpData, &arg.Float, &arg.I8, &arg.Stringx, &arg.Stringx, &arg.I8)
+		return argDecoder.DecodeArgs(droneArguments, tmpData, &arg.Float, &arg.I8, &arg.Stringx, &arg.Stringx, &arg.I8)
 	}
 
 	// Look up an argument function to execute for the command "cmd1"
