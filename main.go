@@ -233,11 +233,16 @@ func encodeNetworkFrame(dataType int, targetBufferID int, sequenceNR int, size i
 // method will return error == nil, and the method should be run over again
 // until io.EOF is received.
 func (packet *networkUDPPacket) decode() (protocolARNetworkAL, error) {
+	// TODO: Make the program check that the length of the packet is the
+	// same as the size field, and if they are not equal do something
+	// about it.......check if this verification is needed at all, or
+	// if is already handled in the ARNetworkAL protocol itself ?
 	frame := protocolARNetworkAL{
 		dataType:       int(packet.data[packet.framePos+0]),
 		targetBufferID: int(packet.data[packet.framePos+1]),
 		sequenceNR:     int(packet.data[packet.framePos+2]),
 		dataARNetwork:  []byte{},
+		//TODO: Have an arguments []byte here so we can decode the arguments
 	}
 
 	// Get the size of the ARNetworkAL frame. Size includes the header of 7bytes.
