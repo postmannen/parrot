@@ -175,39 +175,7 @@ func (d *Drone) writeNetworkPacketsC2D() {
 	// .........
 }
 
-// networkFrame
-// A network frame (ARNetworkAL)looks like this, and in the following order :
-// - dataType 1 byte,
-// - targetBufferID 1 byte,
-// - sequeneNumber 1 Byte,
-// - frameSize 4 Bytes (little endian) for the whole ARNetworkAL frame including 7bit header,
-// - data n bytes (this is the actual drone data ARNetwork),
-//
-//	Example of size:
-//	01 ba 27 08000000 42, 02 0b c3 0b000000 12345678
-//  --size 0x08=8byte---, --size 0x0b=11byte--------
-type protocolARNetworkAL struct {
-	// Data types
-	// • Ack(1): Acknowledgment of previously received data
-	//   To Ack a frame, set type to 1,
-	//   add 128 to the value of the bufferID of the package that requires Ack,
-	//	 new unique sequence nr. for the ack buffer,
-	//
-	// • Data(2): Normal data (no ack requested)
-	// • Low latency data(3): Treated as normal data on the network, but are
-	//   given higher priority internally
-	// • Data with ack(4): Data requesting an ack. The receiver must send an
-	//   ack for this data !
-	dataType int
-	// • [0; 9]: Reserved values for ARNetwork internal use.
-	// • [10; 127]: Data buffers.
-	// • [128; 255]: Acknowledge buffers.
-	targetBufferID int
-	sequenceNR     int
-	size           int
-	dataARNetwork  []byte
-}
-
+// networkUDPPacket
 // networkPacket is the main UDP packet read from the network.
 // A network packet can contain multiple ARNetworkAL/frames.
 type networkUDPPacket struct {
@@ -279,20 +247,61 @@ type protocolARCommands struct {
 	project int
 	class   int
 	command int
+	// size is included since we have now stripped off the header of 7 bytes,
+	// the size is for project+class+command+arguments, which again is the
+	// same size as the whole frame minus the header size of 7 bytes.
+	size int
+}
+
+// networkFrame
+// A network frame (ARNetworkAL)looks like this, and in the following order :
+// - dataType 1 byte,
+// - targetBufferID 1 byte,
+// - sequeneNumber 1 Byte,
+// - frameSize 4 Bytes (little endian) for the whole ARNetworkAL frame including 7bit header,
+// - data n bytes (this is the actual drone data ARNetwork),
+//
+//	Example of size:
+//	01 ba 27 08000000 42, 02 0b c3 0b000000 12345678
+//  --size 0x08=8byte---, --size 0x0b=11byte--------
+type protocolARNetworkAL struct {
+	// Data types
+	// • Ack(1): Acknowledgment of previously received data
+	//   To Ack a frame, set type to 1,
+	//   add 128 to the value of the bufferID of the package that requires Ack,
+	//	 new unique sequence nr. for the ack buffer,
+	//
+	// • Data(2): Normal data (no ack requested)
+	// • Low latency data(3): Treated as normal data on the network, but are
+	//   given higher priority internally
+	// • Data with ack(4): Data requesting an ack. The receiver must send an
+	//   ack for this data !
+	dataType int
+	// • [0; 9]: Reserved values for ARNetwork internal use.
+	// • [10; 127]: Data buffers.
+	// • [128; 255]: Acknowledge buffers.
+	targetBufferID int
+	sequenceNR     int
+	size           int
+	dataARNetwork  []byte
 }
 
 // decode will try to decode the command found in the ARNetworkAL frame,
 // if it fails it will return an empty protocolARCommands struct, and the
 // error
 func (p *protocolARNetworkAL) decode() (protocolARCommands, error) {
+	const headerSize = 7
+
 	fmt.Println("$$$$$$$$ THE COMMAND BYTES: ",
 		p.dataARNetwork,
 		int(p.dataARNetwork[0]),
 		int(p.dataARNetwork[1]))
 
+	// Start preparing a cmd struct that will be returned to the caller.
 	cmd := protocolARCommands{
 		project: int(p.dataARNetwork[0]),
 		class:   int(p.dataARNetwork[1]),
+		size:    p.size - headerSize,
 	}
 
 	fmt.Println("1. inside command contains = ", cmd)
@@ -322,16 +331,21 @@ func (p *protocolARNetworkAL) decode() (protocolARCommands, error) {
 		cmd:     cmdDef(cmd.command),
 	}
 	fmt.Printf("c = %+v\n", c)
+
+	// Check if that command is specified in the map, and if it is...
+	// print it out for now.
 	v, ok := commandMap[c]
 	if ok {
 		fmt.Printf("Content of v = %+v\n", v)
 		v.decode()
 	}
 
+	// TODO: Decode the arguments here !!!
+	// prereq : Parse arg struct, and create arg map which maps arg struct to cmd.
+	arguments := p.dataARNetwork[2:cmd.size]
+	fmt.Printf("--- arguments = %+v\n", arguments)
 	fmt.Println("******************End Parsing of command*********************")
 
-	// ... TODO:
-	// Decode the ARCommands here
 	return cmd, nil
 }
 
@@ -353,9 +367,12 @@ func main() {
 		// Will start the reading of whole UDP packets from the network,
 		// and put them on the chReceivedPacket channel.
 		go drone.readNetworkUDPPacketsD2C()
+
 	} else {
+
 		// It is testing mode, start the fake UDP reader.
 		go drone.readNetworkUDPTestingPacketsD2C()
+
 	}
 
 	for {
