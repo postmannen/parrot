@@ -113,10 +113,13 @@ func (d *Drone) Discover() error {
 // Will read the raw testing UDP packets, and put them on a channel to be
 // picked up by the frame decoder.
 func (d *Drone) readNetworkUDPTestingPacketsD2C() {
+	/* More packets to put into buf if needed.
+	2, 127, 28, 38, 0, 0, 0, 1, 4, 9, 0, 0, 0, 0, 0, 0, 64, 127, 64, 0, 0, 0, 0, 0, 64, 127, 64, 0, 0, 0, 0, 0, 64, 127, 64, 83, 83, 83,
+
+	2, 127, 32, 13, 0, 0, 0, 1, 25, 0, 0, 243, 0,
+	*/
 	// the simulated testing data to use for reading
 	buf := []byte{
-		2, 127, 28, 38, 0, 0, 0, 1, 4, 9, 0, 0, 0, 0, 0, 0, 64, 127, 64, 0, 0, 0, 0, 0, 64, 127, 64, 0, 0, 0, 0, 0, 64, 127, 64, 83, 83, 83,
-		2, 127, 32, 13, 0, 0, 0, 1, 25, 0, 0, 243, 0,
 		2, 127, 8, 23, 0, 0, 0, 1, 4, 6, 0, 154, 221, 45, 61, 44, 209, 73, 188, 121, 230, 52, 64}
 
 	p := networkUDPPacket{
