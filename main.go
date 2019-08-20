@@ -315,22 +315,24 @@ func (p *protocolARNetworkAL) decode() (protocolARCommands, error) {
 		log.Printf("error: binary read of command failed %v\n", err)
 		return protocolARCommands{}, err
 	}
-	fmt.Printf("tmpCommand = %v, %T\n", tmpCommand, tmpCommand)
-	cmd.command = int(tmpCommand)
-	fmt.Println("2. inside command contains = ", cmd)
 
+	cmd.command = int(tmpCommand)
+
+	fmt.Printf("tmpCommand = %v, %T\n", tmpCommand, tmpCommand)
+	fmt.Println("2. inside command contains = ", cmd)
 	fmt.Println("******************Parsing of command*************************")
 	fmt.Printf("* project = %v\n", cmd.project)
 	fmt.Printf("* class = %v\n", cmd.class)
 	fmt.Printf("* command = %v\n", cmd.command)
 	fmt.Println()
+
 	//... testing from here
 	c := command{
 		project: projectDef(cmd.project),
 		class:   classDef(cmd.class),
 		cmd:     cmdDef(cmd.command),
 	}
-	fmt.Printf("c = %+v\n", c)
+	fmt.Printf("c = %#v\n", c)
 
 	// Check if that command is specified in the map, and if it is...
 	// print it out for now.
@@ -357,7 +359,7 @@ func main() {
 	drone.testingMode = *testingMode
 
 	// If not in testingMode, initialize the network connection to the drone
-	if drone.testingMode {
+	if !drone.testingMode {
 		log.Println("Initializing the traffic with the drone, and starting controller UDP listener.")
 		err := drone.Discover()
 		if err != nil {
@@ -369,10 +371,9 @@ func main() {
 		go drone.readNetworkUDPPacketsD2C()
 
 	} else {
-
 		// It is testing mode, start the fake UDP reader.
-		go drone.readNetworkUDPTestingPacketsD2C()
 
+		go drone.readNetworkUDPTestingPacketsD2C()
 	}
 
 	for {
