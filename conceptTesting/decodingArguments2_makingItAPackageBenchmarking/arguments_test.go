@@ -8,6 +8,8 @@ import (
 
 // BenchmarkSome will test how the reflection of packages work out.
 func BenchmarkSome(b *testing.B) {
+	b.ReportAllocs()
+
 	//The data below should decode
 	//bytes 1->4 = a float32,
 	//byte 5 = an int8
