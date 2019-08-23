@@ -34,8 +34,6 @@ type ardrone3PilotingTakeOffArguments struct {
 
 func (a ardrone3PilotingTakeOff) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingTakeOffArguments{}
 // No arguments to decode here !!
 
@@ -67,8 +65,6 @@ timestampAndSeqNum uint32
 
 func (a ardrone3PilotingPCMD) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingPCMDArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+1]), binary.LittleEndian, &arg.flag)
@@ -106,8 +102,6 @@ type ardrone3PilotingLandingArguments struct {
 
 func (a ardrone3PilotingLanding) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingLandingArguments{}
 // No arguments to decode here !!
 
@@ -133,8 +127,6 @@ type ardrone3PilotingEmergencyArguments struct {
 
 func (a ardrone3PilotingEmergency) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingEmergencyArguments{}
 // No arguments to decode here !!
 
@@ -161,8 +153,6 @@ start uint8
 
 func (a ardrone3PilotingNavigateHome) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingNavigateHomeArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+1]), binary.LittleEndian, &arg.start)
@@ -189,8 +179,6 @@ state uint8
 
 func (a ardrone3PilotingAutoTakeOffMode) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingAutoTakeOffModeArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+1]), binary.LittleEndian, &arg.state)
@@ -222,8 +210,6 @@ dPsi float32
 
 func (a ardrone3PilotingmoveBy) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingmoveByArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.dX)
@@ -258,8 +244,6 @@ state uint8
 
 func (a ardrone3PilotingUserTakeOff) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingUserTakeOffArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+1]), binary.LittleEndian, &arg.state)
@@ -288,8 +272,6 @@ direction uint32
 
 func (a ardrone3PilotingCircle) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingCircleArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.direction)
@@ -322,8 +304,6 @@ heading float32
 
 func (a ardrone3PilotingmoveTo) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingmoveToArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+8]), binary.LittleEndian, &arg.latitude)
@@ -359,8 +339,6 @@ type ardrone3PilotingCancelMoveToArguments struct {
 
 func (a ardrone3PilotingCancelMoveTo) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingCancelMoveToArguments{}
 // No arguments to decode here !!
 
@@ -389,8 +367,6 @@ altitude float64
 
 func (a ardrone3PilotingStartPilotedPOI) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingStartPilotedPOIArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+8]), binary.LittleEndian, &arg.latitude)
@@ -422,8 +398,6 @@ type ardrone3PilotingStopPilotedPOIArguments struct {
 
 func (a ardrone3PilotingStopPilotedPOI) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingStopPilotedPOIArguments{}
 // No arguments to decode here !!
 
@@ -448,8 +422,6 @@ type ardrone3PilotingCancelMoveByArguments struct {
 
 func (a ardrone3PilotingCancelMoveBy) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingCancelMoveByArguments{}
 // No arguments to decode here !!
 
@@ -478,8 +450,6 @@ direction uint32
 
 func (a ardrone3AnimationsFlip) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3AnimationsFlipArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.direction)
@@ -511,8 +481,6 @@ pan int8
 
 func (a ardrone3CameraOrientation) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3CameraOrientationArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+1]), binary.LittleEndian, &arg.tilt)
@@ -544,8 +512,6 @@ pan float32
 
 func (a ardrone3CameraOrientationV2) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3CameraOrientationV2Arguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.tilt)
@@ -577,8 +543,6 @@ pan float32
 
 func (a ardrone3CameraVelocity) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3CameraVelocityArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.tilt)
@@ -609,8 +573,6 @@ massstorageid uint8
 
 func (a ardrone3MediaRecordPicture) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3MediaRecordPictureArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+1]), binary.LittleEndian, &arg.massstorageid)
@@ -638,8 +600,6 @@ massstorageid uint8
 
 func (a ardrone3MediaRecordVideo) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3MediaRecordVideoArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.record)
@@ -669,8 +629,6 @@ type ardrone3MediaRecordPictureV2Arguments struct {
 
 func (a ardrone3MediaRecordPictureV2) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3MediaRecordPictureV2Arguments{}
 // No arguments to decode here !!
 
@@ -697,8 +655,6 @@ record uint32
 
 func (a ardrone3MediaRecordVideoV2) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3MediaRecordVideoV2Arguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.record)
@@ -728,8 +684,6 @@ massstorageid uint8
 
 func (a ardrone3MediaRecordStatePictureStateChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3MediaRecordStatePictureStateChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+1]), binary.LittleEndian, &arg.state)
@@ -759,8 +713,6 @@ massstorageid uint8
 
 func (a ardrone3MediaRecordStateVideoStateChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3MediaRecordStateVideoStateChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.state)
@@ -792,8 +744,6 @@ error uint32
 
 func (a ardrone3MediaRecordStatePictureStateChangedV2) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3MediaRecordStatePictureStateChangedV2Arguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.state)
@@ -825,8 +775,6 @@ error uint32
 
 func (a ardrone3MediaRecordStateVideoStateChangedV2) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3MediaRecordStateVideoStateChangedV2Arguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.state)
@@ -858,8 +806,6 @@ recording uint32
 
 func (a ardrone3MediaRecordStateVideoResolutionState) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3MediaRecordStateVideoResolutionStateArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.streaming)
@@ -893,8 +839,6 @@ error uint32
 
 func (a ardrone3MediaRecordEventPictureEventChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3MediaRecordEventPictureEventChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.event)
@@ -926,8 +870,6 @@ error uint32
 
 func (a ardrone3MediaRecordEventVideoEventChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3MediaRecordEventVideoEventChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.event)
@@ -960,8 +902,6 @@ state uint32
 
 func (a ardrone3PilotingStateFlyingStateChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingStateFlyingStateChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.state)
@@ -990,8 +930,6 @@ state uint32
 
 func (a ardrone3PilotingStateAlertStateChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingStateAlertStateChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.state)
@@ -1021,8 +959,6 @@ reason uint32
 
 func (a ardrone3PilotingStateNavigateHomeStateChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingStateNavigateHomeStateChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.state)
@@ -1055,8 +991,6 @@ altitude float64
 
 func (a ardrone3PilotingStatePositionChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingStatePositionChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+8]), binary.LittleEndian, &arg.latitude)
@@ -1091,8 +1025,6 @@ speedZ float32
 
 func (a ardrone3PilotingStateSpeedChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingStateSpeedChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.speedX)
@@ -1127,8 +1059,6 @@ yaw float32
 
 func (a ardrone3PilotingStateAttitudeChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingStateAttitudeChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.roll)
@@ -1159,8 +1089,6 @@ state uint8
 
 func (a ardrone3PilotingStateAutoTakeOffModeChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingStateAutoTakeOffModeChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+1]), binary.LittleEndian, &arg.state)
@@ -1189,8 +1117,6 @@ altitude float64
 
 func (a ardrone3PilotingStateAltitudeChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingStateAltitudeChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+8]), binary.LittleEndian, &arg.altitude)
@@ -1224,8 +1150,6 @@ altitudeaccuracy int8
 
 func (a ardrone3PilotingStateGpsLocationChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingStateGpsLocationChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+8]), binary.LittleEndian, &arg.latitude)
@@ -1264,8 +1188,6 @@ state uint32
 
 func (a ardrone3PilotingStateLandingStateChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingStateLandingStateChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.state)
@@ -1294,8 +1216,6 @@ airSpeed float32
 
 func (a ardrone3PilotingStateAirSpeedChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingStateAirSpeedChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.airSpeed)
@@ -1329,8 +1249,6 @@ status uint32
 
 func (a ardrone3PilotingStatemoveToChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingStatemoveToChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+8]), binary.LittleEndian, &arg.latitude)
@@ -1369,8 +1287,6 @@ state uint32
 
 func (a ardrone3PilotingStateMotionState) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingStateMotionStateArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.state)
@@ -1402,8 +1318,6 @@ status uint32
 
 func (a ardrone3PilotingStatePilotedPOI) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingStatePilotedPOIArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+8]), binary.LittleEndian, &arg.latitude)
@@ -1438,8 +1352,6 @@ status uint32
 
 func (a ardrone3PilotingStateReturnHomeBatteryCapacity) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingStateReturnHomeBatteryCapacityArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.status)
@@ -1475,8 +1387,6 @@ status uint32
 
 func (a ardrone3PilotingStatemoveByChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingStatemoveByChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.dXAsked)
@@ -1522,8 +1432,6 @@ nogpstoohigh uint8
 
 func (a ardrone3PilotingStateHoveringWarning) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingStateHoveringWarningArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+1]), binary.LittleEndian, &arg.nogpstoodark)
@@ -1555,8 +1463,6 @@ delay uint32
 
 func (a ardrone3PilotingStateForcedLandingAutoTrigger) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingStateForcedLandingAutoTriggerArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.reason)
@@ -1587,8 +1493,6 @@ state uint32
 
 func (a ardrone3PilotingStateWindStateChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingStateWindStateChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.state)
@@ -1623,8 +1527,6 @@ error uint32
 
 func (a ardrone3PilotingEventmoveByEnd) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingEventmoveByEndArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.dX)
@@ -1663,8 +1565,6 @@ band uint32
 
 func (a ardrone3NetworkWifiScan) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3NetworkWifiScanArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.band)
@@ -1692,8 +1592,6 @@ type ardrone3NetworkWifiAuthChannelArguments struct {
 
 func (a ardrone3NetworkWifiAuthChannel) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3NetworkWifiAuthChannelArguments{}
 // No arguments to decode here !!
 
@@ -1725,8 +1623,6 @@ channel uint8
 
 func (a ardrone3NetworkStateWifiScanListChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 var stringEnd int
 var err error
 arg := ardrone3NetworkStateWifiScanListChangedArguments{}
@@ -1767,8 +1663,6 @@ type ardrone3NetworkStateAllWifiScanChangedArguments struct {
 
 func (a ardrone3NetworkStateAllWifiScanChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3NetworkStateAllWifiScanChangedArguments{}
 // No arguments to decode here !!
 
@@ -1797,8 +1691,6 @@ inorout uint8
 
 func (a ardrone3NetworkStateWifiAuthChannelListChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3NetworkStateWifiAuthChannelListChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.band)
@@ -1830,8 +1722,6 @@ type ardrone3NetworkStateAllWifiAuthChannelChangedArguments struct {
 
 func (a ardrone3NetworkStateAllWifiAuthChannelChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3NetworkStateAllWifiAuthChannelChangedArguments{}
 // No arguments to decode here !!
 
@@ -1860,8 +1750,6 @@ current float32
 
 func (a ardrone3PilotingSettingsMaxAltitude) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingSettingsMaxAltitudeArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.current)
@@ -1890,8 +1778,6 @@ current float32
 
 func (a ardrone3PilotingSettingsMaxTilt) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingSettingsMaxTiltArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.current)
@@ -1918,8 +1804,6 @@ on uint8
 
 func (a ardrone3PilotingSettingsAbsolutControl) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingSettingsAbsolutControlArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+1]), binary.LittleEndian, &arg.on)
@@ -1948,8 +1832,6 @@ value float32
 
 func (a ardrone3PilotingSettingsMaxDistance) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingSettingsMaxDistanceArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.value)
@@ -1978,8 +1860,6 @@ shouldNotFlyOver uint8
 
 func (a ardrone3PilotingSettingsNoFlyOverMaxDistance) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingSettingsNoFlyOverMaxDistanceArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+1]), binary.LittleEndian, &arg.shouldNotFlyOver)
@@ -2008,8 +1888,6 @@ value float32
 
 func (a ardrone3PilotingSettingssetAutonomousFlightMaxHorizontalSpeed) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingSettingssetAutonomousFlightMaxHorizontalSpeedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.value)
@@ -2038,8 +1916,6 @@ value float32
 
 func (a ardrone3PilotingSettingssetAutonomousFlightMaxVerticalSpeed) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingSettingssetAutonomousFlightMaxVerticalSpeedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.value)
@@ -2068,8 +1944,6 @@ value float32
 
 func (a ardrone3PilotingSettingssetAutonomousFlightMaxHorizontalAcceleration) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingSettingssetAutonomousFlightMaxHorizontalAccelerationArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.value)
@@ -2098,8 +1972,6 @@ value float32
 
 func (a ardrone3PilotingSettingssetAutonomousFlightMaxVerticalAcceleration) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingSettingssetAutonomousFlightMaxVerticalAccelerationArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.value)
@@ -2128,8 +2000,6 @@ value float32
 
 func (a ardrone3PilotingSettingssetAutonomousFlightMaxRotationSpeed) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingSettingssetAutonomousFlightMaxRotationSpeedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.value)
@@ -2158,8 +2028,6 @@ value uint8
 
 func (a ardrone3PilotingSettingsBankedTurn) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingSettingsBankedTurnArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+1]), binary.LittleEndian, &arg.value)
@@ -2188,8 +2056,6 @@ current float32
 
 func (a ardrone3PilotingSettingsMinAltitude) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingSettingsMinAltitudeArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.current)
@@ -2218,8 +2084,6 @@ value uint32
 
 func (a ardrone3PilotingSettingsCirclingDirection) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingSettingsCirclingDirectionArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.value)
@@ -2248,8 +2112,6 @@ value uint16
 
 func (a ardrone3PilotingSettingsCirclingRadius) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingSettingsCirclingRadiusArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+2]), binary.LittleEndian, &arg.value)
@@ -2278,8 +2140,6 @@ value uint16
 
 func (a ardrone3PilotingSettingsCirclingAltitude) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingSettingsCirclingAltitudeArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+2]), binary.LittleEndian, &arg.value)
@@ -2308,8 +2168,6 @@ value uint32
 
 func (a ardrone3PilotingSettingsPitchMode) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingSettingsPitchModeArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.value)
@@ -2338,8 +2196,6 @@ enable uint8
 
 func (a ardrone3PilotingSettingsSetMotionDetectionMode) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingSettingsSetMotionDetectionModeArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+1]), binary.LittleEndian, &arg.enable)
@@ -2372,8 +2228,6 @@ max float32
 
 func (a ardrone3PilotingSettingsStateMaxAltitudeChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingSettingsStateMaxAltitudeChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.current)
@@ -2408,8 +2262,6 @@ max float32
 
 func (a ardrone3PilotingSettingsStateMaxTiltChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingSettingsStateMaxTiltChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.current)
@@ -2440,8 +2292,6 @@ on uint8
 
 func (a ardrone3PilotingSettingsStateAbsolutControlChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingSettingsStateAbsolutControlChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+1]), binary.LittleEndian, &arg.on)
@@ -2472,8 +2322,6 @@ max float32
 
 func (a ardrone3PilotingSettingsStateMaxDistanceChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingSettingsStateMaxDistanceChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.current)
@@ -2506,8 +2354,6 @@ shouldNotFlyOver uint8
 
 func (a ardrone3PilotingSettingsStateNoFlyOverMaxDistanceChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingSettingsStateNoFlyOverMaxDistanceChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+1]), binary.LittleEndian, &arg.shouldNotFlyOver)
@@ -2536,8 +2382,6 @@ value float32
 
 func (a ardrone3PilotingSettingsStateAutonomousFlightMaxHorizontalSpeed) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingSettingsStateAutonomousFlightMaxHorizontalSpeedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.value)
@@ -2566,8 +2410,6 @@ value float32
 
 func (a ardrone3PilotingSettingsStateAutonomousFlightMaxVerticalSpeed) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingSettingsStateAutonomousFlightMaxVerticalSpeedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.value)
@@ -2596,8 +2438,6 @@ value float32
 
 func (a ardrone3PilotingSettingsStateAutonomousFlightMaxHorizontalAcceleration) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingSettingsStateAutonomousFlightMaxHorizontalAccelerationArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.value)
@@ -2626,8 +2466,6 @@ value float32
 
 func (a ardrone3PilotingSettingsStateAutonomousFlightMaxVerticalAcceleration) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingSettingsStateAutonomousFlightMaxVerticalAccelerationArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.value)
@@ -2656,8 +2494,6 @@ value float32
 
 func (a ardrone3PilotingSettingsStateAutonomousFlightMaxRotationSpeed) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingSettingsStateAutonomousFlightMaxRotationSpeedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.value)
@@ -2686,8 +2522,6 @@ state uint8
 
 func (a ardrone3PilotingSettingsStateBankedTurnChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingSettingsStateBankedTurnChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+1]), binary.LittleEndian, &arg.state)
@@ -2718,8 +2552,6 @@ max float32
 
 func (a ardrone3PilotingSettingsStateMinAltitudeChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingSettingsStateMinAltitudeChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.current)
@@ -2752,8 +2584,6 @@ value uint32
 
 func (a ardrone3PilotingSettingsStateCirclingDirectionChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingSettingsStateCirclingDirectionChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.value)
@@ -2784,8 +2614,6 @@ max uint16
 
 func (a ardrone3PilotingSettingsStateCirclingRadiusChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingSettingsStateCirclingRadiusChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+2]), binary.LittleEndian, &arg.current)
@@ -2820,8 +2648,6 @@ max uint16
 
 func (a ardrone3PilotingSettingsStateCirclingAltitudeChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingSettingsStateCirclingAltitudeChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+2]), binary.LittleEndian, &arg.current)
@@ -2854,8 +2680,6 @@ value uint32
 
 func (a ardrone3PilotingSettingsStatePitchModeChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingSettingsStatePitchModeChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.value)
@@ -2884,8 +2708,6 @@ enabled uint8
 
 func (a ardrone3PilotingSettingsStateMotionDetection) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PilotingSettingsStateMotionDetectionArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+1]), binary.LittleEndian, &arg.enabled)
@@ -2916,8 +2738,6 @@ current float32
 
 func (a ardrone3SpeedSettingsMaxVerticalSpeed) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3SpeedSettingsMaxVerticalSpeedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.current)
@@ -2946,8 +2766,6 @@ current float32
 
 func (a ardrone3SpeedSettingsMaxRotationSpeed) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3SpeedSettingsMaxRotationSpeedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.current)
@@ -2976,8 +2794,6 @@ present uint8
 
 func (a ardrone3SpeedSettingsHullProtection) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3SpeedSettingsHullProtectionArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+1]), binary.LittleEndian, &arg.present)
@@ -3004,8 +2820,6 @@ outdoor uint8
 
 func (a ardrone3SpeedSettingsOutdoor) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3SpeedSettingsOutdoorArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+1]), binary.LittleEndian, &arg.outdoor)
@@ -3034,8 +2848,6 @@ current float32
 
 func (a ardrone3SpeedSettingsMaxPitchRollRotationSpeed) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3SpeedSettingsMaxPitchRollRotationSpeedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.current)
@@ -3068,8 +2880,6 @@ max float32
 
 func (a ardrone3SpeedSettingsStateMaxVerticalSpeedChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3SpeedSettingsStateMaxVerticalSpeedChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.current)
@@ -3104,8 +2914,6 @@ max float32
 
 func (a ardrone3SpeedSettingsStateMaxRotationSpeedChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3SpeedSettingsStateMaxRotationSpeedChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.current)
@@ -3138,8 +2946,6 @@ present uint8
 
 func (a ardrone3SpeedSettingsStateHullProtectionChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3SpeedSettingsStateHullProtectionChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+1]), binary.LittleEndian, &arg.present)
@@ -3166,8 +2972,6 @@ outdoor uint8
 
 func (a ardrone3SpeedSettingsStateOutdoorChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3SpeedSettingsStateOutdoorChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+1]), binary.LittleEndian, &arg.outdoor)
@@ -3198,8 +3002,6 @@ max float32
 
 func (a ardrone3SpeedSettingsStateMaxPitchRollRotationSpeedChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3SpeedSettingsStateMaxPitchRollRotationSpeedChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.current)
@@ -3236,8 +3038,6 @@ channel uint8
 
 func (a ardrone3NetworkSettingsWifiSelection) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3NetworkSettingsWifiSelectionArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.typeX)
@@ -3272,8 +3072,6 @@ keyType uint32
 
 func (a ardrone3NetworkSettingswifiSecurity) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 var stringEnd int
 var err error
 arg := ardrone3NetworkSettingswifiSecurityArguments{}
@@ -3317,8 +3115,6 @@ channel uint8
 
 func (a ardrone3NetworkSettingsStateWifiSelectionChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3NetworkSettingsStateWifiSelectionChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.typeX)
@@ -3349,8 +3145,6 @@ typeX uint32
 
 func (a ardrone3NetworkSettingsStatewifiSecurityChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3NetworkSettingsStatewifiSecurityChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.typeX)
@@ -3381,8 +3175,6 @@ keyType uint32
 
 func (a ardrone3NetworkSettingsStatewifiSecurity) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 var stringEnd int
 var err error
 arg := ardrone3NetworkSettingsStatewifiSecurityArguments{}
@@ -3425,8 +3217,6 @@ hardware string
 
 func (a ardrone3SettingsStateProductMotorVersionListChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 var stringEnd int
 var err error
 arg := ardrone3SettingsStateProductMotorVersionListChangedArguments{}
@@ -3479,8 +3269,6 @@ hardware string
 
 func (a ardrone3SettingsStateProductGPSVersionChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 var stringEnd int
 var err error
 arg := ardrone3SettingsStateProductGPSVersionChangedArguments{}
@@ -3524,8 +3312,6 @@ motorError uint32
 
 func (a ardrone3SettingsStateMotorErrorStateChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3SettingsStateMotorErrorStateChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+1]), binary.LittleEndian, &arg.motorIds)
@@ -3554,8 +3340,6 @@ version string
 
 func (a ardrone3SettingsStateMotorSoftwareVersionChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 var stringEnd int
 var err error
 arg := ardrone3SettingsStateMotorSoftwareVersionChangedArguments{}
@@ -3593,8 +3377,6 @@ totalFlightDuration uint32
 
 func (a ardrone3SettingsStateMotorFlightsStatusChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3SettingsStateMotorFlightsStatusChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+2]), binary.LittleEndian, &arg.nbFlights)
@@ -3627,8 +3409,6 @@ motorError uint32
 
 func (a ardrone3SettingsStateMotorErrorLastErrorChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3SettingsStateMotorErrorLastErrorChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.motorError)
@@ -3655,8 +3435,6 @@ serialID string
 
 func (a ardrone3SettingsStateP7ID) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 var stringEnd int
 var err error
 arg := ardrone3SettingsStateP7IDArguments{}
@@ -3688,8 +3466,6 @@ id string
 
 func (a ardrone3SettingsStateCPUID) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 var stringEnd int
 var err error
 arg := ardrone3SettingsStateCPUIDArguments{}
@@ -3727,8 +3503,6 @@ typeX uint32
 
 func (a ardrone3PictureSettingsPictureFormatSelection) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PictureSettingsPictureFormatSelectionArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.typeX)
@@ -3757,8 +3531,6 @@ typeX uint32
 
 func (a ardrone3PictureSettingsAutoWhiteBalanceSelection) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PictureSettingsAutoWhiteBalanceSelectionArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.typeX)
@@ -3787,8 +3559,6 @@ value float32
 
 func (a ardrone3PictureSettingsExpositionSelection) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PictureSettingsExpositionSelectionArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.value)
@@ -3817,8 +3587,6 @@ value float32
 
 func (a ardrone3PictureSettingsSaturationSelection) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PictureSettingsSaturationSelectionArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.value)
@@ -3848,8 +3616,6 @@ interval float32
 
 func (a ardrone3PictureSettingsTimelapseSelection) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PictureSettingsTimelapseSelectionArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+1]), binary.LittleEndian, &arg.enabled)
@@ -3881,8 +3647,6 @@ massstorageid uint8
 
 func (a ardrone3PictureSettingsVideoAutorecordSelection) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PictureSettingsVideoAutorecordSelectionArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+1]), binary.LittleEndian, &arg.enabled)
@@ -3913,8 +3677,6 @@ mode uint32
 
 func (a ardrone3PictureSettingsVideoStabilizationMode) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PictureSettingsVideoStabilizationModeArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.mode)
@@ -3943,8 +3705,6 @@ mode uint32
 
 func (a ardrone3PictureSettingsVideoRecordingMode) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PictureSettingsVideoRecordingModeArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.mode)
@@ -3973,8 +3733,6 @@ framerate uint32
 
 func (a ardrone3PictureSettingsVideoFramerate) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PictureSettingsVideoFramerateArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.framerate)
@@ -4003,8 +3761,6 @@ typeX uint32
 
 func (a ardrone3PictureSettingsVideoResolutions) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PictureSettingsVideoResolutionsArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.typeX)
@@ -4035,8 +3791,6 @@ typeX uint32
 
 func (a ardrone3PictureSettingsStatePictureFormatChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PictureSettingsStatePictureFormatChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.typeX)
@@ -4065,8 +3819,6 @@ typeX uint32
 
 func (a ardrone3PictureSettingsStateAutoWhiteBalanceChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PictureSettingsStateAutoWhiteBalanceChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.typeX)
@@ -4097,8 +3849,6 @@ max float32
 
 func (a ardrone3PictureSettingsStateExpositionChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PictureSettingsStateExpositionChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.value)
@@ -4133,8 +3883,6 @@ max float32
 
 func (a ardrone3PictureSettingsStateSaturationChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PictureSettingsStateSaturationChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.value)
@@ -4170,8 +3918,6 @@ maxInterval float32
 
 func (a ardrone3PictureSettingsStateTimelapseChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PictureSettingsStateTimelapseChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+1]), binary.LittleEndian, &arg.enabled)
@@ -4207,8 +3953,6 @@ massstorageid uint8
 
 func (a ardrone3PictureSettingsStateVideoAutorecordChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PictureSettingsStateVideoAutorecordChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+1]), binary.LittleEndian, &arg.enabled)
@@ -4239,8 +3983,6 @@ mode uint32
 
 func (a ardrone3PictureSettingsStateVideoStabilizationModeChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PictureSettingsStateVideoStabilizationModeChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.mode)
@@ -4269,8 +4011,6 @@ mode uint32
 
 func (a ardrone3PictureSettingsStateVideoRecordingModeChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PictureSettingsStateVideoRecordingModeChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.mode)
@@ -4299,8 +4039,6 @@ framerate uint32
 
 func (a ardrone3PictureSettingsStateVideoFramerateChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PictureSettingsStateVideoFramerateChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.framerate)
@@ -4329,8 +4067,6 @@ typeX uint32
 
 func (a ardrone3PictureSettingsStateVideoResolutionsChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PictureSettingsStateVideoResolutionsChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.typeX)
@@ -4361,8 +4097,6 @@ enable uint8
 
 func (a ardrone3MediaStreamingVideoEnable) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3MediaStreamingVideoEnableArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+1]), binary.LittleEndian, &arg.enable)
@@ -4391,8 +4125,6 @@ mode uint32
 
 func (a ardrone3MediaStreamingVideoStreamMode) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3MediaStreamingVideoStreamModeArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.mode)
@@ -4423,8 +4155,6 @@ enabled uint32
 
 func (a ardrone3MediaStreamingStateVideoEnableChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3MediaStreamingStateVideoEnableChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.enabled)
@@ -4449,8 +4179,6 @@ mode uint32
 
 func (a ardrone3MediaStreamingStateVideoStreamModeChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3MediaStreamingStateVideoStreamModeChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.mode)
@@ -4481,8 +4209,6 @@ altitude float64
 
 func (a ardrone3GPSSettingsSetHome) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3GPSSettingsSetHomeArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+8]), binary.LittleEndian, &arg.latitude)
@@ -4514,8 +4240,6 @@ type ardrone3GPSSettingsResetHomeArguments struct {
 
 func (a ardrone3GPSSettingsResetHome) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3GPSSettingsResetHomeArguments{}
 // No arguments to decode here !!
 
@@ -4546,8 +4270,6 @@ verticalAccuracy float64
 
 func (a ardrone3GPSSettingsSendControllerGPS) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3GPSSettingsSendControllerGPSArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+8]), binary.LittleEndian, &arg.latitude)
@@ -4584,8 +4306,6 @@ typeX uint32
 
 func (a ardrone3GPSSettingsHomeType) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3GPSSettingsHomeTypeArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.typeX)
@@ -4614,8 +4334,6 @@ delay uint16
 
 func (a ardrone3GPSSettingsReturnHomeDelay) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3GPSSettingsReturnHomeDelayArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+2]), binary.LittleEndian, &arg.delay)
@@ -4644,8 +4362,6 @@ value float32
 
 func (a ardrone3GPSSettingsReturnHomeMinAltitude) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3GPSSettingsReturnHomeMinAltitudeArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.value)
@@ -4678,8 +4394,6 @@ altitude float64
 
 func (a ardrone3GPSSettingsStateHomeChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3GPSSettingsStateHomeChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+8]), binary.LittleEndian, &arg.latitude)
@@ -4714,8 +4428,6 @@ altitude float64
 
 func (a ardrone3GPSSettingsStateResetHomeChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3GPSSettingsStateResetHomeChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+8]), binary.LittleEndian, &arg.latitude)
@@ -4748,8 +4460,6 @@ fixed uint8
 
 func (a ardrone3GPSSettingsStateGPSFixStateChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3GPSSettingsStateGPSFixStateChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+1]), binary.LittleEndian, &arg.fixed)
@@ -4778,8 +4488,6 @@ state uint32
 
 func (a ardrone3GPSSettingsStateGPSUpdateStateChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3GPSSettingsStateGPSUpdateStateChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.state)
@@ -4808,8 +4516,6 @@ typeX uint32
 
 func (a ardrone3GPSSettingsStateHomeTypeChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3GPSSettingsStateHomeTypeChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.typeX)
@@ -4838,8 +4544,6 @@ delay uint16
 
 func (a ardrone3GPSSettingsStateReturnHomeDelayChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3GPSSettingsStateReturnHomeDelayChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+2]), binary.LittleEndian, &arg.delay)
@@ -4868,8 +4572,6 @@ longitude float64
 
 func (a ardrone3GPSSettingsStateGeofenceCenterChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3GPSSettingsStateGeofenceCenterChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+8]), binary.LittleEndian, &arg.latitude)
@@ -4901,8 +4603,6 @@ max float32
 
 func (a ardrone3GPSSettingsStateReturnHomeMinAltitudeChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3GPSSettingsStateReturnHomeMinAltitudeChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.value)
@@ -4938,8 +4638,6 @@ pan int8
 
 func (a ardrone3CameraStateOrientation) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3CameraStateOrientationArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+1]), binary.LittleEndian, &arg.tilt)
@@ -4971,8 +4669,6 @@ pan int8
 
 func (a ardrone3CameraStatedefaultCameraOrientation) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3CameraStatedefaultCameraOrientationArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+1]), binary.LittleEndian, &arg.tilt)
@@ -5004,8 +4700,6 @@ pan float32
 
 func (a ardrone3CameraStateOrientationV2) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3CameraStateOrientationV2Arguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.tilt)
@@ -5037,8 +4731,6 @@ pan float32
 
 func (a ardrone3CameraStatedefaultCameraOrientationV2) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3CameraStatedefaultCameraOrientationV2Arguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.tilt)
@@ -5070,8 +4762,6 @@ maxpan float32
 
 func (a ardrone3CameraStateVelocityRange) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3CameraStateVelocityRangeArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.maxtilt)
@@ -5104,8 +4794,6 @@ frequency uint32
 
 func (a ardrone3AntiflickeringelectricFrequency) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3AntiflickeringelectricFrequencyArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.frequency)
@@ -5134,8 +4822,6 @@ mode uint32
 
 func (a ardrone3AntiflickeringsetMode) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3AntiflickeringsetModeArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.mode)
@@ -5166,8 +4852,6 @@ frequency uint32
 
 func (a ardrone3AntiflickeringStateelectricFrequencyChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3AntiflickeringStateelectricFrequencyChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.frequency)
@@ -5196,8 +4880,6 @@ mode uint32
 
 func (a ardrone3AntiflickeringStatemodeChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3AntiflickeringStatemodeChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.mode)
@@ -5228,8 +4910,6 @@ numberOfSatellite uint8
 
 func (a ardrone3GPSStateNumberOfSatelliteChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3GPSStateNumberOfSatelliteChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+1]), binary.LittleEndian, &arg.numberOfSatellite)
@@ -5259,8 +4939,6 @@ available uint8
 
 func (a ardrone3GPSStateHomeTypeAvailabilityChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3GPSStateHomeTypeAvailabilityChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.typeX)
@@ -5291,8 +4969,6 @@ typeX uint32
 
 func (a ardrone3GPSStateHomeTypeChosenChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3GPSStateHomeTypeChosenChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.typeX)
@@ -5321,8 +4997,6 @@ features uint64
 
 func (a ardrone3PROStateFeatures) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3PROStateFeaturesArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+8]), binary.LittleEndian, &arg.features)
@@ -5357,8 +5031,6 @@ listflags uint8
 
 func (a ardrone3AccessoryStateConnectedAccessories) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 var stringEnd int
 var err error
 arg := ardrone3AccessoryStateConnectedAccessoriesArguments{}
@@ -5408,8 +5080,6 @@ listflags uint8
 
 func (a ardrone3AccessoryStateBattery) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3AccessoryStateBatteryArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+1]), binary.LittleEndian, &arg.id)
@@ -5443,8 +5113,6 @@ type ardrone3SoundStartAlertSoundArguments struct {
 
 func (a ardrone3SoundStartAlertSound) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3SoundStartAlertSoundArguments{}
 // No arguments to decode here !!
 
@@ -5470,8 +5138,6 @@ type ardrone3SoundStopAlertSoundArguments struct {
 
 func (a ardrone3SoundStopAlertSound) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3SoundStopAlertSoundArguments{}
 // No arguments to decode here !!
 
@@ -5500,8 +5166,6 @@ state uint32
 
 func (a ardrone3SoundStateAlertSound) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := ardrone3SoundStateAlertSoundArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.state)
@@ -5533,8 +5197,6 @@ type commonNetworkDisconnectArguments struct {
 
 func (a commonNetworkDisconnect) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonNetworkDisconnectArguments{}
 // No arguments to decode here !!
 
@@ -5563,8 +5225,6 @@ cause uint32
 
 func (a commonNetworkEventDisconnection) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonNetworkEventDisconnectionArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.cause)
@@ -5594,8 +5254,6 @@ type commonSettingsAllSettingsArguments struct {
 
 func (a commonSettingsAllSettings) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonSettingsAllSettingsArguments{}
 // No arguments to decode here !!
 
@@ -5621,8 +5279,6 @@ type commonSettingsResetArguments struct {
 
 func (a commonSettingsReset) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonSettingsResetArguments{}
 // No arguments to decode here !!
 
@@ -5649,8 +5305,6 @@ name string
 
 func (a commonSettingsProductName) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 var stringEnd int
 var err error
 arg := commonSettingsProductNameArguments{}
@@ -5686,8 +5340,6 @@ code string
 
 func (a commonSettingsCountry) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 var stringEnd int
 var err error
 arg := commonSettingsCountryArguments{}
@@ -5723,8 +5375,6 @@ automatic uint8
 
 func (a commonSettingsAutoCountry) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonSettingsAutoCountryArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+1]), binary.LittleEndian, &arg.automatic)
@@ -5754,8 +5404,6 @@ type commonSettingsStateAllSettingsChangedArguments struct {
 
 func (a commonSettingsStateAllSettingsChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonSettingsStateAllSettingsChangedArguments{}
 // No arguments to decode here !!
 
@@ -5781,8 +5429,6 @@ type commonSettingsStateResetChangedArguments struct {
 
 func (a commonSettingsStateResetChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonSettingsStateResetChangedArguments{}
 // No arguments to decode here !!
 
@@ -5809,8 +5455,6 @@ name string
 
 func (a commonSettingsStateProductNameChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 var stringEnd int
 var err error
 arg := commonSettingsStateProductNameChangedArguments{}
@@ -5847,8 +5491,6 @@ hardware string
 
 func (a commonSettingsStateProductVersionChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 var stringEnd int
 var err error
 arg := commonSettingsStateProductVersionChangedArguments{}
@@ -5891,8 +5533,6 @@ high string
 
 func (a commonSettingsStateProductSerialHighChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 var stringEnd int
 var err error
 arg := commonSettingsStateProductSerialHighChangedArguments{}
@@ -5928,8 +5568,6 @@ low string
 
 func (a commonSettingsStateProductSerialLowChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 var stringEnd int
 var err error
 arg := commonSettingsStateProductSerialLowChangedArguments{}
@@ -5965,8 +5603,6 @@ code string
 
 func (a commonSettingsStateCountryChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 var stringEnd int
 var err error
 arg := commonSettingsStateCountryChangedArguments{}
@@ -6002,8 +5638,6 @@ automatic uint8
 
 func (a commonSettingsStateAutoCountryChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonSettingsStateAutoCountryChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+1]), binary.LittleEndian, &arg.automatic)
@@ -6032,8 +5666,6 @@ id string
 
 func (a commonSettingsStateBoardIdChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 var stringEnd int
 var err error
 arg := commonSettingsStateBoardIdChangedArguments{}
@@ -6070,8 +5702,6 @@ type commonCommonAllStatesArguments struct {
 
 func (a commonCommonAllStates) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonCommonAllStatesArguments{}
 // No arguments to decode here !!
 
@@ -6098,8 +5728,6 @@ date string
 
 func (a commonCommonCurrentDate) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 var stringEnd int
 var err error
 arg := commonCommonCurrentDateArguments{}
@@ -6135,8 +5763,6 @@ time string
 
 func (a commonCommonCurrentTime) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 var stringEnd int
 var err error
 arg := commonCommonCurrentTimeArguments{}
@@ -6171,8 +5797,6 @@ type commonCommonRebootArguments struct {
 
 func (a commonCommonReboot) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonCommonRebootArguments{}
 // No arguments to decode here !!
 
@@ -6199,8 +5823,6 @@ datetime string
 
 func (a commonCommonCurrentDateTime) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 var stringEnd int
 var err error
 arg := commonCommonCurrentDateTimeArguments{}
@@ -6237,8 +5859,6 @@ type commonCommonStateAllStatesChangedArguments struct {
 
 func (a commonCommonStateAllStatesChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonCommonStateAllStatesChangedArguments{}
 // No arguments to decode here !!
 
@@ -6265,8 +5885,6 @@ percent uint8
 
 func (a commonCommonStateBatteryStateChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonCommonStateBatteryStateChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+1]), binary.LittleEndian, &arg.percent)
@@ -6296,8 +5914,6 @@ name string
 
 func (a commonCommonStateMassStorageStateListChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 var stringEnd int
 var err error
 arg := commonCommonStateMassStorageStateListChangedArguments{}
@@ -6340,8 +5956,6 @@ internal uint8
 
 func (a commonCommonStateMassStorageInfoStateListChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonCommonStateMassStorageInfoStateListChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+1]), binary.LittleEndian, &arg.massstorageid)
@@ -6380,8 +5994,6 @@ date string
 
 func (a commonCommonStateCurrentDateChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 var stringEnd int
 var err error
 arg := commonCommonStateCurrentDateChangedArguments{}
@@ -6417,8 +6029,6 @@ time string
 
 func (a commonCommonStateCurrentTimeChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 var stringEnd int
 var err error
 arg := commonCommonStateCurrentTimeChangedArguments{}
@@ -6454,8 +6064,6 @@ photoremaining uint32
 
 func (a commonCommonStateMassStorageInfoRemainingListChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonCommonStateMassStorageInfoRemainingListChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.freespace)
@@ -6488,8 +6096,6 @@ rssi int16
 
 func (a commonCommonStateWifiSignalChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonCommonStateWifiSignalChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+2]), binary.LittleEndian, &arg.rssi)
@@ -6519,8 +6125,6 @@ sensorState uint8
 
 func (a commonCommonStateSensorsStatesListChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonCommonStateSensorsStatesListChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.sensorName)
@@ -6551,8 +6155,6 @@ model uint32
 
 func (a commonCommonStateProductModel) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonCommonStateProductModelArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.model)
@@ -6580,8 +6182,6 @@ countryCodes string
 
 func (a commonCommonStateCountryListKnown) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 var stringEnd int
 var err error
 arg := commonCommonStateCountryListKnownArguments{}
@@ -6621,8 +6221,6 @@ nbCrashLogs uint16
 
 func (a commonCommonStateDeprecatedMassStorageContentChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonCommonStateDeprecatedMassStorageContentChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+1]), binary.LittleEndian, &arg.massstorageid)
@@ -6664,8 +6262,6 @@ nbRawPhotos uint16
 
 func (a commonCommonStateMassStorageContent) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonCommonStateMassStorageContentArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+1]), binary.LittleEndian, &arg.massstorageid)
@@ -6707,8 +6303,6 @@ nbRawPhotos uint16
 
 func (a commonCommonStateMassStorageContentForCurrentRun) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonCommonStateMassStorageContentForCurrentRunArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+1]), binary.LittleEndian, &arg.massstorageid)
@@ -6743,8 +6337,6 @@ stopTimestamp uint64
 
 func (a commonCommonStateVideoRecordingTimestamp) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonCommonStateVideoRecordingTimestampArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+8]), binary.LittleEndian, &arg.startTimestamp)
@@ -6775,8 +6367,6 @@ datetime string
 
 func (a commonCommonStateCurrentDateTimeChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 var stringEnd int
 var err error
 arg := commonCommonStateCurrentDateTimeChangedArguments{}
@@ -6812,8 +6402,6 @@ value uint8
 
 func (a commonCommonStateLinkSignalQuality) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonCommonStateLinkSignalQualityArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+1]), binary.LittleEndian, &arg.value)
@@ -6842,8 +6430,6 @@ bootId string
 
 func (a commonCommonStateBootId) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 var stringEnd int
 var err error
 arg := commonCommonStateBootIdArguments{}
@@ -6880,8 +6466,6 @@ type commonOverHeatSwitchOffArguments struct {
 
 func (a commonOverHeatSwitchOff) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonOverHeatSwitchOffArguments{}
 // No arguments to decode here !!
 
@@ -6907,8 +6491,6 @@ type commonOverHeatVentilateArguments struct {
 
 func (a commonOverHeatVentilate) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonOverHeatVentilateArguments{}
 // No arguments to decode here !!
 
@@ -6934,8 +6516,6 @@ type commonOverHeatStateOverHeatChangedArguments struct {
 
 func (a commonOverHeatStateOverHeatChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonOverHeatStateOverHeatChangedArguments{}
 // No arguments to decode here !!
 
@@ -6960,8 +6540,6 @@ regulationType uint8
 
 func (a commonOverHeatStateOverHeatRegulationChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonOverHeatStateOverHeatRegulationChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+1]), binary.LittleEndian, &arg.regulationType)
@@ -6992,8 +6570,6 @@ piloting uint8
 
 func (a commonControllerisPiloting) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonControllerisPilotingArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+1]), binary.LittleEndian, &arg.piloting)
@@ -7026,8 +6602,6 @@ peerType string
 
 func (a commonControllerPeerStateChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 var stringEnd int
 var err error
 arg := commonControllerPeerStateChangedArguments{}
@@ -7083,8 +6657,6 @@ outdoor uint8
 
 func (a commonWifiSettingsOutdoorSetting) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonWifiSettingsOutdoorSettingArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+1]), binary.LittleEndian, &arg.outdoor)
@@ -7115,8 +6687,6 @@ outdoor uint8
 
 func (a commonWifiSettingsStateoutdoorSettingsChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonWifiSettingsStateoutdoorSettingsChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+1]), binary.LittleEndian, &arg.outdoor)
@@ -7148,8 +6718,6 @@ typeX uint32
 
 func (a commonMavlinkStart) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 var stringEnd int
 var err error
 arg := commonMavlinkStartArguments{}
@@ -7186,8 +6754,6 @@ type commonMavlinkPauseArguments struct {
 
 func (a commonMavlinkPause) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonMavlinkPauseArguments{}
 // No arguments to decode here !!
 
@@ -7213,8 +6779,6 @@ type commonMavlinkStopArguments struct {
 
 func (a commonMavlinkStop) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonMavlinkStopArguments{}
 // No arguments to decode here !!
 
@@ -7245,8 +6809,6 @@ typeX uint32
 
 func (a commonMavlinkStateMavlinkFilePlayingStateChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 var stringEnd int
 var err error
 arg := commonMavlinkStateMavlinkFilePlayingStateChangedArguments{}
@@ -7286,8 +6848,6 @@ error uint32
 
 func (a commonMavlinkStateMavlinkPlayErrorStateChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonMavlinkStateMavlinkPlayErrorStateChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.error)
@@ -7316,8 +6876,6 @@ idx uint32
 
 func (a commonMavlinkStateMissionItemExecuted) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonMavlinkStateMissionItemExecutedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.idx)
@@ -7347,8 +6905,6 @@ value uint8
 
 func (a commonFlightPlanSettingsReturnHomeOnDisconnect) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonFlightPlanSettingsReturnHomeOnDisconnectArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+1]), binary.LittleEndian, &arg.value)
@@ -7379,8 +6935,6 @@ isReadOnly uint8
 
 func (a commonFlightPlanSettingsStateReturnHomeOnDisconnectChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonFlightPlanSettingsStateReturnHomeOnDisconnectChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+1]), binary.LittleEndian, &arg.state)
@@ -7413,8 +6967,6 @@ calibrate uint8
 
 func (a commonCalibrationMagnetoCalibration) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonCalibrationMagnetoCalibrationArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+1]), binary.LittleEndian, &arg.calibrate)
@@ -7443,8 +6995,6 @@ calibrate uint8
 
 func (a commonCalibrationPitotCalibration) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonCalibrationPitotCalibrationArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+1]), binary.LittleEndian, &arg.calibrate)
@@ -7478,8 +7028,6 @@ calibrationFailed uint8
 
 func (a commonCalibrationStateMagnetoCalibrationStateChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonCalibrationStateMagnetoCalibrationStateChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+1]), binary.LittleEndian, &arg.xAxisCalibration)
@@ -7514,8 +7062,6 @@ required uint8
 
 func (a commonCalibrationStateMagnetoCalibrationRequiredState) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonCalibrationStateMagnetoCalibrationRequiredStateArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+1]), binary.LittleEndian, &arg.required)
@@ -7544,8 +7090,6 @@ axis uint32
 
 func (a commonCalibrationStateMagnetoCalibrationAxisToCalibrateChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonCalibrationStateMagnetoCalibrationAxisToCalibrateChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.axis)
@@ -7574,8 +7118,6 @@ started uint8
 
 func (a commonCalibrationStateMagnetoCalibrationStartedChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonCalibrationStateMagnetoCalibrationStartedChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+1]), binary.LittleEndian, &arg.started)
@@ -7601,8 +7143,6 @@ lastError uint8
 
 func (a commonCalibrationStatePitotCalibrationStateChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonCalibrationStatePitotCalibrationStateChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.state)
@@ -7639,8 +7179,6 @@ tiltMin float32
 
 func (a commonCameraSettingsStateCameraSettingsChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonCameraSettingsStateCameraSettingsChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.fov)
@@ -7680,8 +7218,6 @@ longitude float64
 
 func (a commonGPSControllerPositionForRun) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonGPSControllerPositionForRunArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+8]), binary.LittleEndian, &arg.latitude)
@@ -7714,8 +7250,6 @@ AvailabilityState uint8
 
 func (a commonFlightPlanStateAvailabilityStateChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonFlightPlanStateAvailabilityStateChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+1]), binary.LittleEndian, &arg.AvailabilityState)
@@ -7745,8 +7279,6 @@ State uint8
 
 func (a commonFlightPlanStateComponentStateListChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonFlightPlanStateComponentStateListChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.component)
@@ -7777,8 +7309,6 @@ LockState uint8
 
 func (a commonFlightPlanStateLockStateChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonFlightPlanStateLockStateChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+1]), binary.LittleEndian, &arg.LockState)
@@ -7808,8 +7338,6 @@ type commonFlightPlanEventStartingErrorEventArguments struct {
 
 func (a commonFlightPlanEventStartingErrorEvent) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonFlightPlanEventStartingErrorEventArguments{}
 // No arguments to decode here !!
 
@@ -7835,8 +7363,6 @@ type commonFlightPlanEventSpeedBridleEventArguments struct {
 
 func (a commonFlightPlanEventSpeedBridleEvent) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonFlightPlanEventSpeedBridleEventArguments{}
 // No arguments to decode here !!
 
@@ -7861,8 +7387,6 @@ version string
 
 func (a commonARLibsVersionsStateControllerLibARCommandsVersion) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 var stringEnd int
 var err error
 arg := commonARLibsVersionsStateControllerLibARCommandsVersionArguments{}
@@ -7894,8 +7418,6 @@ version string
 
 func (a commonARLibsVersionsStateSkyControllerLibARCommandsVersion) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 var stringEnd int
 var err error
 arg := commonARLibsVersionsStateSkyControllerLibARCommandsVersionArguments{}
@@ -7927,8 +7449,6 @@ version string
 
 func (a commonARLibsVersionsStateDeviceLibARCommandsVersion) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 var stringEnd int
 var err error
 arg := commonARLibsVersionsStateDeviceLibARCommandsVersionArguments{}
@@ -7966,8 +7486,6 @@ ready uint8
 
 func (a commonAudioControllerReadyForStreaming) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonAudioControllerReadyForStreamingArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+1]), binary.LittleEndian, &arg.ready)
@@ -7998,8 +7516,6 @@ running uint8
 
 func (a commonAudioStateAudioStreamingRunning) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonAudioStateAudioStreamingRunningArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+1]), binary.LittleEndian, &arg.running)
@@ -8031,8 +7547,6 @@ right uint8
 
 func (a commonHeadlightsintensity) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonHeadlightsintensityArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+1]), binary.LittleEndian, &arg.left)
@@ -8066,8 +7580,6 @@ right uint8
 
 func (a commonHeadlightsStateintensityChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonHeadlightsStateintensityChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+1]), binary.LittleEndian, &arg.left)
@@ -8100,8 +7612,6 @@ anim uint32
 
 func (a commonAnimationsStartAnimation) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonAnimationsStartAnimationArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.anim)
@@ -8130,8 +7640,6 @@ anim uint32
 
 func (a commonAnimationsStopAnimation) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonAnimationsStopAnimationArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.anim)
@@ -8159,8 +7667,6 @@ type commonAnimationsStopAllAnimationsArguments struct {
 
 func (a commonAnimationsStopAllAnimations) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonAnimationsStopAllAnimationsArguments{}
 // No arguments to decode here !!
 
@@ -8189,8 +7695,6 @@ anim uint32
 
 func (a commonAnimationsStateList) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonAnimationsStateListArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.anim)
@@ -8221,8 +7725,6 @@ accessory uint32
 
 func (a commonAccessoryConfig) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonAccessoryConfigArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.accessory)
@@ -8253,8 +7755,6 @@ accessory uint32
 
 func (a commonAccessoryStateSupportedAccessoriesListChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonAccessoryStateSupportedAccessoriesListChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.accessory)
@@ -8284,8 +7784,6 @@ error uint32
 
 func (a commonAccessoryStateAccessoryConfigChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonAccessoryStateAccessoryConfigChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.newAccessory)
@@ -8316,8 +7814,6 @@ enabled uint8
 
 func (a commonAccessoryStateAccessoryConfigModificationEnabled) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonAccessoryStateAccessoryConfigModificationEnabledArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+1]), binary.LittleEndian, &arg.enabled)
@@ -8348,8 +7844,6 @@ rate uint32
 
 func (a commonChargerSetMaxChargeRate) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonChargerSetMaxChargeRateArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.rate)
@@ -8378,8 +7872,6 @@ rate uint32
 
 func (a commonChargerStateMaxChargeRateChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonChargerStateMaxChargeRateChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.rate)
@@ -8407,8 +7899,6 @@ phase uint32
 
 func (a commonChargerStateCurrentChargeStateChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonChargerStateCurrentChargeStateChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.status)
@@ -8437,8 +7927,6 @@ rate uint32
 
 func (a commonChargerStateLastChargeRateChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonChargerStateLastChargeRateChangedArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.rate)
@@ -8470,8 +7958,6 @@ fullChargingTime uint8
 
 func (a commonChargerStateChargingInfo) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonChargerStateChargingInfoArguments{}
 var offset = 0
 binary.Read(bytes.NewReader(b[offset:offset+4]), binary.LittleEndian, &arg.phase)
@@ -8508,8 +7994,6 @@ runId string
 
 func (a commonRunStateRunIdChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 var stringEnd int
 var err error
 arg := commonRunStateRunIdChangedArguments{}
@@ -8545,8 +8029,6 @@ type commonFactoryResetArguments struct {
 
 func (a commonFactoryReset) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 arg := commonFactoryResetArguments{}
 // No arguments to decode here !!
 
@@ -8577,8 +8059,6 @@ status uint32
 
 func (a commonUpdateStateUpdateStateChanged) decode(b []byte) interface{} {
 //TODO: .............
-fmt.Printf(".....we are now decoding the payload %v, which is of type %T\n", a, a)
-fmt.Printf("%+v\n", a)
 var stringEnd int
 var err error
 arg := commonUpdateStateUpdateStateChangedArguments{}
@@ -8919,3 +8399,4 @@ command(updateStateUpdateStateChanged) : updateStateUpdateStateChanged,
 		err := fmt.Errorf("no string bytes found, returning 0")
 		return 0, err
 	}
+	

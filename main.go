@@ -229,11 +229,11 @@ func (packet *networkUDPPacket) decode() (protocolARNetworkAL, error) {
 	// This can be checked if there are a complete header
 	// of 7bytes following directly afte the current frame.
 	const headerSize = 7
-	fmt.Println("---- frameStartPos+frame.size+headerSize = ", packet.framePos+frame.size+headerSize)
-	fmt.Println("---- packet.size = ", packet.size)
+	//fmt.Println("---- frameStartPos+frame.size+headerSize = ", packet.framePos+frame.size+headerSize)
+	//fmt.Println("---- packet.size = ", packet.size)
 	if packet.framePos+frame.size+headerSize <= packet.size {
-		fmt.Println("----### ANOTHER PACKAGE FOLLOWS at position = ", packet.framePos+frame.size)
-		fmt.Println("---- Next package is = ", packet.data[15:packet.size])
+		//fmt.Println("----### ANOTHER PACKAGE FOLLOWS at position = ", packet.framePos+frame.size)
+		//fmt.Println("---- Next package is = ", packet.data[15:packet.size])
 		packet.framePos = packet.framePos + frame.size
 
 		return frame, nil
@@ -295,10 +295,10 @@ type protocolARNetworkAL struct {
 func (p *protocolARNetworkAL) decode() (protocolARCommands, error) {
 	const headerSize = 7
 
-	fmt.Println("$$$$$$$$ THE COMMAND BYTES: ",
-		p.dataARNetwork,
-		int(p.dataARNetwork[0]),
-		int(p.dataARNetwork[1]))
+	//fmt.Println("$$$$$$$$ THE COMMAND BYTES: ",
+	//	p.dataARNetwork,
+	//	int(p.dataARNetwork[0]),
+	//	int(p.dataARNetwork[1]))
 
 	// Start preparing a cmd struct that will be returned to the caller.
 	cmd := protocolARCommands{
@@ -307,7 +307,7 @@ func (p *protocolARNetworkAL) decode() (protocolARCommands, error) {
 		size:    p.size - headerSize,
 	}
 
-	fmt.Println("1. inside command contains = ", cmd)
+	//fmt.Println("1. inside command contains = ", cmd)
 
 	// Since we read and slice out 2 bytes, we need to use an uint16 to
 	// write into. We then convert the uint16 to int, and store the
@@ -321,14 +321,14 @@ func (p *protocolARNetworkAL) decode() (protocolARCommands, error) {
 
 	cmd.command = int(tmpCommand)
 
-	fmt.Printf("tmpCommand = %v, %T\n", tmpCommand, tmpCommand)
-	fmt.Println("2. inside command contains = ", cmd)
-	fmt.Println("******************Parsing of command*************************")
-	fmt.Printf("* cmd.project = %v\n", cmd.project)
-	fmt.Printf("* cmd.class = %v\n", cmd.class)
-	fmt.Printf("* cmd.command = %v\n", cmd.command)
-	fmt.Printf("* cmd.size = %v\n", cmd.size)
-	fmt.Println()
+	//fmt.Printf("tmpCommand = %v, %T\n", tmpCommand, tmpCommand)
+	//fmt.Println("2. inside command contains = ", cmd)
+	//fmt.Println("******************Parsing of command*************************")
+	//fmt.Printf("* cmd.project = %v\n", cmd.project)
+	//fmt.Printf("* cmd.class = %v\n", cmd.class)
+	//fmt.Printf("* cmd.command = %v\n", cmd.command)
+	//fmt.Printf("* cmd.size = %v\n", cmd.size)
+	//fmt.Println()
 
 	// #### Done parsing the project/class/cmd
 	// ------------------- Figure out arguments and types from here.
@@ -342,23 +342,26 @@ func (p *protocolARNetworkAL) decode() (protocolARCommands, error) {
 		class:   classDef(cmd.class),
 		cmd:     cmdDef(cmd.command),
 	}
-	fmt.Printf("c = %#v\n", c)
+	//fmt.Printf("c = %#v\n", c)
 
 	// TODO: Decode the arguments here !!!
 	// prereq : Parse arg struct, and create arg map which maps arg struct to cmd.
 	arguments := p.dataARNetwork[4:cmd.size]
 	//fmt.Printf("--- arguments = %+v\n", arguments)
-	fmt.Println("******************End Parsing of command*********************")
+	//fmt.Println("******************End Parsing of command*********************")
 
 	// Check if that command is specified in the map, and if it is...
 	v, ok := commandMap[c]
 	if ok {
-		fmt.Printf("+++++ main : Content before calling decode of v = %+v, arguments = %v\n", v, arguments)
-		args := v.decode(arguments)
-		fmt.Printf("cmdargmain : type %T, arguments = %+v\n", args, args)
+		//fmt.Printf("+++++ main : Content before calling decode of v = %+v, arguments = %v\n", v, arguments)
+
+		//------------------REMOVED 2 LINES BELOW FOR TESTING, PUT BACK !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+		_ = v.decode(arguments)
+		//fmt.Printf("cmdargmain : type %T, arguments = %+v\n", args, args)
+
 		// Check the type...for testing
-		_, ok := args.(ardrone3PilotingStateAttitudeChangedArguments)
-		fmt.Println("The result of the type check for arguments = ", ok)
+		//_, ok := args.(ardrone3PilotingStateAttitudeChangedArguments)
+		//fmt.Println("The result of the type check for arguments = ", ok)
 
 	}
 
@@ -393,9 +396,9 @@ func main() {
 	for {
 		// Get a packet
 		packet := <-drone.chReceivedUDPPacket
-		fmt.Println("-----------------------------------------------------------")
-		fmt.Println("info: main: packet size = ", packet.size)
-		fmt.Println("info: main: packet data ARNetworkAL= ", packet.data[:packet.size])
+		//fmt.Println("-----------------------------------------------------------")
+		//fmt.Println("info: main: packet size = ", packet.size)
+		//fmt.Println("info: main: packet data ARNetworkAL= ", packet.data[:packet.size])
 
 		var lastFrame bool
 		for {
@@ -410,25 +413,26 @@ func main() {
 			//   given higher priority internally
 			// • Data with ack(4): Data requesting an ack. The receiver must send an
 			//   ack for this data !
-			fmt.Println("info: main: frame: data type: ", frameARNetworkAL.dataType)
-			fmt.Println("info: main: frame: target buffer id: ", frameARNetworkAL.targetBufferID)
-			fmt.Println("info: main: frame: size of current frame = ", frameARNetworkAL.size)
-			fmt.Println("info: main: frame: data_ARNetwork = ", frameARNetworkAL.dataARNetwork)
-			fmt.Println("-----------------------------------------------------------")
+			//fmt.Println("info: main: frame: data type: ", frameARNetworkAL.dataType)
+			//fmt.Println("info: main: frame: target buffer id: ", frameARNetworkAL.targetBufferID)
+			//fmt.Println("info: main: frame: size of current frame = ", frameARNetworkAL.size)
+			//fmt.Println("info: main: frame: data_ARNetwork = ", frameARNetworkAL.dataARNetwork)
+			//fmt.Println("-----------------------------------------------------------")
 
 			// TODO: Putting in a continue here to skip decoding of ping packets
 			// which have a buffer ID of 0 or 1.
 			// Replace this with a proper ping detection later.
 			pingDetected := false
 			if frameARNetworkAL.targetBufferID == 0 || frameARNetworkAL.targetBufferID == 1 {
-				fmt.Println("PING DETECTED, PING DETECTED, PING DETECTED,PING DETECTED,")
-				fmt.Println("NOT DECODING THE CONTENT OF THE FRAME")
+				//	fmt.Println("PING DETECTED, PING DETECTED, PING DETECTED,PING DETECTED,")
+				//	fmt.Println("NOT DECODING THE CONTENT OF THE FRAME")
 				pingDetected = true
 			}
 
 			// If the package was not a ping package, then decode the ARCommand
 			// from it.
 			if !pingDetected {
+				// TODO: Put in a select here on the cmd type to do some further processing on the packages
 				cmd, err := frameARNetworkAL.decode()
 				if err != nil {
 					log.Println("error: frame.decode: ", err)
@@ -445,7 +449,7 @@ func main() {
 				break
 			}
 
-			fmt.Println("-------------Working the next frame in the UDP package-----")
+			//	fmt.Println("-------------Working the next frame in the UDP package-----")
 		}
 	}
 
