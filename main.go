@@ -324,12 +324,19 @@ func (p *protocolARNetworkAL) decode() (protocolARCommands, error) {
 	fmt.Printf("tmpCommand = %v, %T\n", tmpCommand, tmpCommand)
 	fmt.Println("2. inside command contains = ", cmd)
 	fmt.Println("******************Parsing of command*************************")
-	fmt.Printf("* project = %v\n", cmd.project)
-	fmt.Printf("* class = %v\n", cmd.class)
-	fmt.Printf("* command = %v\n", cmd.command)
+	fmt.Printf("* cmd.project = %v\n", cmd.project)
+	fmt.Printf("* cmd.class = %v\n", cmd.class)
+	fmt.Printf("* cmd.command = %v\n", cmd.command)
+	fmt.Printf("* cmd.size = %v\n", cmd.size)
 	fmt.Println()
 
+	// #### Done parsing the project/class/cmd
+	// ------------------- Figure out arguments and types from here.
+
 	//... testing from here
+	// Creating a temporary command value of type command (which is the same as used in the map)
+	// of project/class/def with the values parsed earlier, we need this type to compare against
+	// the map, to receive ............?
 	c := command{
 		project: projectDef(cmd.project),
 		class:   classDef(cmd.class),
@@ -337,19 +344,23 @@ func (p *protocolARNetworkAL) decode() (protocolARCommands, error) {
 	}
 	fmt.Printf("c = %#v\n", c)
 
-	// Check if that command is specified in the map, and if it is...
-	// print it out for now.
-	v, ok := commandMap[c]
-	if ok {
-		fmt.Printf("Content of v = %+v\n", v)
-		v.decode()
-	}
-
 	// TODO: Decode the arguments here !!!
 	// prereq : Parse arg struct, and create arg map which maps arg struct to cmd.
-	arguments := p.dataARNetwork[2:cmd.size]
-	fmt.Printf("--- arguments = %+v\n", arguments)
+	arguments := p.dataARNetwork[4:cmd.size]
+	//fmt.Printf("--- arguments = %+v\n", arguments)
 	fmt.Println("******************End Parsing of command*********************")
+
+	// Check if that command is specified in the map, and if it is...
+	v, ok := commandMap[c]
+	if ok {
+		fmt.Printf("+++++ main : Content before calling decode of v = %+v, arguments = %v\n", v, arguments)
+		args := v.decode(arguments)
+		fmt.Printf("cmdargmain : type %T, arguments = %+v\n", args, args)
+		// Check the type...for testing
+		_, ok := args.(ardrone3PilotingStateAttitudeChangedArguments)
+		fmt.Println("The result of the type check for arguments = ", ok)
+
+	}
 
 	return cmd, nil
 }
@@ -424,7 +435,7 @@ func main() {
 					break
 				}
 				fmt.Println("----------COMMAND-------------------------------------------")
-				fmt.Printf("%v+\n", cmd)
+				fmt.Printf("%+v\n", cmd)
 				fmt.Println("-----------------------------------------------------------")
 
 			}

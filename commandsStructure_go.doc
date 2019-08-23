@@ -1,0 +1,116 @@
+package main
+
+import (
+	"bytes"
+	"encoding/binary"
+	"fmt"
+)
+
+//HERE
+
+type projectDef int //uint8
+type classDef int   //uint8
+type cmdDef int     //uint16
+
+// command is needed for lookup of the real structure later, by using the map below.
+type command struct {
+	project projectDef
+	class   classDef
+	cmd     cmdDef
+}
+
+// All ARDrone3-only commands
+const ardrone3 projectDef = 1
+
+// State from drone
+const pilotingState classDef = 4
+
+// title : Drone's attitude changed,
+// desc : Drone's attitude changed.,
+// support : 0901;090c;090e,
+// triggered : regularly.,
+const attitudeChanged cmdDef = 6
+
+type ardrone3PilotingStateAttitudeChanged command
+
+type ardrone3PilotingStateAttitudeChangedArguments struct {
+	one   float32
+	two   float32
+	three float32
+}
+
+// lenStringData takes a []byte which is the data for the arguments, and returns
+// the position of the 0 terminator for the string.
+// The []byte given as input will start looking from the beginning of the slice,
+// so the input slice should be sliced to start from the offset of the string.
+func lenStringData(b []byte) (int, error) {
+	// Figure out the length of the string
+	for i := 0; i < cap(b); i++ {
+		//fmt.Printf("%+v, of type %T\n", b[i], b[i])
+
+		//fmt.Println("i = ", i)
+		if b[i] == 0 {
+			//fmt.Println("lengthString = ", i)
+
+			// add 1 to jump to the 0
+			return i + 1, nil
+		}
+
+	}
+
+	err := fmt.Errorf("no string bytes found, returning 0")
+	return 0, err
+}
+
+func (a ardrone3PilotingStateAttitudeChanged) decode(b []byte) interface{} {
+	// Since the command decode function can be specified with what kind
+	// of argument type it wants to use, we don't need a map to lookup
+	// that argument type.
+	//
+	// When we are done decoding the arguments we can pass them along as
+	// interface{}, and cast them into it's correct type at the function
+	// where it is going to be processed later, since that function will
+	// also know what data to use and make it easy to do a cast'ing when
+	// needed.
+	var offset = 0
+	const float32Size = 4
+
+	arg := ardrone3PilotingStateAttitudeChangedArguments{}
+	binary.Read(bytes.NewReader(b[offset:offset+float32Size]), binary.LittleEndian, &arg.one)
+	offset += float32Size
+	binary.Read(bytes.NewReader(b[offset:offset+float32Size]), binary.LittleEndian, &arg.two)
+	offset += float32Size
+	binary.Read(bytes.NewReader(b[offset:offset+float32Size]), binary.LittleEndian, &arg.three)
+	offset += float32Size
+	//TODO: .............
+	fmt.Printf(".....decode : we are now decoding the payload %v, %v, which is of type %T\n", a, b, a)
+	fmt.Printf(".....decode : and the arguments []byte = %v\n", b)
+	fmt.Printf(".....decode : and the arg struct became = %+v, type = %T\n", arg, arg)
+
+	return arg
+}
+
+// The variables -> of some command type -> of type command,
+// are filled with int values and used when you have received some indata
+// and then check for the same indata in the map, for then to get a value
+// from the map
+// We use the same name for this lookup variable as the name of the type.
+var ardronePilotingStateAttitudeChanged = ardrone3PilotingStateAttitudeChanged{
+	project: ardrone3,
+	class:   pilotingState,
+	cmd:     attitudeChanged,
+}
+
+type decoder interface {
+	decode([]byte) interface{}
+}
+
+// The key value here is a command with the values project/class/cmd,
+// and are all possible variants of the commands used for the drone.
+// We then take the incomming command we received from the drone, and
+// check if we can find the same key value in the map.
+//
+// The value to return from the map will be............TODO
+var commandMap = map[command]decoder{
+	command(ardronePilotingStateAttitudeChanged): ardronePilotingStateAttitudeChanged,
+}
