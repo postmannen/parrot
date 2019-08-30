@@ -213,7 +213,6 @@ func (packet *networkUDPPacket) decode() (protocolARNetworkAL, error) {
 		targetBufferID: int(packet.data[packet.framePos+1]),
 		sequenceNR:     int(packet.data[packet.framePos+2]),
 		dataARNetwork:  []byte{},
-		//TODO: Have an arguments []byte here so we can decode the arguments
 	}
 
 	// Get the size of the ARNetworkAL frame. Size includes the header of 7bytes.
@@ -229,11 +228,8 @@ func (packet *networkUDPPacket) decode() (protocolARNetworkAL, error) {
 	// This can be checked if there are a complete header
 	// of 7bytes following directly afte the current frame.
 	const headerSize = 7
-	//fmt.Println("---- frameStartPos+frame.size+headerSize = ", packet.framePos+frame.size+headerSize)
-	//fmt.Println("---- packet.size = ", packet.size)
+
 	if packet.framePos+frame.size+headerSize <= packet.size {
-		//fmt.Println("----### ANOTHER PACKAGE FOLLOWS at position = ", packet.framePos+frame.size)
-		//fmt.Println("---- Next package is = ", packet.data[15:packet.size])
 		packet.framePos = packet.framePos + frame.size
 
 		return frame, nil
@@ -294,11 +290,6 @@ type protocolARNetworkAL struct {
 // error
 func (p *protocolARNetworkAL) decode() (protocolARCommands, error) {
 	const headerSize = 7
-
-	//fmt.Println("$$$$$$$$ THE COMMAND BYTES: ",
-	//	p.dataARNetwork,
-	//	int(p.dataARNetwork[0]),
-	//	int(p.dataARNetwork[1]))
 
 	// Start preparing a cmd struct that will be returned to the caller.
 	cmd := protocolARCommands{
@@ -389,16 +380,12 @@ func main() {
 
 	} else {
 		// It is testing mode, start the fake UDP reader.
-
 		go drone.readNetworkUDPTestingPacketsD2C()
 	}
 
 	for {
 		// Get a packet
 		packet := <-drone.chReceivedUDPPacket
-		//fmt.Println("-----------------------------------------------------------")
-		//fmt.Println("info: main: packet size = ", packet.size)
-		//fmt.Println("info: main: packet data ARNetworkAL= ", packet.data[:packet.size])
 
 		var lastFrame bool
 		for {
@@ -407,25 +394,19 @@ func main() {
 			if err == io.EOF {
 				lastFrame = true
 			}
+
 			// • Ack(1): Acknowledgment of previously received data
 			// • Data(2): Normal data (no ack requested)
 			// • Low latency data(3): Treated as normal data on the network, but are
 			//   given higher priority internally
 			// • Data with ack(4): Data requesting an ack. The receiver must send an
 			//   ack for this data !
-			//fmt.Println("info: main: frame: data type: ", frameARNetworkAL.dataType)
-			//fmt.Println("info: main: frame: target buffer id: ", frameARNetworkAL.targetBufferID)
-			//fmt.Println("info: main: frame: size of current frame = ", frameARNetworkAL.size)
-			//fmt.Println("info: main: frame: data_ARNetwork = ", frameARNetworkAL.dataARNetwork)
-			//fmt.Println("-----------------------------------------------------------")
 
 			// TODO: Putting in a continue here to skip decoding of ping packets
 			// which have a buffer ID of 0 or 1.
 			// Replace this with a proper ping detection later.
 			pingDetected := false
 			if frameARNetworkAL.targetBufferID == 0 || frameARNetworkAL.targetBufferID == 1 {
-				//	fmt.Println("PING DETECTED, PING DETECTED, PING DETECTED,PING DETECTED,")
-				//	fmt.Println("NOT DECODING THE CONTENT OF THE FRAME")
 				pingDetected = true
 			}
 
@@ -448,12 +429,8 @@ func main() {
 			if lastFrame {
 				break
 			}
-
-			//	fmt.Println("-------------Working the next frame in the UDP package-----")
 		}
 	}
-
-	//time.Sleep(time.Second * 2)
 }
 
 //--------------------
