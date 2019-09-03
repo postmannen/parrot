@@ -347,8 +347,9 @@ func (p *protocolARNetworkAL) decode() (protocolARCommands, error) {
 		//fmt.Printf("+++++ main : Content before calling decode of v = %+v, arguments = %v\n", v, arguments)
 
 		//------------------REMOVED 2 LINES BELOW FOR TESTING, PUT BACK !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		_ = v.decode(arguments)
-		//fmt.Printf("cmdargmain : type %T, arguments = %+v\n", args, args)
+		//_ = v.decode(arguments)
+		args := v.decode(arguments)
+		fmt.Printf("cmdargmain : type %T, arguments = %+v\n", args, args)
 
 		// Check the type...for testing
 		//_, ok := args.(ardrone3PilotingStateAttitudeChangedArguments)
