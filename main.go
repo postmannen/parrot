@@ -2,7 +2,6 @@ package main
 
 import (
 	"bytes"
-	"encoding/binary"
 	"encoding/json"
 	"flag"
 	"fmt"
@@ -217,10 +216,12 @@ func (packet *networkUDPPacket) decode() (protocolARNetworkAL, error) {
 
 	// Get the size of the ARNetworkAL frame. Size includes the header of 7bytes.
 	var size uint32
-	err := binary.Read(bytes.NewReader(packet.data[packet.framePos+3:packet.framePos+7]), binary.LittleEndian, &size)
-	if err != nil {
-		log.Println("error: NewNetworkFrame, binary.Read: ", err)
-	}
+	//err := binary.Read(bytes.NewReader(packet.data[packet.framePos+3:packet.framePos+7]), binary.LittleEndian, &size)
+	//if err != nil {
+	//	log.Println("error: NewNetworkFrame, binary.Read: ", err)
+	//}
+	convLittleEndian(packet.data[packet.framePos+3:packet.framePos+7], &size)
+
 	frame.size = int(size)
 	frame.dataARNetwork = packet.data[packet.framePos+7 : packet.framePos+frame.size]
 
@@ -304,11 +305,13 @@ func (p *protocolARNetworkAL) decode() (protocolARCommands, error) {
 	// write into. We then convert the uint16 to int, and store the
 	// value in the command field of the struct.
 	var tmpCommand uint16
-	err := binary.Read(bytes.NewReader(p.dataARNetwork[2:4]), binary.LittleEndian, &tmpCommand)
-	if err != nil {
-		log.Printf("error: binary read of command failed %v\n", err)
-		return protocolARCommands{}, err
-	}
+	// HERE: removed, and replacing with new littleEndian decoder
+	//err := binary.Read(bytes.NewReader(p.dataARNetwork[2:4]), binary.LittleEndian, &tmpCommand)
+	//if err != nil {
+	//	log.Printf("error: binary read of command failed %v\n", err)
+	//	return protocolARCommands{}, err
+	//}
+	convLittleEndian(p.dataARNetwork[2:4], &tmpCommand)
 
 	cmd.command = int(tmpCommand)
 
@@ -347,9 +350,9 @@ func (p *protocolARNetworkAL) decode() (protocolARCommands, error) {
 		//fmt.Printf("+++++ main : Content before calling decode of v = %+v, arguments = %v\n", v, arguments)
 
 		//------------------REMOVED 2 LINES BELOW FOR TESTING, PUT BACK !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		//_ = v.decode(arguments)
-		args := v.decode(arguments)
-		fmt.Printf("cmdargmain : type %T, arguments = %+v\n", args, args)
+		_ = v.decode(arguments)
+		//args := v.decode(arguments)
+		//fmt.Printf("cmdargmain : type %T, arguments = %+v\n", args, args)
 
 		// Check the type...for testing
 		//_, ok := args.(ardrone3PilotingStateAttitudeChangedArguments)
