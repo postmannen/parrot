@@ -214,6 +214,8 @@ func (packet *networkUDPPacket) decode() (protocolARNetworkAL, error) {
 		dataARNetwork:  []byte{},
 	}
 
+	fmt.Printf("* Output of frame : protocolARNetworkAL%+v\n", frame)
+
 	// Get the size of the ARNetworkAL frame. Size includes the header of 7bytes.
 	var size uint32
 	//err := binary.Read(bytes.NewReader(packet.data[packet.framePos+3:packet.framePos+7]), binary.LittleEndian, &size)
@@ -349,10 +351,11 @@ func (p *protocolARNetworkAL) decode() (protocolARCommands, error) {
 	if ok {
 		//fmt.Printf("+++++ main : Content before calling decode of v = %+v, arguments = %v\n", v, arguments)
 
-		//------------------REMOVED 2 LINES BELOW FOR TESTING, PUT BACK !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-		_ = v.decode(arguments)
-		//args := v.decode(arguments)
-		//fmt.Printf("cmdargmain : type %T, arguments = %+v\n", args, args)
+		//-- !!!!!!!!! If you are running the _test file uncomment the line below
+		// and comment out the 2 lines below that one so the output doesn't get flooded.
+		//_ = v.decode(arguments)
+		args := v.decode(arguments)
+		fmt.Printf("cmdargmain : type %T, arguments = %+v\n", args, args)
 
 		// Check the type...for testing
 		//_, ok := args.(ardrone3PilotingStateAttitudeChangedArguments)
@@ -366,6 +369,7 @@ func (p *protocolARNetworkAL) decode() (protocolARCommands, error) {
 func main() {
 	drone := NewDrone()
 
+	// Parse flags
 	testingMode := flag.Bool("testingMode", false, "set to true to test without connecting to the drone")
 	flag.Parse()
 	drone.testingMode = *testingMode
@@ -379,7 +383,7 @@ func main() {
 		}
 
 		// Will start the reading of whole UDP packets from the network,
-		// and put them on the chReceivedPacket channel.
+		// and put them on the chReceivedUDPPacket channel.
 		go drone.readNetworkUDPPacketsD2C()
 
 	} else {
@@ -387,13 +391,17 @@ func main() {
 		go drone.readNetworkUDPTestingPacketsD2C()
 	}
 
+	// Loop, get a recieved UDP packet from the channel, and decode it.
 	for {
 		// Get a packet
 		packet := <-drone.chReceivedUDPPacket
 
 		var lastFrame bool
+		// An UDP Packet can consist of several frames, loop over each
+		// frame found in the packet. If last frame is found, break out.
 		for {
 			frameARNetworkAL, err := packet.decode()
+
 			// Check if it was the last frame in the UDP packet.
 			if err == io.EOF {
 				lastFrame = true

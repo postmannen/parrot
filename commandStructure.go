@@ -21,7 +21,7 @@ type command struct {
 const projectardrone3 projectDef = 1
 // All commands related to piloting the drone
 const classPiloting classDef = 0
-// title : Take off, 
+// cmdTakeoff , title : Take off, 
 // desc : Ask the drone to take off.\n On the fixed wings (such as Disco): not used except to cancel a land., 
 // support : 0901;090c;090e, 
 // result : On the quadcopters: the drone takes off if its [FlyingState](#1-4-1) was landed.\n On the fixed wings, the landing process is aborted if the [FlyingState](#1-4-1) was landing.\n Then, event [FlyingState](#1-4-1) is triggered., 
