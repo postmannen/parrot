@@ -16,7 +16,7 @@ type Drone struct {
 	testingMode         bool   // used for testing the package without connecting to the drone
 	addressDrone        string // The ip address of the drone
 	portDiscover        string // Used for initializing the connection to the drone over TCP
-	portC2D             string // TODO: Make this one to be filled with port value from discover.
+	portC2D             string // Controller to drone, port the controller wil send the drone messages on
 	portD2C             string // Drone to controller, port the controller will listen on for drone messages
 	portRTPStream       string
 	portRTPControl      string
@@ -140,7 +140,7 @@ func (d *Drone) readNetworkUDPTestingPacketsD2C() {
 // picked up by the frame decoder.
 func (d *Drone) readNetworkUDPPacketsD2C() {
 	// create an 'empty' UDP listener.
-	localConn, err := net.ListenPacket("udp", ":43210")
+	localConn, err := net.ListenPacket("udp", ":"+d.portD2C)
 	if err != nil {
 		log.Println("error: failed to start listener", err)
 	}
@@ -171,7 +171,7 @@ func (d *Drone) readNetworkUDPPacketsD2C() {
 
 // writeNetworkPacketsC2D writes the raw UDP packets from the controller to the drone.
 // Will receive []byte packet to write on an incomming channel for the function.
-func (d *Drone) writeNetworkPacketsC2D() {
+func (d *Drone) writeNetworkUDPPacketsC2D() {
 	// TODO:
 	// Have a channel waiting for incomming network packets to be written to the drone
 	// .........
@@ -185,8 +185,13 @@ func (d *Drone) writeNetworkPacketsC2D() {
 	if err != nil {
 		log.Printf("error: failed to DialUDP: %v", err)
 	}
-
 	defer conn.Close()
+
+	for v := range d.chSendingUDPPacket {
+		fmt.Printf("sending v = %v\n", v)
+	}
+
+	fmt.Println("chSendingUDPPacket closed, leaving for loop of writeNetworkUDPPacketsC2D")
 
 }
 
@@ -205,8 +210,54 @@ type networkUDPPacket struct {
 	framePos int
 }
 
-func encodeNetworkFrame(dataType int, targetBufferID int, sequenceNR int, size int, dataARNetworkAL []byte) {
+func (packet *networkUDPPacket) encode(dataType int, targetBufferID int, sequenceNR int, size int, dataARNetworkAL []byte) {
 	// TODO:.........................
+	// Make this the reverse of the decode below ?
+
+}
+
+// udpPacketCreator will keep the sequence counter needed
+// to keep track of the sequence number used when sending
+// udp packets.
+// Since the type is uint8 we don't need any logic to put
+// it back to 0 when >255, since it jump back to zero when
+// max value is reached.
+type udpPacketCreator struct {
+	// The sequence number used when sending packets
+	sequenceNR uint8
+}
+
+// newUdpPacketCreator will return a new udpPacketCreator,
+// and set it's correct default values.
+func newUdpPacketCreator() *udpPacketCreator {
+	return &udpPacketCreator{
+		sequenceNR: 0,
+	}
+}
+
+func (u *udpPacketCreator) encodeAck(targetBufferID int, sequenceNR uint8) networkUDPPacket {
+	// TODO:
+	// To acknowledge data, simply send back a frame with the Ack data type,
+	// a buffer ID of 128+Data_Buffer_ID, and the data sequence number as the
+	// data.
+	// E.g. : To acknowledge the frame    "(hex) 04 0b 42 0b000000 12345678",
+	// you will need to send a frame like "(hex) 01 8b 01 08000000 42"
+
+	u.sequenceNR++
+
+	pdataType := uint8(1)
+	ptargetBufferID := uint8(targetBufferID + 128)
+	psequenceNR := sequenceNR
+	psize := []byte{8, 0, 0, 0}
+	pdata := uint8(sequenceNR)
+
+	d := []byte{pdataType, ptargetBufferID, psequenceNR}
+	d = append(d, psize...)
+	d = append(d, pdata)
+
+	return networkUDPPacket{
+		data: d,
+	}
 }
 
 // decode will decode a whole UDP packet given as input,
@@ -231,10 +282,6 @@ func (packet *networkUDPPacket) decode() (protocolARNetworkAL, error) {
 
 	// Get the size of the ARNetworkAL frame. Size includes the header of 7bytes.
 	var size uint32
-	//err := binary.Read(bytes.NewReader(packet.data[packet.framePos+3:packet.framePos+7]), binary.LittleEndian, &size)
-	//if err != nil {
-	//	log.Println("error: NewNetworkFrame, binary.Read: ", err)
-	//}
 	convLittleEndian(packet.data[packet.framePos+3:packet.framePos+7], &size)
 
 	frame.size = int(size)
@@ -280,18 +327,19 @@ type protocolARCommands struct {
 //	01 ba 27 08000000 42, 02 0b c3 0b000000 12345678
 //  --size 0x08=8byte---, --size 0x0b=11byte--------
 type protocolARNetworkAL struct {
+	//
 	// Data types
 	// • Ack(1): Acknowledgment of previously received data
 	//   To Ack a frame, set type to 1,
 	//   add 128 to the value of the bufferID of the package that requires Ack,
 	//	 new unique sequence nr. for the ack buffer,
-	//
 	// • Data(2): Normal data (no ack requested)
 	// • Low latency data(3): Treated as normal data on the network, but are
 	//   given higher priority internally
 	// • Data with ack(4): Data requesting an ack. The receiver must send an
 	//   ack for this data !
 	dataType int
+	//
 	// • [0; 9]: Reserved values for ARNetwork internal use.
 	// • [10; 127]: Data buffers.
 	// • [128; 255]: Acknowledge buffers.
@@ -381,6 +429,7 @@ func (p *protocolARNetworkAL) decode() (protocolARCommands, error) {
 
 func main() {
 	drone := NewDrone()
+	packetCreator := newUdpPacketCreator()
 
 	// Parse flags
 	testingMode := flag.Bool("testingMode", false, "set to true to test without connecting to the drone")
@@ -398,9 +447,14 @@ func main() {
 			log.Println("error: client Discover failed:", err)
 		}
 
-		// Will start the reading of whole UDP packets from the network,
-		// and put them on the chReceivedUDPPacket channel.
+		// Start the reading of whole UDP packets from the network,
+		// and put them on the Drone.chReceivedUDPPacket channel.
 		go drone.readNetworkUDPPacketsD2C()
+
+		// Start the sender of UDP packets,
+		// will send UDP packets received at the Drone.chSendingUDPPacket
+		// channel
+		go drone.writeNetworkUDPPacketsC2D()
 	}
 
 	// Loop, get a recieved UDP packet from the channel, and decode it.
@@ -431,7 +485,18 @@ func main() {
 			// Replace this with a proper ping detection later.
 			pingDetected := false
 			if frameARNetworkAL.targetBufferID == 0 || frameARNetworkAL.targetBufferID == 1 {
+				fmt.Println("****** frameARNetworkAL.targetBufferID = ", frameARNetworkAL.targetBufferID)
 				pingDetected = true
+			}
+
+			// TODO: Send an ack if the datatype == 4
+			if frameARNetworkAL.dataType == 4 {
+				fmt.Printf("*************************************************************************\n")
+				fmt.Printf("*************************************************************************\n")
+				fmt.Printf("*************************************************************************\n")
+
+				// p := packetCreator.encodeAck(frameARNetworkAL.targetBufferID, packetCreator.sequenceNR)
+				// TODO: Put in the sending of p above to the sending channel here.
 			}
 
 			// If the package was not a ping package, then decode the ARCommand
