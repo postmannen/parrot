@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	arg "github.com/postmannen/parrotbebop/conceptTesting/decodingArguments2_makingItAPackageCopyBenchmarking"
+	arg "github.com/postmannen/parrotbebop/conceptTesting/decodingArguments2_makingItAPackageBenchmarking"
 )
 
 func main() {
