@@ -546,16 +546,11 @@ func main() {
 					p := packetCreator.encodeAck(frameARNetworkAL.targetBufferID, uint8(frameARNetworkAL.sequenceNR))
 					drone.chSendingUDPPacket <- p
 				}
-
-				//if lastFrame {
-				//	break
-				//}
-				//
-				//continue
 			}
 
-			// TODO:
-			// Put in a select here on the cmd type to do some further processing
+			// Try to figure out what kind of command that where received.
+			//
+			// Put in a switch here on cmdArgs to do some further processing
 			// based on the command received. This for example to do some action
 			// if GPS coordinates changed, battery status to low, etc.
 
@@ -568,9 +563,16 @@ func main() {
 			fmt.Printf("-- cmd = %+v\n", cmd)
 			fmt.Printf("-- Value of cmdArgs = %+v\n", cmdArgs)
 			fmt.Printf("-- Type of cmdArgs = %+T\n", cmdArgs)
+			switch cmdArgs.(type) {
+			case ardrone3CameraStateOrientationArguments:
+				log.Println("** EXECUTING ACTION FOR TYPE, ardrone3CameraStateOrientationArguments ...........")
+			case ardrone3PilotingStateAttitudeChangedArguments:
+				log.Println("** EXECUTING ACTION FOR TYPE, ardrone3PilotingStateAttitudeChangedArguments")
+			}
 			fmt.Println("-----------------------------------------------------------")
 
-			// If no more frames, break out to read the next package received.
+			// If no more frames, break out of for loop to read
+			// the next package received.
 			if lastFrame {
 				break
 			}
