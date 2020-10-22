@@ -524,6 +524,7 @@ func main() {
 			// which have a buffer ID of 0 or 1.
 			// Replace this with a proper ping detection later.
 			pingDetected := false
+
 			if frameARNetworkAL.targetBufferID == 0 || frameARNetworkAL.targetBufferID == 1 {
 				log.Println("***PING*** frameARNetworkAL.targetBufferID = ", frameARNetworkAL.targetBufferID)
 				pingDetected = true
@@ -550,14 +551,13 @@ func main() {
 				continue
 			}
 
-			// TODO: Send an ack if the datatype == 4
+			// Send an ACK packet if the dataType == 4
 			if frameARNetworkAL.dataType == 4 {
 				fmt.Printf("*************************************************************************\n")
-				fmt.Printf("************Last fram was dataType 4, sending ACK************************\n")
+				fmt.Printf("************Last frame was dataType 4, sending ACK************************\n")
 				fmt.Printf("*************************************************************************\n")
 
 				p := packetCreator.encodeAck(frameARNetworkAL.targetBufferID, uint8(frameARNetworkAL.sequenceNR))
-				// TODO: Put in the sending of p above to the sending channel here.
 				drone.chSendingUDPPacket <- p
 
 				if lastFrame {
