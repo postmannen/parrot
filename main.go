@@ -153,9 +153,8 @@ func (d *Drone) readNetworkUDPPacketsD2C() {
 
 		n, addr, err := localConn.ReadFrom(p)
 		if err != nil {
-			log.Printf("error: failed ReadFrom: %v\n", err)
+			log.Printf("error: failed ReadFrom: %v %v\n", addr, err)
 		}
-		log.Printf("info from readNetworkPacketsD2C: read %v bytes, from %v\n", n, addr)
 
 		packet := networkUDPPacket{
 			size: n,
@@ -338,19 +337,6 @@ func (packet *networkUDPPacket) decode() (protocolARNetworkAL, error) {
 	return frame, io.EOF
 }
 
-// • Project or Feature ID (1 byte)
-// • Class ID in the project/feature (1 byte)
-// • Command ID in the class (2 bytes)
-type protocolARCommands struct {
-	project int
-	class   int
-	command int
-	// size is included since we have now stripped off the header of 7 bytes,
-	// the size is for project+class+command+arguments, which again is the
-	// same size as the whole frame minus the header size of 7 bytes.
-	size int
-}
-
 // networkFrame
 // A network frame (ARNetworkAL)looks like this, and in the following order :
 // - dataType 1 byte,
@@ -438,6 +424,8 @@ func (p *protocolARNetworkAL) decode() (protocolARCommands, error) {
 	//fmt.Printf("--- arguments = %+v\n", arguments)
 	//fmt.Println("******************End Parsing of command*********************")
 
+	// To get the actual type we have to check the map holding all the commands, to get it's
+	// actual type.
 	// Check if the command c with the correct values are specified in the map, and if it is...
 	v, ok := commandMap[c]
 	if ok {
@@ -456,6 +444,19 @@ func (p *protocolARNetworkAL) decode() (protocolARCommands, error) {
 	}
 
 	return cmd, nil
+}
+
+// • Project or Feature ID (1 byte)
+// • Class ID in the project/feature (1 byte)
+// • Command ID in the class (2 bytes)
+type protocolARCommands struct {
+	project int
+	class   int
+	command int
+	// size is included since we have now stripped off the header of 7 bytes,
+	// the size is for project+class+command+arguments, which again is the
+	// same size as the whole frame minus the header size of 7 bytes.
+	size int
 }
 
 func main() {
@@ -493,8 +494,6 @@ func main() {
 		// Get a packet
 		udpPacket := <-drone.chReceivedUDPPacket
 
-		log.Println("Reading new packet : ")
-
 		var lastFrame bool
 		// An UDP Packet can consist of several frames, loop over each
 		// frame found in the packet. If last frame is found, break out.
@@ -525,14 +524,10 @@ func main() {
 			// TODO: Putting in a continue here to skip decoding of ping packets
 			// which have a buffer ID of 0 or 1.
 			// Replace this with a proper ping detection later.
-			pingDetected := false
 
 			// Check if it is a ping packet from drone, and incase
 			// it is, reply with a pong.
 			if frameARNetworkAL.targetBufferID == 0 || frameARNetworkAL.targetBufferID == 1 {
-				log.Println("***PING*** frameARNetworkAL.targetBufferID = ", frameARNetworkAL.targetBufferID)
-				pingDetected = true
-
 				{
 					p := packetCreator.encodePong(frameARNetworkAL)
 					drone.chSendingUDPPacket <- p
@@ -559,24 +554,19 @@ func main() {
 				continue
 			}
 
-			// If the package was not a ping package, then decode the ARCommand
-			// from it.
-			if !pingDetected {
-				// TODO:
-				// Put in a select here on the cmd type to do some further processing
-				// based on the command received. This for example to do some action
-				// if GPS coordinates changed, battery status to low, etc.
+			// TODO:
+			// Put in a select here on the cmd type to do some further processing
+			// based on the command received. This for example to do some action
+			// if GPS coordinates changed, battery status to low, etc.
 
-				cmd, err := frameARNetworkAL.decode()
-				if err != nil {
-					log.Println("error: frame.decode: ", err)
-					break
-				}
-				fmt.Println("----------COMMAND-------------------------------------------")
-				fmt.Printf("%+v\n", cmd)
-				fmt.Println("-----------------------------------------------------------")
-
+			cmd, err := frameARNetworkAL.decode()
+			if err != nil {
+				log.Println("error: frame.decode: ", err)
+				break
 			}
+			fmt.Println("----------COMMAND-------------------------------------------")
+			fmt.Printf("%+v\n", cmd)
+			fmt.Println("-----------------------------------------------------------")
 
 			// If no more frames, break out to read the next package received.
 			if lastFrame {
