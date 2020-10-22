@@ -496,7 +496,7 @@ func main() {
 	// Loop, get a recieved UDP packet from the channel, and decode it.
 	for {
 		// Get a packet
-		packet := <-drone.chReceivedUDPPacket
+		udpPacket := <-drone.chReceivedUDPPacket
 
 		log.Println("Reading new packet : ")
 
@@ -504,7 +504,14 @@ func main() {
 		// An UDP Packet can consist of several frames, loop over each
 		// frame found in the packet. If last frame is found, break out.
 		for {
-			frameARNetworkAL, err := packet.decode()
+			// decode will decode a whole UDP packet given as input,
+			// and return a frame of the ARNetworkAL protocol, it will
+			// return error== io.EOF when decoding of the whole packet
+			// is done. If the there are more than one ARNetworkAL frame
+			// in the UDP packet the method will return error == nil,
+			// and the method should be run over again until io.EOF is
+			// received.
+			frameARNetworkAL, err := udpPacket.decode()
 
 			log.Println("Reading new frame", frameARNetworkAL)
 
@@ -570,7 +577,11 @@ func main() {
 			// If the package was not a ping package, then decode the ARCommand
 			// from it.
 			if !pingDetected {
-				// TODO: Put in a select here on the cmd type to do some further processing on the packages
+				// TODO:
+				// Put in a select here on the cmd type to do some further processing
+				// based on the command received. This for example to do some action
+				// if GPS coordinates changed, battery status to low, etc.
+
 				cmd, err := frameARNetworkAL.decode()
 				if err != nil {
 					log.Println("error: frame.decode: ", err)
