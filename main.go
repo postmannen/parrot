@@ -9,7 +9,6 @@ import (
 	"log"
 	"net"
 	"strconv"
-	"time"
 )
 
 // Drone holds the data and methods specific for the drone
@@ -188,15 +187,16 @@ func (d *Drone) writeNetworkUDPPacketsC2D() {
 	defer conn.Close()
 
 	for v := range d.chSendingUDPPacket {
-		fmt.Printf("sending v = %v\n", v.data)
+		fmt.Printf("sending to Drone, v = %v\n", v.data)
 
 		n, err := conn.Write(v.data)
 		if err != nil {
 			log.Printf("error: failed conn.Write while sending: %v", err)
 		}
 
-		fmt.Printf("*** while sending, n = %v\n", n)
-		time.Sleep(time.Millisecond * 200)
+		fmt.Printf("*** while sending to Drone, n = %v\n", n)
+		fmt.Println("--------------------")
+		//time.Sleep(time.Millisecond * 200)
 	}
 
 	fmt.Println("chSendingUDPPacket closed, leaving for loop of writeNetworkUDPPacketsC2D")
@@ -313,7 +313,7 @@ func (packet *networkUDPPacket) decode() (protocolARNetworkAL, error) {
 		dataARNetwork:  []byte{},
 	}
 
-	fmt.Printf("* Output of frame : protocolARNetworkAL%+v\n", frame)
+	fmt.Printf("* Content of frame : protocolARNetworkAL%+v\n", frame)
 
 	// Get the size of the ARNetworkAL frame. Size includes the header of 7bytes.
 	var size uint32
@@ -374,11 +374,11 @@ type protocolARNetworkAL struct {
 // decode will try to decode the command found in the ARNetworkAL frame,
 // if it fails it will return an empty protocolARCommands struct, and the
 // error
-func (p *protocolARNetworkAL) decode() (protocolARCommands, error) {
+func (p *protocolARNetworkAL) decode() (cmd protocolARCommands, cmdArgs interface{}, err error) {
 	const headerSize = 7
 
 	// Start preparing a cmd struct that will be returned to the caller.
-	cmd := protocolARCommands{
+	cmd = protocolARCommands{
 		project: int(p.dataARNetwork[0]),
 		class:   int(p.dataARNetwork[1]),
 		size:    p.size - headerSize,
@@ -434,8 +434,8 @@ func (p *protocolARNetworkAL) decode() (protocolARCommands, error) {
 		//-- !!!!!!!!! If you are running the _test file uncomment the line below
 		// and comment out the 2 lines below that one so the output doesn't get flooded.
 		//_ = v.decode(arguments)
-		args := v.decode(arguments)
-		fmt.Printf("cmdargmain : type %T, arguments = %+v\n", args, args)
+		cmdArgs = v.decode(arguments)
+		// fmt.Printf("cmdargmain : type %T, arguments = %+v\n", cmdArgs, cmdArgs)
 
 		// Check the type...for testing
 		//_, ok := args.(ardrone3PilotingStateAttitudeChangedArguments)
@@ -443,7 +443,7 @@ func (p *protocolARNetworkAL) decode() (protocolARCommands, error) {
 
 	}
 
-	return cmd, nil
+	return cmd, cmdArgs, nil
 }
 
 // • Project or Feature ID (1 byte)
@@ -547,11 +547,11 @@ func main() {
 					drone.chSendingUDPPacket <- p
 				}
 
-				if lastFrame {
-					break
-				}
-
-				continue
+				//if lastFrame {
+				//	break
+				//}
+				//
+				//continue
 			}
 
 			// TODO:
@@ -559,13 +559,15 @@ func main() {
 			// based on the command received. This for example to do some action
 			// if GPS coordinates changed, battery status to low, etc.
 
-			cmd, err := frameARNetworkAL.decode()
+			cmd, cmdArgs, err := frameARNetworkAL.decode()
 			if err != nil {
 				log.Println("error: frame.decode: ", err)
 				break
 			}
 			fmt.Println("----------COMMAND-------------------------------------------")
-			fmt.Printf("%+v\n", cmd)
+			fmt.Printf("-- cmd = %+v\n", cmd)
+			fmt.Printf("-- Value of cmdArgs = %+v\n", cmdArgs)
+			fmt.Printf("-- Type of cmdArgs = %+T\n", cmdArgs)
 			fmt.Println("-----------------------------------------------------------")
 
 			// If no more frames, break out to read the next package received.

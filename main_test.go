@@ -75,7 +75,7 @@ func BenchmarkMain(b *testing.B) {
 			// from it.
 			if !pingDetected {
 				// TODO: Put in a select here on the cmd type to do some further processing on the packages
-				_, err := frameARNetworkAL.decode()
+				_, _, err := frameARNetworkAL.decode()
 				if err != nil {
 					log.Println("error: frame.decode: ", err)
 					break
