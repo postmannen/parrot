@@ -422,7 +422,9 @@ func (p *protocolARNetworkAL) decode() (protocolARCommands, error) {
 	//... testing from here
 	// Creating a temporary command value of type command (which is the same as used in the map)
 	// of project/class/def with the values parsed earlier, we need this type to compare against
-	// the map, to receive ............?
+	// the map.
+	// The key's of map are a variable of type 'command', and we will check if we find that
+	// same variable later.
 	c := command{
 		project: projectDef(cmd.project),
 		class:   classDef(cmd.class),
@@ -436,7 +438,7 @@ func (p *protocolARNetworkAL) decode() (protocolARCommands, error) {
 	//fmt.Printf("--- arguments = %+v\n", arguments)
 	//fmt.Println("******************End Parsing of command*********************")
 
-	// Check if that command is specified in the map, and if it is...
+	// Check if the command c with the correct values are specified in the map, and if it is...
 	v, ok := commandMap[c]
 	if ok {
 		//fmt.Printf("+++++ main : Content before calling decode of v = %+v, arguments = %v\n", v, arguments)
@@ -525,21 +527,13 @@ func main() {
 			// Replace this with a proper ping detection later.
 			pingDetected := false
 
+			// Check if it is a ping packet from drone, and incase
+			// it is, reply with a pong.
 			if frameARNetworkAL.targetBufferID == 0 || frameARNetworkAL.targetBufferID == 1 {
 				log.Println("***PING*** frameARNetworkAL.targetBufferID = ", frameARNetworkAL.targetBufferID)
 				pingDetected = true
 
 				{
-					//cmd, err := frameARNetworkAL.decode()
-					//if err != nil {
-					//	log.Println("error: frame.decode: ", err)
-					//	break
-					//}
-					log.Println("---------------------------------------------------------------------")
-					log.Println("------------------------SENDING PONG COMMAND-------------------------")
-					log.Println("---------------------------------------------------------------------")
-					//log.Printf("%+v\n", cmd)
-
 					p := packetCreator.encodePong(frameARNetworkAL)
 					drone.chSendingUDPPacket <- p
 				}
@@ -553,12 +547,10 @@ func main() {
 
 			// Send an ACK packet if the dataType == 4
 			if frameARNetworkAL.dataType == 4 {
-				fmt.Printf("*************************************************************************\n")
-				fmt.Printf("************Last frame was dataType 4, sending ACK************************\n")
-				fmt.Printf("*************************************************************************\n")
-
-				p := packetCreator.encodeAck(frameARNetworkAL.targetBufferID, uint8(frameARNetworkAL.sequenceNR))
-				drone.chSendingUDPPacket <- p
+				{
+					p := packetCreator.encodeAck(frameARNetworkAL.targetBufferID, uint8(frameARNetworkAL.sequenceNR))
+					drone.chSendingUDPPacket <- p
+				}
 
 				if lastFrame {
 					break
