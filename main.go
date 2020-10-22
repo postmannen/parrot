@@ -9,6 +9,7 @@ import (
 	"log"
 	"net"
 	"strconv"
+	"time"
 )
 
 // Drone holds the data and methods specific for the drone
@@ -40,7 +41,7 @@ func NewDrone() *Drone {
 }
 
 // Discover will initalize the connection with the drone.
-// A discover will JSON formated data like :
+// A discover with JSON formated data like :
 //
 // { "status": 0, "c2d_port": 54321, "c2d_update_port": 51, "c2d_user_port": 21, "qos_mode": 0, "arstream2_server_stream_port": 5004, "arstream2_server_control_port": 5005 }
 func (d *Drone) Discover() error {
@@ -188,7 +189,15 @@ func (d *Drone) writeNetworkUDPPacketsC2D() {
 	defer conn.Close()
 
 	for v := range d.chSendingUDPPacket {
-		fmt.Printf("sending v = %v\n", v)
+		fmt.Printf("sending v = %v\n", v.data)
+
+		n, err := conn.Write(v.data)
+		if err != nil {
+			log.Printf("error: failed conn.Write while sending: %v", err)
+		}
+
+		fmt.Printf("*** while sending, n = %v\n", n)
+		time.Sleep(time.Millisecond * 200)
 	}
 
 	fmt.Println("chSendingUDPPacket closed, leaving for loop of writeNetworkUDPPacketsC2D")
@@ -224,15 +233,42 @@ func (packet *networkUDPPacket) encode(dataType int, targetBufferID int, sequenc
 // max value is reached.
 type udpPacketCreator struct {
 	// The sequence number used when sending packets
-	sequenceNR uint8
+	//
+	// TODO: It seems that each individual ID has it's
+	// own sequence number, so we should create a map
+	// of all the id's with a value for sequence number
+	// and not just single one as it is now!
+	sequenceNR map[int]uint8
 }
 
 // newUdpPacketCreator will return a new udpPacketCreator,
 // and set it's correct default values.
 func newUdpPacketCreator() *udpPacketCreator {
 	return &udpPacketCreator{
-		sequenceNR: 0,
+		sequenceNR: make(map[int]uint8),
 	}
+}
+
+func (u *udpPacketCreator) encodePong(data protocolARNetworkAL) networkUDPPacket {
+
+	u.sequenceNR[int(data.targetBufferID)]++
+
+	pdataType := uint8(2)
+	ptargetBufferID := uint8(data.targetBufferID)
+	psequenceNR := uint8(u.sequenceNR[int(ptargetBufferID)])
+	psize := []byte{8, 0, 0, 0}
+	pdata := data.dataARNetwork
+
+	u.sequenceNR[int(ptargetBufferID)]++
+
+	d := []byte{pdataType, ptargetBufferID, psequenceNR}
+	d = append(d, psize...)
+	d = append(d, pdata...)
+
+	return networkUDPPacket{
+		data: d,
+	}
+
 }
 
 func (u *udpPacketCreator) encodeAck(targetBufferID int, sequenceNR uint8) networkUDPPacket {
@@ -243,13 +279,13 @@ func (u *udpPacketCreator) encodeAck(targetBufferID int, sequenceNR uint8) netwo
 	// E.g. : To acknowledge the frame    "(hex) 04 0b 42 0b000000 12345678",
 	// you will need to send a frame like "(hex) 01 8b 01 08000000 42"
 
-	u.sequenceNR++
-
 	pdataType := uint8(1)
 	ptargetBufferID := uint8(targetBufferID + 128)
 	psequenceNR := sequenceNR
 	psize := []byte{8, 0, 0, 0}
 	pdata := uint8(sequenceNR)
+
+	u.sequenceNR[int(ptargetBufferID)]++
 
 	d := []byte{pdataType, ptargetBufferID, psequenceNR}
 	d = append(d, psize...)
@@ -462,11 +498,15 @@ func main() {
 		// Get a packet
 		packet := <-drone.chReceivedUDPPacket
 
+		log.Println("Reading new packet : ")
+
 		var lastFrame bool
 		// An UDP Packet can consist of several frames, loop over each
 		// frame found in the packet. If last frame is found, break out.
 		for {
 			frameARNetworkAL, err := packet.decode()
+
+			log.Println("Reading new frame", frameARNetworkAL)
 
 			// Check if it was the last frame in the UDP packet.
 			if err == io.EOF {
@@ -485,18 +525,46 @@ func main() {
 			// Replace this with a proper ping detection later.
 			pingDetected := false
 			if frameARNetworkAL.targetBufferID == 0 || frameARNetworkAL.targetBufferID == 1 {
-				fmt.Println("****** frameARNetworkAL.targetBufferID = ", frameARNetworkAL.targetBufferID)
+				log.Println("***PING*** frameARNetworkAL.targetBufferID = ", frameARNetworkAL.targetBufferID)
 				pingDetected = true
+
+				{
+					//cmd, err := frameARNetworkAL.decode()
+					//if err != nil {
+					//	log.Println("error: frame.decode: ", err)
+					//	break
+					//}
+					log.Println("---------------------------------------------------------------------")
+					log.Println("------------------------SENDING PONG COMMAND-------------------------")
+					log.Println("---------------------------------------------------------------------")
+					//log.Printf("%+v\n", cmd)
+
+					p := packetCreator.encodePong(frameARNetworkAL)
+					drone.chSendingUDPPacket <- p
+				}
+
+				if lastFrame {
+					break
+				}
+
+				continue
 			}
 
 			// TODO: Send an ack if the datatype == 4
 			if frameARNetworkAL.dataType == 4 {
 				fmt.Printf("*************************************************************************\n")
-				fmt.Printf("*************************************************************************\n")
+				fmt.Printf("************Last fram was dataType 4, sending ACK************************\n")
 				fmt.Printf("*************************************************************************\n")
 
-				// p := packetCreator.encodeAck(frameARNetworkAL.targetBufferID, packetCreator.sequenceNR)
+				p := packetCreator.encodeAck(frameARNetworkAL.targetBufferID, uint8(frameARNetworkAL.sequenceNR))
 				// TODO: Put in the sending of p above to the sending channel here.
+				drone.chSendingUDPPacket <- p
+
+				if lastFrame {
+					break
+				}
+
+				continue
 			}
 
 			// If the package was not a ping package, then decode the ARCommand
