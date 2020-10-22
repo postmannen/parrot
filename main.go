@@ -404,14 +404,7 @@ func (p *protocolARNetworkAL) decode() (protocolARCommands, error) {
 	// write into. We then convert the uint16 to int, and store the
 	// value in the command field of the struct.
 	var tmpCommand uint16
-	// HERE: removed, and replacing with new littleEndian decoder
-	//err := binary.Read(bytes.NewReader(p.dataARNetwork[2:4]), binary.LittleEndian, &tmpCommand)
-	//if err != nil {
-	//	log.Printf("error: binary read of command failed %v\n", err)
-	//	return protocolARCommands{}, err
-	//}
 	convLittleEndian(p.dataARNetwork[2:4], &tmpCommand)
-
 	cmd.command = int(tmpCommand)
 
 	//fmt.Printf("tmpCommand = %v, %T\n", tmpCommand, tmpCommand)
