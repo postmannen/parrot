@@ -6,9 +6,9 @@ import (
 )
 
 type data struct {
-	a uint8
-	b uint8
-	c uint16
+	A uint8
+	B uint8
+	C uint16
 }
 
 func main() {

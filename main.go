@@ -2,13 +2,18 @@ package main
 
 import (
 	"bytes"
+	"encoding/binary"
 	"encoding/json"
-	"flag"
 	"fmt"
 	"io"
 	"log"
 	"net"
+	"reflect"
 	"strconv"
+	"time"
+	"unsafe"
+
+	flags "flag"
 )
 
 // Drone holds the data and methods specific for the drone
@@ -281,7 +286,10 @@ func (u *udpPacketCreator) encodeAck(targetBufferID int, sequenceNR uint8) netwo
 	pdataType := uint8(1)
 	ptargetBufferID := uint8(targetBufferID + 128)
 	psequenceNR := sequenceNR
+	// Ack is always 8 bytes. 7 bytes of header, and 1 byte for the received
+	// sequence number put into the data part.
 	psize := []byte{8, 0, 0, 0}
+	// Put the received sequence number into the data payload
 	pdata := uint8(sequenceNR)
 
 	u.sequenceNR[int(ptargetBufferID)]++
@@ -295,30 +303,117 @@ func (u *udpPacketCreator) encodeAck(targetBufferID int, sequenceNR uint8) netwo
 	}
 }
 
-func (u *udpPacketCreator) encodeCmd(targetBufferID int, sequenceNR uint8) networkUDPPacket {
-	// TODO:
-	// To acknowledge data, simply send back a frame with the Ack data type,
-	// a buffer ID of 128+Data_Buffer_ID, and the data sequence number as the
-	// data.
-	// E.g. : To acknowledge the frame    "(hex) 04 0b 42 0b000000 12345678",
-	// you will need to send a frame like "(hex) 01 8b 01 08000000 42"
+// encodeCmd will encode and prepare the Command package to be sent over UDP.
+func (u *udpPacketCreator) encodeCmd(c Command) networkUDPPacket {
+	// Data types:
+	// The ARNetworkAL library supports 4 types of data:
+	//  • Ack(1): Acknowledgment of previously received data
+	//  • Data(2): Normal data (no ack requested)
+	//  • Low latency data(3): Treated as normal data on the network, but are
+	//    given higher priority internally
+	//  • Data with ack(4): Data requesting an ack. The receiver must send an
+	//    ack for this data !
 
-	pdataType := uint8(1)
-	ptargetBufferID := uint8(targetBufferID + 128)
-	psequenceNR := sequenceNR
-	psize := []byte{8, 0, 0, 0}
-	pdata := uint8(sequenceNR)
+	// Controller To Device buffers
+	// • Non ack data (periodic commands for piloting and camera orientation).
+	//   Non ack data (periodic commands for piloting and camera orientation).
+	//   This buffers transports ARCommands.
+	//   {
+	//   .ID = 10
+	//   .dataType = ARNETWORKAL FRAME TYPE DATA;
+	//   ...
+	//   }
+	//
+	// • Ack data (Events, settings ...).
+	//   Ack data (Events, settings ...).
+	//   This buffers transports ARCommands.
+	//   {
+	//   .ID = 11
+	//   .dataType = ARNETWORKAL FRAME TYPE DATA WITH ACK;
+	//   ...
+	//   }
+	//
+	// • Emergency data (Emergency command only).
+	//   This buffers transports ARCommands.
+	//   {
+	//   .ID = 12
+	//   .dataType = ARNETWORKAL FRAME TYPE DATA WITH ACK;
+	//   ...
+	//   }
+	//
+	// • ARStream video acks.
+	//   This buffers transports ARStream data.
+	//   {
+	//   .ID = 13
+	//   .dataType = ARNETWORKAL FRAME TYPE DATA LOW LATENCY;
+	//   ...
+	//   }
 
-	u.sequenceNR[int(ptargetBufferID)]++
+	// Setting buffer to 11 for ARCommands
+	const buffer int = 11
 
+	// setting type to data no-ack
+	pdataType := uint8(2)
+	// ARCommands uses buffer 11 ?
+	ptargetBufferID := uint8(buffer)
+
+	u.sequenceNR[buffer]++
+	psequenceNR := u.sequenceNR[buffer]
+	// Convert the content of the Command from input argument from struct to []byte
+	pdata := convertCMDToBytes(Command(c))
+
+	// The header size is 7 bytes, 1+1+1+4.
+	const headerSize uint32 = 7
+
+	// Get the size, and convert it to a []byte with length of 4.
+	size := uint32(len(pdata)) + headerSize
+	var buf bytes.Buffer
+	err := binary.Write(&buf, binary.LittleEndian, size)
+	if err != nil {
+		fmt.Printf("error: binary write failed: %v\n", err)
+	}
+	psize := buf.Bytes()
+
+	// Create the data package by putting the values in the correct places.
 	d := []byte{pdataType, ptargetBufferID, psequenceNR}
 	d = append(d, psize...)
-	d = append(d, pdata)
+	d = append(d, pdata...)
 
 	return networkUDPPacket{
 		data: d,
 	}
 }
+
+func convertCMDToBytes(c Command) []byte {
+
+	var buf bytes.Buffer
+
+	rv := reflect.ValueOf(c)
+
+	for i := 0; i < rv.NumField(); i++ {
+		f := rv.Field(i)
+		v := (*value)(unsafe.Pointer(&f))
+		v.flag &^= flagRO
+		binary.Write(&buf, binary.LittleEndian, f.Interface())
+	}
+
+	return buf.Bytes()
+
+}
+
+type value struct {
+	_    unsafe.Pointer
+	_    unsafe.Pointer
+	flag flag
+}
+
+type flag uintptr
+
+const (
+	flagStickyRO flag = 1 << 5
+	flagEmbedRO  flag = 1 << 6
+	flagRO       flag = flagStickyRO | flagEmbedRO
+)
 
 // decode will decode a whole UDP packet given as input,
 // and return a frame of the ARNetworkAL protocol, it will return error==
@@ -436,10 +531,10 @@ func (p *protocolARNetworkAL) decode() (cmd protocolARCommands, cmdArgs interfac
 	// the map.
 	// The key's of map are a variable of type 'command', and we will check if we find that
 	// same variable later.
-	c := command{
-		project: projectDef(cmd.project),
-		class:   classDef(cmd.class),
-		cmd:     cmdDef(cmd.command),
+	c := Command{
+		Project: ProjectDef(cmd.project),
+		Class:   ClassDef(cmd.class),
+		Cmd:     CmdDef(cmd.command),
 	}
 	//fmt.Printf("c = %#v\n", c)
 
@@ -452,14 +547,14 @@ func (p *protocolARNetworkAL) decode() (cmd protocolARCommands, cmdArgs interfac
 	// To get the actual type we have to check the map holding all the commands, to get it's
 	// actual type.
 	// Check if the command c with the correct values are specified in the map, and if it is...
-	v, ok := commandMap[c]
+	v, ok := CommandMap[c]
 	if ok {
 		//fmt.Printf("+++++ main : Content before calling decode of v = %+v, arguments = %v\n", v, arguments)
 
 		//-- !!!!!!!!! If you are running the _test file uncomment the line below
 		// and comment out the 2 lines below that one so the output doesn't get flooded.
 		//_ = v.decode(arguments)
-		cmdArgs = v.decode(arguments)
+		cmdArgs = v.Decode(arguments)
 		// fmt.Printf("cmdargmain : type %T, arguments = %+v\n", cmdArgs, cmdArgs)
 
 		// Check the type...for testing
@@ -489,8 +584,8 @@ func main() {
 	packetCreator := newUdpPacketCreator()
 
 	// Parse flags
-	testingMode := flag.Bool("testingMode", false, "set to true to test without connecting to the drone")
-	flag.Parse()
+	testingMode := flags.Bool("testingMode", false, "set to true to test without connecting to the drone")
+	flags.Parse()
 	drone.testingMode = *testingMode
 
 	if drone.testingMode {
@@ -513,6 +608,21 @@ func main() {
 		// channel
 		go drone.writeNetworkUDPPacketsC2D()
 	}
+
+	// Simple test, send a reboot command for testing
+	go func() {
+		{
+			time.Sleep(time.Second * 3)
+			p := packetCreator.encodeCmd(Command(PilotingTakeOff))
+			drone.chSendingUDPPacket <- p
+		}
+
+		{
+			time.Sleep(time.Second * 5)
+			p := packetCreator.encodeCmd(Command(PilotingLanding))
+			drone.chSendingUDPPacket <- p
+		}
+	}()
 
 	// Loop, get a recieved UDP packet from the channel, and decode it.
 	for {
@@ -589,10 +699,10 @@ func main() {
 			fmt.Printf("-- Value of cmdArgs = %+v\n", cmdArgs)
 			fmt.Printf("-- Type of cmdArgs = %+T\n", cmdArgs)
 			switch cmdArgs.(type) {
-			case ardrone3CameraStateOrientationArguments:
-				log.Println("** EXECUTING ACTION FOR TYPE, ardrone3CameraStateOrientationArguments ...........")
-			case ardrone3PilotingStateAttitudeChangedArguments:
-				log.Println("** EXECUTING ACTION FOR TYPE, ardrone3PilotingStateAttitudeChangedArguments")
+			case Ardrone3CameraStateOrientationArguments:
+				log.Println("** EXECUTING ACTION FOR TYPE, Ardrone3CameraStateOrientationArguments ...........")
+			case Ardrone3PilotingStateAttitudeChangedArguments:
+				log.Println("** EXECUTING ACTION FOR TYPE, Ardrone3PilotingStateAttitudeChangedArguments")
 			}
 			fmt.Println("-----------------------------------------------------------")
 
