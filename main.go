@@ -295,6 +295,31 @@ func (u *udpPacketCreator) encodeAck(targetBufferID int, sequenceNR uint8) netwo
 	}
 }
 
+func (u *udpPacketCreator) encodeCmd(targetBufferID int, sequenceNR uint8) networkUDPPacket {
+	// TODO:
+	// To acknowledge data, simply send back a frame with the Ack data type,
+	// a buffer ID of 128+Data_Buffer_ID, and the data sequence number as the
+	// data.
+	// E.g. : To acknowledge the frame    "(hex) 04 0b 42 0b000000 12345678",
+	// you will need to send a frame like "(hex) 01 8b 01 08000000 42"
+
+	pdataType := uint8(1)
+	ptargetBufferID := uint8(targetBufferID + 128)
+	psequenceNR := sequenceNR
+	psize := []byte{8, 0, 0, 0}
+	pdata := uint8(sequenceNR)
+
+	u.sequenceNR[int(ptargetBufferID)]++
+
+	d := []byte{pdataType, ptargetBufferID, psequenceNR}
+	d = append(d, psize...)
+	d = append(d, pdata)
+
+	return networkUDPPacket{
+		data: d,
+	}
+}
+
 // decode will decode a whole UDP packet given as input,
 // and return a frame of the ARNetworkAL protocol, it will return error==
 // io.EOF when decoding of the whole packet is done.
