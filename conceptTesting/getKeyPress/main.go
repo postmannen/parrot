@@ -28,6 +28,25 @@ func main() {
 			log.Println("stdin:", err)
 			break
 		}
+
+		if r == '\x1b' {
+			r, _, _ := in.ReadRune()
+			if r == '[' {
+				r, _, _ := in.ReadRune()
+				switch r {
+				case 'A':
+					fmt.Printf("UP ARROW\r\n")
+				case 'B':
+					fmt.Printf("DOWN ARROW\r\n")
+				case 'C':
+					fmt.Printf("RIGHT ARROW\r\n")
+				case 'D':
+					fmt.Printf("LEFT ARROW\r\n")
+				}
+
+			}
+		}
+
 		fmt.Printf("read rune %q\r\n", r)
 		if r == 'q' {
 			break
