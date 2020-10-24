@@ -300,6 +300,9 @@ func (d *Drone) handleReadPackages(packetCreator *udpPacketCreator) error {
 	}
 }
 
+// actions, the idea here is to send the actions on a keypress,
+// and then have some logic who reads the actions received over
+// a channel, and then do the logic for landing/takeoff/rotate etc.
 type action int
 
 const (
