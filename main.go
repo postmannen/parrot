@@ -300,6 +300,31 @@ func (d *Drone) handleReadPackages(packetCreator *udpPacketCreator) error {
 	}
 }
 
+type action int
+
+const (
+	ActionPcmdFlag                action = iota
+	ActionPcmdRollLeft            action = iota
+	ActionPcmdRollRight           action = iota
+	ActionPcmdPitchForward        action = iota
+	ActionPcmdPitchBackward       action = iota
+	ActionPcmdYawClockwise        action = iota
+	ActionPcmdYawCounterClockwise action = iota
+	ActionPcmdGazIncMore          action = iota
+	ActionPcmdGazIncLess          action = iota
+	ActionTakeoff                 action = iota
+	ActionLanding                 action = iota
+	ActionEmergency               action = iota
+	ActionNavigateHome            action = iota // Check how to implement it in xml line 153
+	ActionMoveBy                  action = iota // Check how to implement it in xml line 181
+	ActionUserTakeoff             action = iota
+	ActionMoveTo                  action = iota // Check how to implement it in xml line 259
+	ActionCancelMoveTo            action = iota
+	ActionStartedPilotedPOI       action = iota
+	ActionStopPilotedPOI          action = iota
+	ActionCancelMoveBy            action = iota
+)
+
 // readKeyBoardEvent will read keys pressed on the keyboard
 func (d *Drone) readKeyBoardEvent() {
 	// fd 0 is stdin
