@@ -12,6 +12,7 @@ import (
 	"os"
 	"reflect"
 	"strconv"
+	"time"
 	"unsafe"
 
 	"golang.org/x/crypto/ssh/terminal"
@@ -57,7 +58,8 @@ func NewDrone() *Drone {
 func (d *Drone) Discover() error {
 	//const addr = "192.168.42.1:44444"
 
-	discoverConn, err := net.Dial("tcp", d.addressDrone+":"+d.portDiscover)
+	nd := net.Dialer{Timeout: time.Second * 3}
+	discoverConn, err := nd.Dial("tcp", d.addressDrone+":"+d.portDiscover)
 
 	if err != nil {
 		return err
@@ -87,7 +89,7 @@ func (d *Drone) Discover() error {
 	if err != nil {
 		return err
 	}
-	fmt.Printf("*** Discovery data \n %v \n\n, Size of data = %v\n", string(data), len(data))
+	log.Printf("*** Discovery data \r\n %v \r\n\r\n, Size of data = %v\r\n", string(data), len(data))
 
 	// Using anonymous struct just for unmarshalling the discoveryData
 	discoverData := struct {
@@ -106,7 +108,7 @@ func (d *Drone) Discover() error {
 	if err := json.Unmarshal(data, &discoverData); err != nil {
 		log.Println("error:Umarshal discovery data: ", err)
 	}
-	fmt.Println("Unmarshaled : ", discoverData)
+	fmt.Printf("Unmarshaled : %v\r\n", discoverData)
 
 	// if the status !=0 the disovery failed.
 	if discoverData.Status != 0 {
@@ -115,7 +117,6 @@ func (d *Drone) Discover() error {
 
 	// Set the received Controller 2 Drone to use based on discovery data.
 	d.portC2D = strconv.Itoa(discoverData.C2dPort)
-	fmt.Printf("portC2D is of type = %T, and value = %s \n", d.portC2D, d.portC2D)
 
 	return discoverConn.Close()
 }
@@ -199,19 +200,19 @@ func (d *Drone) writeNetworkUDPPacketsC2D() {
 	defer conn.Close()
 
 	for v := range d.chSendingUDPPacket {
-		fmt.Printf("sending to Drone, v = %v\n", v.data)
+		fmt.Printf("sending to Drone, v = %v\r\n", v.data)
 
 		n, err := conn.Write(v.data)
 		if err != nil {
 			log.Printf("error: failed conn.Write while sending: %v", err)
 		}
 
-		fmt.Printf("*** while sending to Drone, n = %v\n", n)
-		fmt.Println("--------------------")
+		fmt.Printf("*** while sending to Drone, n = %v\r\n", n)
+		fmt.Printf("--------------------\r\n")
 		//time.Sleep(time.Millisecond * 200)
 	}
 
-	fmt.Println("chSendingUDPPacket closed, leaving for loop of writeNetworkUDPPacketsC2D")
+	fmt.Printf("chSendingUDPPacket closed, leaving for loop of writeNetworkUDPPacketsC2D\r\n")
 
 }
 
@@ -283,17 +284,17 @@ func (d *Drone) handleReadPackages(packetCreator *udpPacketCreator) error {
 				log.Println("error: frame.decode: ", err)
 				break
 			}
-			fmt.Println("----------COMMAND-------------------------------------------")
-			fmt.Printf("-- cmd = %+v\n", cmd)
-			fmt.Printf("-- Value of cmdArgs = %+v\n", cmdArgs)
-			fmt.Printf("-- Type of cmdArgs = %+T\n", cmdArgs)
+			fmt.Printf("----------COMMAND-------------------------------------------\r\n")
+			fmt.Printf("-- cmd = %+v\r\n", cmd)
+			fmt.Printf("-- Value of cmdArgs = %+v\r\n", cmdArgs)
+			fmt.Printf("-- Type of cmdArgs = %+T\r\n", cmdArgs)
 			switch cmdArgs.(type) {
 			case Ardrone3CameraStateOrientationArguments:
 				//log.Printf("** EXECUTING ACTION FOR TYPE, Ardrone3CameraStateOrientationArguments ...........\r\n")
 			case Ardrone3PilotingStateAttitudeChangedArguments:
 				//log.Printf("** EXECUTING ACTION FOR TYPE, Ardrone3PilotingStateAttitudeChangedArguments\r\n")
 			}
-			fmt.Println("-----------------------------------------------------------")
+			fmt.Printf("-----------------------------------------------------------\r\n")
 
 			// If no more frames, break out of for loop to read
 			// the next package received.
@@ -346,6 +347,7 @@ func (d *Drone) readKeyBoardEvent() {
 	}()
 
 	in := bufio.NewReader(os.Stdin)
+
 	for {
 		r, _, err := in.ReadRune()
 		if err != nil {
@@ -541,7 +543,7 @@ func (u *udpPacketCreator) encodeCmd(c Command) networkUDPPacket {
 	var buf bytes.Buffer
 	err := binary.Write(&buf, binary.LittleEndian, size)
 	if err != nil {
-		fmt.Printf("error: binary write failed: %v\n", err)
+		fmt.Printf("error: binary write failed: %v\r\n", err)
 	}
 	psize := buf.Bytes()
 
@@ -604,7 +606,7 @@ func (packet *networkUDPPacket) decode() (protocolARNetworkAL, error) {
 		dataARNetwork:  []byte{},
 	}
 
-	fmt.Printf("* Content of frame : protocolARNetworkAL%+v\n", frame)
+	fmt.Printf("* Content of frame : protocolARNetworkAL%+v\r\n", frame)
 
 	// Get the size of the ARNetworkAL frame. Size includes the header of 7bytes.
 	var size uint32
