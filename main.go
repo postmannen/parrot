@@ -10,7 +10,6 @@ import (
 	"net"
 	"reflect"
 	"strconv"
-	"time"
 	"unsafe"
 
 	flags "flag"
@@ -610,19 +609,19 @@ func main() {
 	}
 
 	// Simple test, send a reboot command for testing
-	go func() {
-		{
-			time.Sleep(time.Second * 3)
-			p := packetCreator.encodeCmd(Command(PilotingTakeOff))
-			drone.chSendingUDPPacket <- p
-		}
-
-		{
-			time.Sleep(time.Second * 5)
-			p := packetCreator.encodeCmd(Command(PilotingLanding))
-			drone.chSendingUDPPacket <- p
-		}
-	}()
+	// go func() {
+	// 	{
+	// 		time.Sleep(time.Second * 3)
+	// 		p := packetCreator.encodeCmd(Command(PilotingTakeOff))
+	// 		drone.chSendingUDPPacket <- p
+	// 	}
+	//
+	// 	{
+	// 		time.Sleep(time.Second * 5)
+	// 		p := packetCreator.encodeCmd(Command(PilotingLanding))
+	// 		drone.chSendingUDPPacket <- p
+	// 	}
+	// }()
 
 	// Loop, get a recieved UDP packet from the channel, and decode it.
 	for {
@@ -656,10 +655,9 @@ func main() {
 			// • Data with ack(4): Data requesting an ack. The receiver must send an
 			//   ack for this data !
 
-			// TODO: Putting in a continue here to skip decoding of ping packets
-			// which have a buffer ID of 0 or 1.
-			// Replace this with a proper ping detection later.
-
+			// The drone will send out ping packets each second where we will need to
+			// reply with a pong. The drone will assume the connection is broken if a
+			// pong is not received within 5 seconds.
 			// Check if it is a ping packet from drone, and incase
 			// it is, reply with a pong.
 			if frameARNetworkAL.targetBufferID == 0 || frameARNetworkAL.targetBufferID == 1 {
