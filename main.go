@@ -14,8 +14,6 @@ import (
 	"strconv"
 	"unsafe"
 
-	flags "flag"
-
 	"golang.org/x/crypto/ssh/terminal"
 )
 
@@ -30,6 +28,8 @@ type Drone struct {
 	portRTPControl      string
 	chReceivedUDPPacket chan networkUDPPacket
 	chSendingUDPPacket  chan networkUDPPacket
+	chInputActions      chan inputAction
+	chQuit              chan struct{}
 }
 
 // NewDrone will initalize all the variables needed for a drone,
@@ -44,7 +44,10 @@ func NewDrone() *Drone {
 		portRTPControl: "55005",
 
 		chReceivedUDPPacket: make(chan networkUDPPacket),
-		chSendingUDPPacket:  make(chan networkUDPPacket)}
+		chSendingUDPPacket:  make(chan networkUDPPacket),
+		chInputActions:      make(chan inputAction),
+		chQuit:              make(chan struct{}),
+	}
 }
 
 // Discover will initalize the connection with the drone.
@@ -117,31 +120,32 @@ func (d *Drone) Discover() error {
 	return discoverConn.Close()
 }
 
-// getNetworkTestingPacketsD2C gets the raw UDP packets from the test data.
-// Will read the raw testing UDP packets, and put them on a channel to be
-// picked up by the frame decoder.
-func (d *Drone) readNetworkUDPTestingPacketsD2C() {
-	/* More packets to put into buf if needed.
-	2, 127, 28, 38, 0, 0, 0, 1, 4, 9, 0, 0, 0, 0, 0, 0, 64, 127, 64, 0, 0, 0, 0, 0, 64, 127, 64, 0, 0, 0, 0, 0, 64, 127, 64, 83, 83, 83,
-
-	2, 127, 32, 13, 0, 0, 0, 1, 25, 0, 0, 243, 0,
-	*/
-	// the simulated testing data to use for reading
-	buf := []byte{
-		2, 127, 8, 23, 0, 0, 0, 1, 4, 6, 0, 154, 221, 45, 61, 44, 209, 73, 188, 121, 230, 52, 64}
-
-	p := networkUDPPacket{
-		size: len(buf),
-		data: buf,
-		// Since this is a new UDP packet, and we want to start reading
-		// the first frame from the start we set the start position to 0.
-		framePos: 0,
-	}
-
-	// send the packet received over a channel to later parse out ARNetworkAL/frames.
-	d.chReceivedUDPPacket <- p
-
-}
+// // getNetworkTestingPacketsD2C gets the raw UDP packets from the test data.
+// // Will read the raw testing UDP packets, and put them on a channel to be
+// // picked up by the frame decoder.
+// //
+// func (d *Drone) readNetworkUDPTestingPacketsD2C() {
+// 	/* More packets to put into buf if needed.
+// 	2, 127, 28, 38, 0, 0, 0, 1, 4, 9, 0, 0, 0, 0, 0, 0, 64, 127, 64, 0, 0, 0, 0, 0, 64, 127, 64, 0, 0, 0, 0, 0, 64, // 127, 64, 83, 83, 83,
+//
+// 	2, 127, 32, 13, 0, 0, 0, 1, 25, 0, 0, 243, 0,
+// 	*/
+// 	// the simulated testing data to use for reading
+// 	buf := []byte{
+// 		2, 127, 8, 23, 0, 0, 0, 1, 4, 6, 0, 154, 221, 45, 61, 44, 209, 73, 188, 121, 230, 52, 64}
+//
+// 	p := networkUDPPacket{
+// 		size: len(buf),
+// 		data: buf,
+// 		// Since this is a new UDP packet, and we want to start reading
+// 		// the first frame from the start we set the start position to 0.
+// 		framePos: 0,
+// 	}
+//
+// 	// send the packet received over a channel to later parse out ARNetworkAL/frames.
+// 	d.chReceivedUDPPacket <- p
+//
+// }
 
 // getNetworkPacketsD2C gets the raw UDP packets from the drone sent to the controller.
 // Will read the raw UDP packets from the network, and put them on a channel to be
@@ -303,29 +307,29 @@ func (d *Drone) handleReadPackages(packetCreator *udpPacketCreator) error {
 // actions, the idea here is to send the actions on a keypress,
 // and then have some logic who reads the actions received over
 // a channel, and then do the logic for landing/takeoff/rotate etc.
-type action int
+type inputAction int
 
 const (
-	ActionPcmdFlag                action = iota
-	ActionPcmdRollLeft            action = iota
-	ActionPcmdRollRight           action = iota
-	ActionPcmdPitchForward        action = iota
-	ActionPcmdPitchBackward       action = iota
-	ActionPcmdYawClockwise        action = iota
-	ActionPcmdYawCounterClockwise action = iota
-	ActionPcmdGazIncMore          action = iota
-	ActionPcmdGazIncLess          action = iota
-	ActionTakeoff                 action = iota
-	ActionLanding                 action = iota
-	ActionEmergency               action = iota
-	ActionNavigateHome            action = iota // Check how to implement it in xml line 153
-	ActionMoveBy                  action = iota // Check how to implement it in xml line 181
-	ActionUserTakeoff             action = iota
-	ActionMoveTo                  action = iota // Check how to implement it in xml line 259
-	ActionCancelMoveTo            action = iota
-	ActionStartedPilotedPOI       action = iota
-	ActionStopPilotedPOI          action = iota
-	ActionCancelMoveBy            action = iota
+	ActionPcmdFlag                inputAction = iota
+	ActionPcmdRollLeft            inputAction = iota
+	ActionPcmdRollRight           inputAction = iota
+	ActionPcmdPitchForward        inputAction = iota
+	ActionPcmdPitchBackward       inputAction = iota
+	ActionPcmdYawClockwise        inputAction = iota
+	ActionPcmdYawCounterClockwise inputAction = iota
+	ActionPcmdGazIncMore          inputAction = iota
+	ActionPcmdGazIncLess          inputAction = iota
+	ActionTakeoff                 inputAction = iota
+	ActionLanding                 inputAction = iota
+	ActionEmergency               inputAction = iota
+	ActionNavigateHome            inputAction = iota // Check how to implement it in xml line 153
+	ActionMoveBy                  inputAction = iota // Check how to implement it in xml line 181
+	ActionUserTakeoff             inputAction = iota
+	ActionMoveTo                  inputAction = iota // Check how to implement it in xml line 259
+	ActionCancelMoveTo            inputAction = iota
+	ActionStartedPilotedPOI       inputAction = iota
+	ActionStopPilotedPOI          inputAction = iota
+	ActionCancelMoveBy            inputAction = iota
 )
 
 // readKeyBoardEvent will read keys pressed on the keyboard
@@ -349,6 +353,10 @@ func (d *Drone) readKeyBoardEvent() {
 			break
 		}
 
+		if r == 'q' {
+			d.chQuit <- struct{}{}
+		}
+
 		// Check for arrow keys
 		if r == '\x1b' {
 			r, _, _ := in.ReadRune()
@@ -368,8 +376,11 @@ func (d *Drone) readKeyBoardEvent() {
 			}
 		}
 
-		if r == 'q' {
-			break
+		switch r {
+		case 't':
+			d.chInputActions <- ActionTakeoff
+		case 'l':
+			d.chInputActions <- ActionLanding
 		}
 	}
 }
@@ -739,53 +750,60 @@ type protocolARCommands struct {
 	size int
 }
 
-func main() {
-	drone := NewDrone()
-	packetCreator := newUdpPacketCreator()
-
-	go drone.readKeyBoardEvent()
-
-	// Parse flags
-	testingMode := flags.Bool("testingMode", false, "set to true to test without connecting to the drone")
-	flags.Parse()
-	drone.testingMode = *testingMode
-
-	if drone.testingMode {
-		// It is testing mode, start the fake UDP reader.
-		go drone.readNetworkUDPTestingPacketsD2C()
-	} else {
-		// If not in testingMode, initialize the network connection to the drone
-		log.Println("Initializing the traffic with the drone, and starting controller UDP listener.")
-		err := drone.Discover()
-		if err != nil {
-			log.Println("error: client Discover failed:", err)
+func (d *Drone) handleInputAction(packetCreator udpPacketCreator) {
+	for {
+		action := <-d.chInputActions
+		switch action {
+		case ActionTakeoff:
+			p := packetCreator.encodeCmd(Command(PilotingTakeOff))
+			d.chSendingUDPPacket <- p
+		case ActionLanding:
+			p := packetCreator.encodeCmd(Command(PilotingLanding))
+			d.chSendingUDPPacket <- p
 		}
 
-		// Start the reading of whole UDP packets from the network,
-		// and put them on the Drone.chReceivedUDPPacket channel.
-		go drone.readNetworkUDPPacketsD2C()
+	}
+}
 
-		// Start the sender of UDP packets,
-		// will send UDP packets received at the Drone.chSendingUDPPacket
-		// channel
-		go drone.writeNetworkUDPPacketsC2D()
+func (d *Drone) start() {
+
+	// Since we need to use individual sequence number counters for each
+	// buffer a udpPacketCreator will keep track of them, and increment
+	// the currect buffer sequence number when a new package are created.
+	// All UDP packet encoding methods are tied to this type.
+	packetCreator := newUdpPacketCreator()
+
+	// Will handle all the events generated by input actions from keyboard etc.
+	go d.handleInputAction(*packetCreator)
+
+	// Check for keyboard press, and generate appropriate inputActions's.
+	go d.readKeyBoardEvent()
+
+	// Initialize the network connection to the drone
+	log.Println("Initializing the traffic with the drone, and starting controller UDP listener.")
+	err := d.Discover()
+	if err != nil {
+		log.Println("error: client Discover failed:", err)
 	}
 
-	// Simple test, send a reboot command for testing
-	// go func() {
-	// 	{
-	// 		time.Sleep(time.Second * 3)
-	// 		p := packetCreator.encodeCmd(Command(PilotingTakeOff))
-	// 		drone.chSendingUDPPacket <- p
-	// 	}
-	//
-	// 	{
-	// 		time.Sleep(time.Second * 5)
-	// 		p := packetCreator.encodeCmd(Command(PilotingLanding))
-	// 		drone.chSendingUDPPacket <- p
-	// 	}
-	// }()
+	// Start the reading of whole UDP packets from the network,
+	// and put them on the Drone.chReceivedUDPPacket channel.
+	go d.readNetworkUDPPacketsD2C()
 
-	drone.handleReadPackages(packetCreator)
+	// Start the sender of UDP packets,
+	// will send UDP packets received at the Drone.chSendingUDPPacket
+	// channel
+	go d.writeNetworkUDPPacketsC2D()
 
+	go d.handleReadPackages(packetCreator)
+
+	// Wait here until receiving on quit channel. Trigger by pressing
+	// 'q' on the keyboard.
+	<-d.chQuit
+}
+
+func main() {
+	drone := NewDrone()
+
+	drone.start()
 }
