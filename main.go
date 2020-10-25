@@ -3,6 +3,7 @@ package main
 import (
 	"bufio"
 	"bytes"
+	"context"
 	"encoding/binary"
 	"encoding/json"
 	"fmt"
@@ -31,6 +32,7 @@ type Drone struct {
 	chSendingUDPPacket  chan networkUDPPacket
 	chInputActions      chan inputAction
 	chQuit              chan struct{}
+	chNetworkConnect    chan struct{}
 }
 
 // NewDrone will initalize all the variables needed for a drone,
@@ -48,6 +50,7 @@ func NewDrone() *Drone {
 		chSendingUDPPacket:  make(chan networkUDPPacket),
 		chInputActions:      make(chan inputAction),
 		chQuit:              make(chan struct{}),
+		chNetworkConnect:    make(chan struct{}),
 	}
 }
 
@@ -151,7 +154,7 @@ func (d *Drone) Discover() error {
 // getNetworkPacketsD2C gets the raw UDP packets from the drone sent to the controller.
 // Will read the raw UDP packets from the network, and put them on a channel to be
 // picked up by the frame decoder.
-func (d *Drone) readNetworkUDPPacketsD2C() {
+func (d *Drone) readNetworkUDPPacketsD2C(ctx context.Context) {
 	// create an 'empty' UDP listener.
 	localConn, err := net.ListenPacket("udp", ":"+d.portD2C)
 	if err != nil {
@@ -168,6 +171,11 @@ func (d *Drone) readNetworkUDPPacketsD2C() {
 			log.Printf("error: failed ReadFrom: %v %v\n", addr, err)
 		}
 
+		// setting the deadline after a succesful write will make the
+		// next read fail if it does not receive any data within the
+		// deadline
+		localConn.SetReadDeadline(time.Now().Add(time.Second * 3))
+
 		packet := networkUDPPacket{
 			size: n,
 			data: p,
@@ -183,11 +191,7 @@ func (d *Drone) readNetworkUDPPacketsD2C() {
 
 // writeNetworkPacketsC2D writes the raw UDP packets from the controller to the drone.
 // Will receive []byte packet to write on an incomming channel for the function.
-func (d *Drone) writeNetworkUDPPacketsC2D() {
-	// TODO:
-	// Have a channel waiting for incomming network packets to be written to the drone
-	// .........
-
+func (d *Drone) writeNetworkUDPPacketsC2D(ctx context.Context) {
 	udpAddr, err := net.ResolveUDPAddr("udp", d.addressDrone+":"+d.portC2D)
 	if err != nil {
 		log.Printf("error: failed to resolveUDPAddr: %v", err)
@@ -790,14 +794,22 @@ func (d *Drone) start() {
 		log.Println("error: client Discover failed:", err)
 	}
 
-	// Start the reading of whole UDP packets from the network,
-	// and put them on the Drone.chReceivedUDPPacket channel.
-	go d.readNetworkUDPPacketsD2C()
+	go func() {
+		<-d.chNetworkConnect
+		ctx := context.Background()
 
-	// Start the sender of UDP packets,
-	// will send UDP packets received at the Drone.chSendingUDPPacket
-	// channel
-	go d.writeNetworkUDPPacketsC2D()
+		// Start the reading of whole UDP packets from the network,
+		// and put them on the Drone.chReceivedUDPPacket channel.
+		go d.readNetworkUDPPacketsD2C(ctx)
+
+		// Start the sender of UDP packets,
+		// will send UDP packets received at the Drone.chSendingUDPPacket
+		// channel
+		go d.writeNetworkUDPPacketsC2D(ctx)
+	}()
+
+	// Set the inital signal to trigger the first network initialization above.
+	d.chNetworkConnect <- struct{}{}
 
 	go d.handleReadPackages(packetCreator)
 

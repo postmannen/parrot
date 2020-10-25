@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"io"
 	"log"
 	"testing"
@@ -21,7 +22,8 @@ func BenchmarkMain(b *testing.B) {
 
 		// Will start the reading of whole UDP packets from the network,
 		// and put them on the chReceivedPacket channel.
-		go drone.readNetworkUDPPacketsD2C()
+		ctx := context.Background()
+		go drone.readNetworkUDPPacketsD2C(ctx)
 
 	}
 
