@@ -333,7 +333,8 @@ const (
 	ActionCancelMoveBy            inputAction = iota
 )
 
-// readKeyBoardEvent will read keys pressed on the keyboard
+// readKeyBoardEvent will read keys pressed on the keyboard,
+// and pass on the correct action to be executed.
 func (d *Drone) readKeyBoardEvent() {
 	// fd 0 is stdin
 	state, err := terminal.MakeRaw(0)
@@ -355,11 +356,10 @@ func (d *Drone) readKeyBoardEvent() {
 			break
 		}
 
-		if r == 'q' {
-			d.chQuit <- struct{}{}
-		}
-
-		// Check for arrow keys
+		// Check for arrow keys. They come as a series of 3 ReadRunes,
+		// so when we detect the the firs correct value read indicating
+		// arrow key being pressed, we also need to read and check the
+		// next 2 to figure out what arrow key that where pressed.
 		if r == '\x1b' {
 			r, _, _ := in.ReadRune()
 			if r == '[' {
@@ -379,6 +379,8 @@ func (d *Drone) readKeyBoardEvent() {
 		}
 
 		switch r {
+		case 'q':
+			d.chQuit <- struct{}{}
 		case 't':
 			d.chInputActions <- ActionTakeoff
 		case 'l':
