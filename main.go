@@ -58,7 +58,7 @@ func NewDrone() *Drone {
 func (d *Drone) Discover() error {
 	//const addr = "192.168.42.1:44444"
 
-	nd := net.Dialer{Timeout: time.Second * 3}
+	nd := net.Dialer{Timeout: time.Second * 3, Cancel: d.chQuit}
 	discoverConn, err := nd.Dial("tcp", d.addressDrone+":"+d.portDiscover)
 
 	if err != nil {
