@@ -3,7 +3,6 @@ package main
 import (
 	"bufio"
 	"bytes"
-	"context"
 	"encoding/binary"
 	"encoding/json"
 	"fmt"
@@ -21,7 +20,6 @@ import (
 
 // Drone holds the data and methods specific for the drone
 type Drone struct {
-	testingMode         bool   // used for testing the package without connecting to the drone
 	addressDrone        string // The ip address of the drone
 	portDiscover        string // Used for initializing the connection to the drone over TCP
 	portC2D             string // Controller to drone, port the controller wil send the drone messages on
@@ -33,6 +31,9 @@ type Drone struct {
 	chInputActions      chan inputAction
 	chQuit              chan struct{}
 	chNetworkConnect    chan struct{}
+
+	connUDPRead  net.PacketConn
+	connUDPWrite *net.UDPConn
 }
 
 // NewDrone will initalize all the variables needed for a drone,
@@ -154,19 +155,14 @@ func (d *Drone) Discover() error {
 // getNetworkPacketsD2C gets the raw UDP packets from the drone sent to the controller.
 // Will read the raw UDP packets from the network, and put them on a channel to be
 // picked up by the frame decoder.
-func (d *Drone) readNetworkUDPPacketsD2C(ctx context.Context) {
-	// create an 'empty' UDP listener.
-	localConn, err := net.ListenPacket("udp", ":"+d.portD2C)
-	if err != nil {
-		log.Println("error: failed to start listener", err)
-	}
+func (d *Drone) readNetworkUDPPacketsD2C() {
 
-	defer localConn.Close()
+	defer d.connUDPRead.Close()
 
 	for {
 		p := make([]byte, 16384) // NB: buf might be to small ?
 
-		n, addr, err := localConn.ReadFrom(p)
+		n, addr, err := d.connUDPRead.ReadFrom(p)
 		if err != nil {
 			log.Printf("error: failed ReadFrom: %v %v\n", addr, err)
 		}
@@ -174,7 +170,7 @@ func (d *Drone) readNetworkUDPPacketsD2C(ctx context.Context) {
 		// setting the deadline after a succesful write will make the
 		// next read fail if it does not receive any data within the
 		// deadline
-		localConn.SetReadDeadline(time.Now().Add(time.Second * 3))
+		d.connUDPRead.SetReadDeadline(time.Now().Add(time.Second * 3))
 
 		packet := networkUDPPacket{
 			size: n,
@@ -191,22 +187,14 @@ func (d *Drone) readNetworkUDPPacketsD2C(ctx context.Context) {
 
 // writeNetworkPacketsC2D writes the raw UDP packets from the controller to the drone.
 // Will receive []byte packet to write on an incomming channel for the function.
-func (d *Drone) writeNetworkUDPPacketsC2D(ctx context.Context) {
-	udpAddr, err := net.ResolveUDPAddr("udp", d.addressDrone+":"+d.portC2D)
-	if err != nil {
-		log.Printf("error: failed to resolveUDPAddr: %v", err)
-	}
+func (d *Drone) writeNetworkUDPPacketsC2D() {
 
-	conn, err := net.DialUDP("udp", nil, udpAddr)
-	if err != nil {
-		log.Printf("error: failed to DialUDP: %v", err)
-	}
-	defer conn.Close()
+	defer d.connUDPWrite.Close()
 
 	for v := range d.chSendingUDPPacket {
 		fmt.Printf("sending to Drone, v = %v\r\n", v.data)
 
-		n, err := conn.Write(v.data)
+		n, err := d.connUDPWrite.Write(v.data)
 		if err != nil {
 			log.Printf("error: failed conn.Write while sending: %v", err)
 		}
@@ -794,22 +782,30 @@ func (d *Drone) start() {
 		log.Println("error: client Discover failed:", err)
 	}
 
-	go func() {
-		<-d.chNetworkConnect
-		ctx := context.Background()
+	// create an 'empty' UDP listener.
+	d.connUDPRead, err = net.ListenPacket("udp", ":"+d.portD2C)
+	if err != nil {
+		log.Println("error: failed to start listener", err)
+	}
 
-		// Start the reading of whole UDP packets from the network,
-		// and put them on the Drone.chReceivedUDPPacket channel.
-		go d.readNetworkUDPPacketsD2C(ctx)
+	// Start the reading of whole UDP packets from the network,
+	// and put them on the Drone.chReceivedUDPPacket channel.
+	go d.readNetworkUDPPacketsD2C()
 
-		// Start the sender of UDP packets,
-		// will send UDP packets received at the Drone.chSendingUDPPacket
-		// channel
-		go d.writeNetworkUDPPacketsC2D(ctx)
-	}()
+	udpAddr, err := net.ResolveUDPAddr("udp", d.addressDrone+":"+d.portC2D)
+	if err != nil {
+		log.Printf("error: failed to resolveUDPAddr: %v", err)
+	}
 
-	// Set the inital signal to trigger the first network initialization above.
-	d.chNetworkConnect <- struct{}{}
+	d.connUDPWrite, err = net.DialUDP("udp", nil, udpAddr)
+	if err != nil {
+		log.Printf("error: failed to DialUDP: %v", err)
+	}
+
+	// Start the sender of UDP packets,
+	// will send UDP packets received at the Drone.chSendingUDPPacket
+	// channel
+	go d.writeNetworkUDPPacketsC2D()
 
 	go d.handleReadPackages(packetCreator)
 
