@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"context"
 	"encoding/binary"
 	"encoding/json"
 	"fmt"
@@ -160,7 +161,7 @@ func (d *Drone) Discover() error {
 // getNetworkPacketsD2C gets the raw UDP packets from the drone sent to the controller.
 // Will read the raw UDP packets from the network, and put them on a channel to be
 // picked up by the frame decoder.
-func (d *Drone) readNetworkUDPPacketsD2C() {
+func (d *Drone) readNetworkUDPPacketsD2C(ctx context.Context) {
 
 	defer func() {
 		err := d.connUDPRead.Close()
@@ -171,34 +172,39 @@ func (d *Drone) readNetworkUDPPacketsD2C() {
 	}()
 
 	for {
-		p := make([]byte, 16384) // NB: buf might be to small ?
+		select {
+		case <-ctx.Done():
+			log.Printf("info: exiting readNetworkUDPPacketD2C\n")
+		default:
+			p := make([]byte, 16384) // NB: buf might be to small ?
 
-		n, addr, err := d.connUDPRead.ReadFrom(p)
-		if err != nil {
-			log.Printf("error: failed ReadFrom: %v %v\n", addr, err)
+			n, addr, err := d.connUDPRead.ReadFrom(p)
+			if err != nil {
+				log.Printf("error: failed ReadFrom: %v %v\n", addr, err)
+			}
+
+			// setting the deadline after a succesful write will make the
+			// next read fail if it does not receive any data within the
+			// deadline
+			d.connUDPRead.SetReadDeadline(time.Now().Add(time.Second * 3))
+
+			packet := networkUDPPacket{
+				size: n,
+				data: p,
+				// Set framePos to zero so we start with the first frame.
+				framePos: 0,
+			}
+
+			// send the packet received over a channel to later parse out ARNetworkAL/frames.
+			d.chReceivedUDPPacket <- packet
+
 		}
-
-		// setting the deadline after a succesful write will make the
-		// next read fail if it does not receive any data within the
-		// deadline
-		d.connUDPRead.SetReadDeadline(time.Now().Add(time.Second * 3))
-
-		packet := networkUDPPacket{
-			size: n,
-			data: p,
-			// Set framePos to zero so we start with the first frame.
-			framePos: 0,
-		}
-
-		// send the packet received over a channel to later parse out ARNetworkAL/frames.
-		d.chReceivedUDPPacket <- packet
-
 	}
 }
 
 // writeNetworkPacketsC2D writes the raw UDP packets from the controller to the drone.
 // Will receive []byte packet to write on an incomming channel for the function.
-func (d *Drone) writeNetworkUDPPacketsC2D() {
+func (d *Drone) writeNetworkUDPPacketsC2D(ctx context.Context) {
 
 	defer func() {
 		err := d.connUDPWrite.Close()
@@ -209,18 +215,22 @@ func (d *Drone) writeNetworkUDPPacketsC2D() {
 	}()
 
 	for {
-		v := <-d.chSendingUDPPacket
+		select {
+		case <-ctx.Done():
+			log.Printf("info: exiting writeNetworkUDPPacketsC2D\n")
+		case v := <-d.chSendingUDPPacket:
 
-		fmt.Printf("sending to Drone, v = %v\r\n", v.data)
+			fmt.Printf("sending to Drone, v = %v\r\n", v.data)
 
-		n, err := d.connUDPWrite.Write(v.data)
-		if err != nil {
-			log.Printf("error: failed conn.Write while sending: %v", err)
+			n, err := d.connUDPWrite.Write(v.data)
+			if err != nil {
+				log.Printf("error: failed conn.Write while sending: %v", err)
+			}
+
+			fmt.Printf("*** while sending to Drone, n = %v\r\n", n)
+			fmt.Printf("--------------------\r\n")
+			//time.Sleep(time.Millisecond * 200)
 		}
-
-		fmt.Printf("*** while sending to Drone, n = %v\r\n", n)
-		fmt.Printf("--------------------\r\n")
-		//time.Sleep(time.Millisecond * 200)
 	}
 }
 
@@ -228,86 +238,91 @@ func (d *Drone) writeNetworkUDPPacketsC2D() {
 // packet is receied and what to do based on the content of the package.
 // This means sending a pong for a received package, or do some action
 // if a state command where received from the drone.
-func (d *Drone) handleReadPackages(packetCreator *udpPacketCreator) error {
+func (d *Drone) handleReadPackages(packetCreator *udpPacketCreator, ctx context.Context) error {
 	// Loop, get a recieved UDP packet from the channel, and decode it.
 	for {
-		// Get a packet
-		udpPacket := <-d.chReceivedUDPPacket
+		select {
+		case <-ctx.Done():
+			log.Printf("info: exiting handleReadPAclages\n")
+		default:
+			// Get a packet
+			udpPacket := <-d.chReceivedUDPPacket
 
-		var lastFrame bool
-		// An UDP Packet can consist of several frames, loop over each
-		// frame found in the packet. If last frame is found, break out.
-		for {
-			// decode will decode a whole UDP packet given as input,
-			// and return a frame of the ARNetworkAL protocol, it will
-			// return error== io.EOF when decoding of the whole packet
-			// is done. If the there are more than one ARNetworkAL frame
-			// in the UDP packet the method will return error == nil,
-			// and the method should be run over again until io.EOF is
-			// received.
-			frameARNetworkAL, err := udpPacket.decode()
+			var lastFrame bool
+			// An UDP Packet can consist of several frames, loop over each
+			// frame found in the packet. If last frame is found, break out.
+			for {
+				// decode will decode a whole UDP packet given as input,
+				// and return a frame of the ARNetworkAL protocol, it will
+				// return error== io.EOF when decoding of the whole packet
+				// is done. If the there are more than one ARNetworkAL frame
+				// in the UDP packet the method will return error == nil,
+				// and the method should be run over again until io.EOF is
+				// received.
+				frameARNetworkAL, err := udpPacket.decode()
 
-			// Check if it was the last frame in the UDP packet.
-			if err == io.EOF {
-				lastFrame = true
-			}
-
-			// • Ack(1): Acknowledgment of previously received data
-			// • Data(2): Normal data (no ack requested)
-			// • Low latency data(3): Treated as normal data on the network, but are
-			//   given higher priority internally
-			// • Data with ack(4): Data requesting an ack. The receiver must send an
-			//   ack for this data !
-
-			// The drone will send out ping packets each second where we will need to
-			// reply with a pong. The drone will assume the connection is broken if a
-			// pong is not received within 5 seconds.
-			// Check if it is a ping packet from drone, and incase
-			// it is, reply with a pong.
-			if frameARNetworkAL.targetBufferID == 0 || frameARNetworkAL.targetBufferID == 1 {
-				{
-					p := packetCreator.encodePong(frameARNetworkAL)
-					d.chSendingUDPPacket <- p
+				// Check if it was the last frame in the UDP packet.
+				if err == io.EOF {
+					lastFrame = true
 				}
 
+				// • Ack(1): Acknowledgment of previously received data
+				// • Data(2): Normal data (no ack requested)
+				// • Low latency data(3): Treated as normal data on the network, but are
+				//   given higher priority internally
+				// • Data with ack(4): Data requesting an ack. The receiver must send an
+				//   ack for this data !
+
+				// The drone will send out ping packets each second where we will need to
+				// reply with a pong. The drone will assume the connection is broken if a
+				// pong is not received within 5 seconds.
+				// Check if it is a ping packet from drone, and incase
+				// it is, reply with a pong.
+				if frameARNetworkAL.targetBufferID == 0 || frameARNetworkAL.targetBufferID == 1 {
+					{
+						p := packetCreator.encodePong(frameARNetworkAL)
+						d.chSendingUDPPacket <- p
+					}
+
+					if lastFrame {
+						break
+					}
+
+					continue
+				}
+
+				// Send an ACK packet if the dataType == 4
+				if frameARNetworkAL.dataType == 4 {
+					{
+						p := packetCreator.encodeAck(frameARNetworkAL.targetBufferID, uint8(frameARNetworkAL.sequenceNR))
+						d.chSendingUDPPacket <- p
+					}
+				}
+
+				// Try to figure out what kind of command that where received.
+				// Based on the type of cmdArgs we can execute som action.
+				cmd, cmdArgs, err := frameARNetworkAL.decode()
+				if err != nil {
+					log.Println("error: frame.decode: ", err)
+					break
+				}
+				fmt.Printf("----------COMMAND-------------------------------------------\r\n")
+				fmt.Printf("-- cmd = %+v\r\n", cmd)
+				fmt.Printf("-- Value of cmdArgs = %+v\r\n", cmdArgs)
+				fmt.Printf("-- Type of cmdArgs = %+T\r\n", cmdArgs)
+				switch cmdArgs.(type) {
+				case Ardrone3CameraStateOrientationArguments:
+					//log.Printf("** EXECUTING ACTION FOR TYPE, Ardrone3CameraStateOrientationArguments ...........\r\n")
+				case Ardrone3PilotingStateAttitudeChangedArguments:
+					//log.Printf("** EXECUTING ACTION FOR TYPE, Ardrone3PilotingStateAttitudeChangedArguments\r\n")
+				}
+				fmt.Printf("-----------------------------------------------------------\r\n")
+
+				// If no more frames, break out of for loop to read
+				// the next package received.
 				if lastFrame {
 					break
 				}
-
-				continue
-			}
-
-			// Send an ACK packet if the dataType == 4
-			if frameARNetworkAL.dataType == 4 {
-				{
-					p := packetCreator.encodeAck(frameARNetworkAL.targetBufferID, uint8(frameARNetworkAL.sequenceNR))
-					d.chSendingUDPPacket <- p
-				}
-			}
-
-			// Try to figure out what kind of command that where received.
-			// Based on the type of cmdArgs we can execute som action.
-			cmd, cmdArgs, err := frameARNetworkAL.decode()
-			if err != nil {
-				log.Println("error: frame.decode: ", err)
-				break
-			}
-			fmt.Printf("----------COMMAND-------------------------------------------\r\n")
-			fmt.Printf("-- cmd = %+v\r\n", cmd)
-			fmt.Printf("-- Value of cmdArgs = %+v\r\n", cmdArgs)
-			fmt.Printf("-- Type of cmdArgs = %+T\r\n", cmdArgs)
-			switch cmdArgs.(type) {
-			case Ardrone3CameraStateOrientationArguments:
-				//log.Printf("** EXECUTING ACTION FOR TYPE, Ardrone3CameraStateOrientationArguments ...........\r\n")
-			case Ardrone3PilotingStateAttitudeChangedArguments:
-				//log.Printf("** EXECUTING ACTION FOR TYPE, Ardrone3PilotingStateAttitudeChangedArguments\r\n")
-			}
-			fmt.Printf("-----------------------------------------------------------\r\n")
-
-			// If no more frames, break out of for loop to read
-			// the next package received.
-			if lastFrame {
-				break
 			}
 		}
 	}
@@ -343,7 +358,7 @@ const (
 
 // readKeyBoardEvent will read keys pressed on the keyboard,
 // and pass on the correct action to be executed.
-func (d *Drone) readKeyBoardEvent() {
+func (d *Drone) readKeyBoardEvent(ctx context.Context) {
 
 	keysEvents, err := keyboard.GetKeys(10)
 	if err != nil {
@@ -357,18 +372,23 @@ func (d *Drone) readKeyBoardEvent() {
 	}()
 
 	for {
-		event := <-keysEvents
-		if event.Err != nil {
-			panic(event.Err)
-		}
+		select {
+		case <-ctx.Done():
+			return
+		case event := <-keysEvents:
 
-		switch {
-		case event.Key == keyboard.KeyEsc:
-			d.chQuit <- struct{}{}
-		case event.Rune == 't':
-			d.chInputActions <- ActionTakeoff
-		case event.Rune == 'l':
-			d.chInputActions <- ActionLanding
+			if event.Err != nil {
+				panic(event.Err)
+			}
+
+			switch {
+			case event.Key == keyboard.KeyEsc:
+				d.chQuit <- struct{}{}
+			case event.Rune == 't':
+				d.chInputActions <- ActionTakeoff
+			case event.Rune == 'l':
+				d.chInputActions <- ActionLanding
+			}
 		}
 
 	}
@@ -740,16 +760,24 @@ type protocolARCommands struct {
 	size int
 }
 
-func (d *Drone) handleInputAction(packetCreator udpPacketCreator) {
+// handleInputAction is where we specify what package to send to the drone
+// based on what action came out of the readKeyboardEvent method.
+func (d *Drone) handleInputAction(packetCreator udpPacketCreator, ctx context.Context) {
 	for {
-		action := <-d.chInputActions
-		switch action {
-		case ActionTakeoff:
-			p := packetCreator.encodeCmd(Command(PilotingTakeOff))
-			d.chSendingUDPPacket <- p
-		case ActionLanding:
-			p := packetCreator.encodeCmd(Command(PilotingLanding))
-			d.chSendingUDPPacket <- p
+		select {
+		case <-ctx.Done():
+			log.Println("info: exiting handleInputAction")
+			return
+
+		case action := <-d.chInputActions:
+			switch action {
+			case ActionTakeoff:
+				p := packetCreator.encodeCmd(Command(PilotingTakeOff))
+				d.chSendingUDPPacket <- p
+			case ActionLanding:
+				p := packetCreator.encodeCmd(Command(PilotingLanding))
+				d.chSendingUDPPacket <- p
+			}
 		}
 
 	}
@@ -763,11 +791,13 @@ func (d *Drone) start() {
 	// All UDP packet encoding methods are tied to this type.
 	packetCreator := newUdpPacketCreator()
 
+	ctx := context.Background()
+
 	// Will handle all the events generated by input actions from keyboard etc.
-	go d.handleInputAction(*packetCreator)
+	go d.handleInputAction(*packetCreator, ctx)
 
 	// Check for keyboard press, and generate appropriate inputActions's.
-	go d.readKeyBoardEvent()
+	go d.readKeyBoardEvent(ctx)
 
 	// Initialize the network connection to the drone
 	log.Println("Initializing the traffic with the drone, and starting controller UDP listener.")
@@ -784,7 +814,7 @@ func (d *Drone) start() {
 
 	// Start the reading of whole UDP packets from the network,
 	// and put them on the Drone.chReceivedUDPPacket channel.
-	go d.readNetworkUDPPacketsD2C()
+	go d.readNetworkUDPPacketsD2C(ctx)
 
 	udpAddr, err := net.ResolveUDPAddr("udp", d.addressDrone+":"+d.portC2D)
 	if err != nil {
@@ -799,9 +829,9 @@ func (d *Drone) start() {
 	// Start the sender of UDP packets,
 	// will send UDP packets received at the Drone.chSendingUDPPacket
 	// channel
-	go d.writeNetworkUDPPacketsC2D()
+	go d.writeNetworkUDPPacketsC2D(ctx)
 
-	go d.handleReadPackages(packetCreator)
+	go d.handleReadPackages(packetCreator, ctx)
 
 	// Wait here until receiving on quit channel. Trigger by pressing
 	// 'q' on the keyboard.
