@@ -797,6 +797,8 @@ func (d *Drone) handleInputAction(packetCreator udpPacketCreator, ctx context.Co
 
 func (d *Drone) start() {
 	for {
+		var err error
+
 		// Since we need to use individual sequence number counters for each
 		// buffer a udpPacketCreator will keep track of them, and increment
 		// the currect buffer sequence number when a new package are created.
@@ -814,9 +816,15 @@ func (d *Drone) start() {
 
 		// Initialize the network connection to the drone
 		log.Println("Initializing the traffic with the drone, and starting controller UDP listener.")
-		err := d.Discover()
-		if err != nil {
-			log.Println("error: client Discover failed:", err)
+		for i := 0; i < 20; i++ {
+			err := d.Discover()
+			if err != nil {
+				log.Printf("error: client Discover failed: %v\n", err)
+				time.Sleep(time.Second * 2)
+				continue
+			}
+
+			break
 		}
 
 		// create an 'empty' UDP listener.
