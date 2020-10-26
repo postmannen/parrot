@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bufio"
 	"bytes"
 	"encoding/binary"
 	"encoding/json"
@@ -9,13 +8,12 @@ import (
 	"io"
 	"log"
 	"net"
-	"os"
 	"reflect"
 	"strconv"
 	"time"
 	"unsafe"
 
-	"golang.org/x/crypto/ssh/terminal"
+	"github.com/eiannone/keyboard"
 )
 
 // Drone holds the data and methods specific for the drone
@@ -346,57 +344,35 @@ const (
 // readKeyBoardEvent will read keys pressed on the keyboard,
 // and pass on the correct action to be executed.
 func (d *Drone) readKeyBoardEvent() {
-	// fd 0 is stdin
-	state, err := terminal.MakeRaw(0)
+
+	keysEvents, err := keyboard.GetKeys(10)
 	if err != nil {
-		log.Fatalln("setting stdin to raw:", err)
+		panic(err)
 	}
 	defer func() {
-		if err := terminal.Restore(0, state); err != nil {
-			log.Println("warning, failed to restore terminal:", err)
+		err := keyboard.Close()
+		if err != nil {
+			log.Printf("error: failed to close keyboard: %v\n", err)
 		}
 	}()
 
-	in := bufio.NewReader(os.Stdin)
-
 	for {
-		r, _, err := in.ReadRune()
-		if err != nil {
-			log.Println("stdin:", err)
-			break
+		event := <-keysEvents
+		if event.Err != nil {
+			panic(event.Err)
 		}
 
-		// Check for arrow keys. They come as a series of 3 ReadRunes,
-		// so when we detect the the firs correct value read indicating
-		// arrow key being pressed, we also need to read and check the
-		// next 2 to figure out what arrow key that where pressed.
-		if r == '\x1b' {
-			r, _, _ := in.ReadRune()
-			if r == '[' {
-				r, _, _ := in.ReadRune()
-				switch r {
-				case 'A':
-					log.Printf("UP ARROW\r\n")
-				case 'B':
-					log.Printf("DOWN ARROW\r\n")
-				case 'C':
-					log.Printf("RIGHT ARROW\r\n")
-				case 'D':
-					log.Printf("LEFT ARROW\r\n")
-				}
-
-			}
-		}
-
-		switch r {
-		case 'q':
+		switch {
+		case event.Key == keyboard.KeyEsc:
 			d.chQuit <- struct{}{}
-		case 't':
+		case event.Rune == 't':
 			d.chInputActions <- ActionTakeoff
-		case 'l':
+		case event.Rune == 'l':
 			d.chInputActions <- ActionLanding
 		}
+
 	}
+
 }
 
 // networkUDPPacket
