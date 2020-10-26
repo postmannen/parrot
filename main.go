@@ -64,10 +64,17 @@ func (d *Drone) Discover() error {
 
 	nd := net.Dialer{Timeout: time.Second * 3, Cancel: d.chQuit}
 	discoverConn, err := nd.Dial("tcp", d.addressDrone+":"+d.portDiscover)
-
 	if err != nil {
 		return err
 	}
+
+	defer func() {
+		err := discoverConn.Close()
+		if err != nil {
+			log.Printf("error: failed to close discoverConn: %v\r\n", err)
+		}
+		log.Printf("...closed discoverConn\r\n")
+	}()
 
 	_, err = discoverConn.Write(
 		[]byte(
@@ -122,7 +129,7 @@ func (d *Drone) Discover() error {
 	// Set the received Controller 2 Drone to use based on discovery data.
 	d.portC2D = strconv.Itoa(discoverData.C2dPort)
 
-	return discoverConn.Close()
+	return nil
 }
 
 // // getNetworkTestingPacketsD2C gets the raw UDP packets from the test data.
@@ -157,7 +164,13 @@ func (d *Drone) Discover() error {
 // picked up by the frame decoder.
 func (d *Drone) readNetworkUDPPacketsD2C() {
 
-	defer d.connUDPRead.Close()
+	defer func() {
+		err := d.connUDPRead.Close()
+		if err != nil {
+			log.Printf("error: failed to close connUDPRead: %v\r\n", err)
+		}
+		log.Printf("...closed connUDPRead\r\n")
+	}()
 
 	for {
 		p := make([]byte, 16384) // NB: buf might be to small ?
@@ -189,9 +202,17 @@ func (d *Drone) readNetworkUDPPacketsD2C() {
 // Will receive []byte packet to write on an incomming channel for the function.
 func (d *Drone) writeNetworkUDPPacketsC2D() {
 
-	defer d.connUDPWrite.Close()
+	defer func() {
+		err := d.connUDPWrite.Close()
+		if err != nil {
+			log.Printf("error:failed to close connUDPWrite: %v\r\n", err)
+		}
+		fmt.Printf("...connUDPWrite closed\r\n")
+	}()
 
-	for v := range d.chSendingUDPPacket {
+	for {
+		v := <-d.chSendingUDPPacket
+
 		fmt.Printf("sending to Drone, v = %v\r\n", v.data)
 
 		n, err := d.connUDPWrite.Write(v.data)
@@ -203,9 +224,6 @@ func (d *Drone) writeNetworkUDPPacketsC2D() {
 		fmt.Printf("--------------------\r\n")
 		//time.Sleep(time.Millisecond * 200)
 	}
-
-	fmt.Printf("chSendingUDPPacket closed, leaving for loop of writeNetworkUDPPacketsC2D\r\n")
-
 }
 
 // handleReadPackages holds the logic for what action to do when an UDP
