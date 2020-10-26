@@ -19,21 +19,34 @@ import (
 	"github.com/eiannone/keyboard"
 )
 
-// Drone holds the data and methods specific for the drone
+// Drone holds the data and methods specific for the drone.
 type Drone struct {
-	addressDrone        string // The ip address of the drone
-	portDiscover        string // Used for initializing the connection to the drone over TCP
-	portC2D             string // Controller to drone, port the controller wil send the drone messages on
-	portD2C             string // Drone to controller, port the controller will listen on for drone messages
-	portRTPStream       string
-	portRTPControl      string
+	// The ip address of the drone
+	addressDrone string
+	// Used for initializing the connection to the drone over TCP.
+	portDiscover string
+	// Controller to drone, port the controller wil send the drone messages on.
+	portC2D string
+	// Drone to controller, port the controller will listen on for drone messages.
+	portD2C        string
+	portRTPStream  string
+	portRTPControl string
+	// Channel to put the raw UDP packages from the drone.
 	chReceivedUDPPacket chan networkUDPPacket
-	chSendingUDPPacket  chan networkUDPPacket
-	chInputActions      chan inputAction
-	chQuit              chan struct{}
-	chNetworkConnect    chan struct{}
-
-	connUDPRead  net.PacketConn
+	// Channel to put the raw UDP packages to be sent to the drone.
+	chSendingUDPPacket chan networkUDPPacket
+	// Channel to put the inputAction type send to the drone when
+	// for example a key is pressed on the keyboard.
+	chInputActions chan inputAction
+	// Sending to this channel will quit the controller program.
+	chQuit chan struct{}
+	// Sending to this channel will disconnect all network related
+	// go routines, and then reconnect to the drone.
+	chNetworkConnect chan struct{}
+	// The conn object for the UDP network listener
+	connUDPRead net.PacketConn
+	// The conn object for the UDP connection to send commands to
+	// the drone.
 	connUDPWrite *net.UDPConn
 }
 
@@ -57,10 +70,11 @@ func NewDrone() *Drone {
 }
 
 // Discover will initalize the connection with the drone.
-// A discover with JSON formated data like :
-//
-// { "status": 0, "c2d_port": 54321, "c2d_update_port": 51, "c2d_user_port": 21, "qos_mode": 0, "arstream2_server_stream_port": 5004, "arstream2_server_control_port": 5005 }
 func (d *Drone) Discover() error {
+	// A discover with JSON formated data like :
+	//
+	// { "status": 0, "c2d_port": 54321, "c2d_update_port": 51, "c2d_user_port": 21, "qos_mode": 0, "arstream2_server_stream_port": 5004, "arstream2_server_control_port": 5005 }
+
 	//const addr = "192.168.42.1:44444"
 
 	nd := net.Dialer{Timeout: time.Second * 3, Cancel: d.chQuit}
@@ -77,6 +91,7 @@ func (d *Drone) Discover() error {
 		log.Printf("...closed discoverConn\r\n")
 	}()
 
+	// The drone expects the discovery data payload in the following format.
 	_, err = discoverConn.Write(
 		[]byte(
 			fmt.Sprintf(`{
@@ -97,6 +112,7 @@ func (d *Drone) Discover() error {
 
 	data := make([]byte, 1024) // not quite sure about the size here...
 
+	// Read the returned response of the discovery from the drone.
 	_, err = discoverConn.Read(data)
 	if err != nil {
 		return err
@@ -124,10 +140,10 @@ func (d *Drone) Discover() error {
 
 	// if the status !=0 the disovery failed.
 	if discoverData.Status != 0 {
-		log.Fatal("DISCOVERY FAILED") // TODO: put in a timer and make it retry after a few seconds.
+		log.Fatal("DISCOVERY FAILED")
 	}
 
-	// Set the received Controller 2 Drone to use based on discovery data.
+	// Set the received Controller to Drone port to use based on discovery data.
 	d.portC2D = strconv.Itoa(discoverData.C2dPort)
 
 	return nil
@@ -431,10 +447,9 @@ type networkUDPPacket struct {
 type udpPacketCreator struct {
 	// The sequence number used when sending packets
 	//
-	// TODO: It seems that each individual ID has it's
-	// own sequence number, so we should create a map
+	// Each individual ID has it's
+	// own sequence number, so we create a map
 	// of all the id's with a value for sequence number
-	// and not just single one as it is now!
 	sequenceNR map[int]uint8
 }
 
@@ -468,8 +483,10 @@ func (u *udpPacketCreator) encodePong(data protocolARNetworkAL) networkUDPPacket
 
 }
 
+// encodeAck will prepare and create the UDP ack package that
+// is needed is needed to send from the controller for ACK
+// packages from the drone.
 func (u *udpPacketCreator) encodeAck(targetBufferID int, sequenceNR uint8) networkUDPPacket {
-	// TODO:
 	// To acknowledge data, simply send back a frame with the Ack data type,
 	// a buffer ID of 128+Data_Buffer_ID, and the data sequence number as the
 	// data.
@@ -731,7 +748,6 @@ func (p *protocolARNetworkAL) decode() (cmd protocolARCommands, cmdArgs interfac
 	}
 	//fmt.Printf("c = %#v\n", c)
 
-	// TODO: Decode the arguments here !!!
 	// prereq : Parse arg struct, and create arg map which maps arg struct to cmd.
 	arguments := p.dataARNetwork[4:cmd.size]
 	//fmt.Printf("--- arguments = %+v\n", arguments)
@@ -814,7 +830,11 @@ func (d *Drone) start() {
 		// Check for keyboard press, and generate appropriate inputActions's.
 		go d.readKeyBoardEvent(ctx)
 
-		// Initialize the network connection to the drone
+		// Initialize the network connection to the drone.
+		// If the connection fails retry 20 times before giving up.
+		//
+		// TODO:
+		// Make it call return-home if unable to initialize.
 		log.Println("Initializing the traffic with the drone, and starting controller UDP listener.")
 		for i := 0; i < 20; i++ {
 			err := d.Discover()
@@ -837,11 +857,11 @@ func (d *Drone) start() {
 		// and put them on the Drone.chReceivedUDPPacket channel.
 		go d.readNetworkUDPPacketsD2C(ctx)
 
+		// Prepare and dial the UDP connection from controller to drone.
 		udpAddr, err := net.ResolveUDPAddr("udp", d.addressDrone+":"+d.portC2D)
 		if err != nil {
 			log.Printf("error: failed to resolveUDPAddr: %v", err)
 		}
-
 		d.connUDPWrite, err = net.DialUDP("udp", nil, udpAddr)
 		if err != nil {
 			log.Printf("error: failed to DialUDP: %v", err)
@@ -849,7 +869,7 @@ func (d *Drone) start() {
 
 		// Start the sender of UDP packets,
 		// will send UDP packets received at the Drone.chSendingUDPPacket
-		// channel
+		// channel.
 		go d.writeNetworkUDPPacketsC2D(ctx)
 
 		go d.handleReadPackages(packetCreator, ctx)
@@ -861,8 +881,6 @@ func (d *Drone) start() {
 			cancel()
 			return
 		case <-d.chNetworkConnect:
-			// TODO: If reconnected X number of times within some timeframe
-			// then trigger return-home.
 			cancel()
 			time.Sleep(time.Second * 3)
 			continue
