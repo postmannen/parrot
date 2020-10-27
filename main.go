@@ -559,8 +559,9 @@ func (u *udpPacketCreator) encodeCmd(c Command) networkUDPPacket {
 	//   ...
 	//   }
 
-	// Setting buffer to 11 for ARCommands
-	const buffer int = 11
+	// Setting buffer to 10 which is no-ack for ARCommands
+	// 11 is for packages that should be ack'ed.
+	const buffer int = 10
 
 	// setting type to data no-ack
 	pdataType := uint8(2)
