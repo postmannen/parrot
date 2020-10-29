@@ -1,3 +1,6 @@
+// The latest version of the ardrone3.xml document can be found at
+// https://github.com/Parrot-Developers/arsdk-xml/tree/master/xml
+
 package main
 
 import (
@@ -353,12 +356,24 @@ func (d *Drone) handleReadPackages(packetCreator *udpPacketCreator, ctx context.
 	}
 }
 
+// TODO: Check if the inputActions can be taken from the
+// commandStructure.go document, or if we will be better
+// off defining them here...or if we don't need them at
+// all since we can
+//
+// Instead of all the input definition constants below, we
+// could use the already defined constants present in the
+// commandStructure.go file, like..
+// const CmdStopPilotedPOI CmdDef = 13 ???
+
 // actions, the idea here is to send the actions on a keypress,
 // and then have some logic who reads the actions received over
 // a channel, and then do the logic for landing/takeoff/rotate etc.
 type inputAction int
 
 const (
+	// Standard actions.
+	//
 	ActionPcmdFlag                inputAction = iota
 	ActionPcmdRollLeft            inputAction = iota
 	ActionPcmdRollRight           inputAction = iota
@@ -376,9 +391,19 @@ const (
 	ActionUserTakeoff             inputAction = iota
 	ActionMoveTo                  inputAction = iota // Check how to implement it in xml line 259
 	ActionCancelMoveTo            inputAction = iota
-	ActionStartedPilotedPOI       inputAction = iota
+	ActionStartPilotedPOI         inputAction = iota
 	ActionStopPilotedPOI          inputAction = iota
 	ActionCancelMoveBy            inputAction = iota
+
+	// Custom actions.
+	//
+	ActionHow inputAction = iota
+	// Flattrim should be performed before a takeoff
+	// to calibrate the drone.
+	ActionFlatTrim inputAction = iota
+	// TODO: Also check out the <class name="PilotingSettings" id="2">"
+	// starting at line 1400 in the ardrone3.xml document, for more
+	// commands to eventually implement.
 )
 
 // readKeyBoardEvent will read keys pressed on the keyboard,
@@ -422,6 +447,68 @@ func (d *Drone) readKeyBoardEvent(ctx context.Context) {
 	}
 
 }
+
+// handleInputAction is where we specify what package to send to the drone
+// based on what action came out of the readKeyboardEvent method.
+func (d *Drone) handleInputAction(packetCreator udpPacketCreator, ctx context.Context) {
+	for {
+		select {
+		case <-ctx.Done():
+			log.Println("info: exiting handleInputAction")
+			return
+
+		case action := <-d.chInputActions:
+			switch action {
+			case ActionTakeoff:
+				p := packetCreator.encodeCmd(Command(PilotingTakeOff))
+				d.chSendingUDPPacket <- p
+			case ActionLanding:
+				p := packetCreator.encodeCmd(Command(PilotingLanding))
+				d.chSendingUDPPacket <- p
+			}
+		}
+
+	}
+}
+
+// TODO: The Pcmd structure below are really not necessary since
+// since it already exist in the commandStructure.go file with
+// the correct type for all the struct fields. This also go for
+// all the other command types for the drone.
+//
+// Thinking maybe adding an encode method to all types that do not
+// include the word state in it's name, since state is generally
+// just messages from the drone to the controller.
+//
+// This should mean we could reuse those same types when creating
+// packages for commands to send to the drone. We could use reflect
+// to loop over all the struct fields, translate it to []byte values
+// in little endian (for all except string values which are big endian).
+//
+// We will need encode methods made by the parser,
+// and also a converLittleEndianToBytes function to
+// use in the encoding.
+
+//   Pcmd will hold the current state of the piloting commands.
+//  type Pcmd struct {
+//  	// Boolean flag: 1 if the roll and pitch values should be taken in consideration. 0 otherwise
+//  	Flag uint8
+//  	// Roll, Left/Right tilt, (Nose rotate around its it's own axis left/right) -100/100
+//  	Roll int8
+//  	// Front/Back tilt, (Nose up or down) -100/100
+//  	Pitch int8
+//  	// Horizontal rotation left or right around the up and down axis, -100/100
+//  	Yaw int8
+//  	// Expressed as signed percentage of the max vertical speed setting, in range [-100, 100]
+//  	// -100 corresponds to a max vertical speed towards ground
+//  	// 100 corresponds to a max vertical speed towards sky
+//  	Gaz int8
+//  	// Command timestamp in milliseconds (low 24 bits) + command sequence number (high 8 bits) [0;255].
+//  	// TODO: This seems to the the value for how long to keep a given piloting command,
+//  	// rather control this in a loop ?
+//  	// Set the value to 0.0 for now...or something a bit higher. Will have to test this.
+//  	TimestampAndSeqNum float32
+//  }
 
 // networkUDPPacket
 // networkPacket is the main UDP packet read from the network.
@@ -787,29 +874,6 @@ type protocolARCommands struct {
 	// the size is for project+class+command+arguments, which again is the
 	// same size as the whole frame minus the header size of 7 bytes.
 	size int
-}
-
-// handleInputAction is where we specify what package to send to the drone
-// based on what action came out of the readKeyboardEvent method.
-func (d *Drone) handleInputAction(packetCreator udpPacketCreator, ctx context.Context) {
-	for {
-		select {
-		case <-ctx.Done():
-			log.Println("info: exiting handleInputAction")
-			return
-
-		case action := <-d.chInputActions:
-			switch action {
-			case ActionTakeoff:
-				p := packetCreator.encodeCmd(Command(PilotingTakeOff))
-				d.chSendingUDPPacket <- p
-			case ActionLanding:
-				p := packetCreator.encodeCmd(Command(PilotingLanding))
-				d.chSendingUDPPacket <- p
-			}
-		}
-
-	}
 }
 
 func (d *Drone) start() {
