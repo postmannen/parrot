@@ -40,7 +40,7 @@ type Drone struct {
 	chSendingUDPPacket chan networkUDPPacket
 	// Channel to put the inputAction type send to the drone when
 	// for example a key is pressed on the keyboard.
-	chInputActions chan inputAction
+	chInputActions chan Decoder
 	// Sending to this channel will quit the controller program.
 	chQuit chan struct{}
 	// Sending to this channel will disconnect all network related
@@ -66,7 +66,7 @@ func NewDrone() *Drone {
 
 		chReceivedUDPPacket: make(chan networkUDPPacket),
 		chSendingUDPPacket:  make(chan networkUDPPacket),
-		chInputActions:      make(chan inputAction),
+		chInputActions:      make(chan Decoder),
 		chQuit:              make(chan struct{}),
 		chNetworkConnect:    make(chan struct{}),
 	}
@@ -369,45 +369,50 @@ func (d *Drone) handleReadPackages(packetCreator *udpPacketCreator, ctx context.
 // actions, the idea here is to send the actions on a keypress,
 // and then have some logic who reads the actions received over
 // a channel, and then do the logic for landing/takeoff/rotate etc.
-type inputAction int
 
-const (
-	// Standard actions.
-	//
-	ActionPcmdFlag                inputAction = iota
-	ActionPcmdRollLeft            inputAction = iota
-	ActionPcmdRollRight           inputAction = iota
-	ActionPcmdPitchForward        inputAction = iota
-	ActionPcmdPitchBackward       inputAction = iota
-	ActionPcmdYawClockwise        inputAction = iota
-	ActionPcmdYawCounterClockwise inputAction = iota
-	ActionPcmdGazIncMore          inputAction = iota
-	ActionPcmdGazIncLess          inputAction = iota
-	ActionTakeoff                 inputAction = iota
-	ActionLanding                 inputAction = iota
-	ActionEmergency               inputAction = iota
-	ActionNavigateHome            inputAction = iota // Check how to implement it in xml line 153
-	ActionMoveBy                  inputAction = iota // Check how to implement it in xml line 181
-	ActionUserTakeoff             inputAction = iota
-	ActionMoveTo                  inputAction = iota // Check how to implement it in xml line 259
-	ActionCancelMoveTo            inputAction = iota
-	ActionStartPilotedPOI         inputAction = iota
-	ActionStopPilotedPOI          inputAction = iota
-	ActionCancelMoveBy            inputAction = iota
+// type inputAction int
 
-	// Custom actions.
-	//
-	ActionHow inputAction = iota
-	// Flattrim should be performed before a takeoff
-	// to calibrate the drone.
-	ActionFlatTrim inputAction = iota
-	// TODO: Also check out the <class name="PilotingSettings" id="2">"
-	// starting at line 1400 in the ardrone3.xml document, for more
-	// commands to eventually implement.
-)
+//  const (
+//  	// Standard actions.
+//  	//
+//  	ActionPcmdFlag                inputAction = iota
+//  	ActionPcmdRollLeft            inputAction = iota
+//  	ActionPcmdRollRight           inputAction = iota
+//  	ActionPcmdPitchForward        inputAction = iota
+//  	ActionPcmdPitchBackward       inputAction = iota
+//  	ActionPcmdYawClockwise        inputAction = iota
+//  	ActionPcmdYawCounterClockwise inputAction = iota
+//  	ActionPcmdGazIncMore          inputAction = iota
+//  	ActionPcmdGazIncLess          inputAction = iota
+//  	ActionTakeoff                 inputAction = iota
+//  	ActionLanding                 inputAction = iota
+//  	ActionEmergency               inputAction = iota
+//  	ActionNavigateHome            inputAction = iota // Check how to implement it in xml line 153
+//  	ActionMoveBy                  inputAction = iota // Check how to implement it in xml line 181
+//  	ActionUserTakeoff             inputAction = iota
+//  	ActionMoveTo                  inputAction = iota // Check how to implement it in xml line 259
+//  	ActionCancelMoveTo            inputAction = iota
+//  	ActionStartPilotedPOI         inputAction = iota
+//  	ActionStopPilotedPOI          inputAction = iota
+//  	ActionCancelMoveBy            inputAction = iota
+//
+//  	// Custom actions.
+//  	//
+//  	ActionHow inputAction = iota
+//  	// Flattrim should be performed before a takeoff
+//  	// to calibrate the drone.
+//  	ActionFlatTrim inputAction = iota
+//  	// TODO: Also check out the <class name="PilotingSettings" id="2">"
+//  	// starting at line 1400 in the ardrone3.xml document, for more
+//  	// commands to eventually implement.
+//  )
 
 // readKeyBoardEvent will read keys pressed on the keyboard,
 // and pass on the correct action to be executed.
+//
+// TODO: Make more source to create inputActions than keyboard...
+// Geofencing ?
+// Map route ?
 func (d *Drone) readKeyBoardEvent(ctx context.Context) {
 
 	keysEvents, err := keyboard.GetKeys(10)
@@ -438,9 +443,9 @@ func (d *Drone) readKeyBoardEvent(ctx context.Context) {
 			case event.Rune == 'q':
 				d.chNetworkConnect <- struct{}{}
 			case event.Rune == 't':
-				d.chInputActions <- ActionTakeoff
+				d.chInputActions <- Ardrone3PilotingTakeOff{}
 			case event.Rune == 'l':
-				d.chInputActions <- ActionLanding
+				d.chInputActions <- Ardrone3PilotingLanding{}
 			}
 		}
 
@@ -450,6 +455,11 @@ func (d *Drone) readKeyBoardEvent(ctx context.Context) {
 
 // handleInputAction is where we specify what package to send to the drone
 // based on what action came out of the readKeyboardEvent method.
+//
+// The reason we have this function and don't encode the packets directly
+// in readKeyBoardEvent, is that we might want to have other input methods
+// then the keyboard to control the drone.
+// This function will execute the commands that arrives on the d.chInputActions.
 func (d *Drone) handleInputAction(packetCreator udpPacketCreator, ctx context.Context) {
 	for {
 		select {
@@ -458,11 +468,11 @@ func (d *Drone) handleInputAction(packetCreator udpPacketCreator, ctx context.Co
 			return
 
 		case action := <-d.chInputActions:
-			switch action {
-			case ActionTakeoff:
+			switch action.(type) {
+			case Ardrone3PilotingTakeOff:
 				p := packetCreator.encodeCmd(Command(PilotingTakeOff))
 				d.chSendingUDPPacket <- p
-			case ActionLanding:
+			case Ardrone3PilotingLanding:
 				p := packetCreator.encodeCmd(Command(PilotingLanding))
 				d.chSendingUDPPacket <- p
 			}
