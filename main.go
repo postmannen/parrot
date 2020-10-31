@@ -735,7 +735,7 @@ func (packet *networkUDPPacket) decode() (protocolARNetworkAL, error) {
 
 	// Get the size of the ARNetworkAL frame. Size includes the header of 7bytes.
 	var size uint32
-	convLittleEndian(packet.data[packet.framePos+3:packet.framePos+7], &size)
+	ConvLittleEndianSliceToNumeric(packet.data[packet.framePos+3:packet.framePos+7], &size)
 
 	frame.size = int(size)
 	frame.dataARNetwork = packet.data[packet.framePos+7 : packet.framePos+frame.size]
@@ -808,7 +808,7 @@ func (p *protocolARNetworkAL) decode() (cmd protocolARCommands, cmdArgs interfac
 	// write into. We then convert the uint16 to int, and store the
 	// value in the command field of the struct.
 	var tmpCommand uint16
-	convLittleEndian(p.dataARNetwork[2:4], &tmpCommand)
+	ConvLittleEndianSliceToNumeric(p.dataARNetwork[2:4], &tmpCommand)
 	cmd.command = int(tmpCommand)
 
 	//fmt.Printf("tmpCommand = %v, %T\n", tmpCommand, tmpCommand)

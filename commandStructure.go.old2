@@ -69,17 +69,17 @@ func (a Ardrone3PilotingPCMD) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3PilotingPCMDArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Flag)
+	convLittleEndian(b[offset:offset+1], &arg.Flag)
 	offset++
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Roll)
+	convLittleEndian(b[offset:offset+1], &arg.Roll)
 	offset++
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Pitch)
+	convLittleEndian(b[offset:offset+1], &arg.Pitch)
 	offset++
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Yaw)
+	convLittleEndian(b[offset:offset+1], &arg.Yaw)
 	offset++
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Gaz)
+	convLittleEndian(b[offset:offset+1], &arg.Gaz)
 	offset++
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.TimestampAndSeqNum)
+	convLittleEndian(b[offset:offset+4], &arg.TimestampAndSeqNum)
 	offset += 4
 
 	return arg
@@ -157,7 +157,7 @@ func (a Ardrone3PilotingNavigateHome) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3PilotingNavigateHomeArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Start)
+	convLittleEndian(b[offset:offset+1], &arg.Start)
 	offset++
 
 	return arg
@@ -183,7 +183,7 @@ func (a Ardrone3PilotingAutoTakeOffMode) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3PilotingAutoTakeOffModeArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.State)
+	convLittleEndian(b[offset:offset+1], &arg.State)
 	offset++
 
 	return arg
@@ -214,13 +214,13 @@ func (a Ardrone3PilotingmoveBy) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3PilotingmoveByArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.DX)
+	convLittleEndian(b[offset:offset+4], &arg.DX)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.DY)
+	convLittleEndian(b[offset:offset+4], &arg.DY)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.DZ)
+	convLittleEndian(b[offset:offset+4], &arg.DZ)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.DPsi)
+	convLittleEndian(b[offset:offset+4], &arg.DPsi)
 	offset += 4
 
 	return arg
@@ -248,7 +248,7 @@ func (a Ardrone3PilotingUserTakeOff) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3PilotingUserTakeOffArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.State)
+	convLittleEndian(b[offset:offset+1], &arg.State)
 	offset++
 
 	return arg
@@ -276,7 +276,7 @@ func (a Ardrone3PilotingCircle) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3PilotingCircleArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Direction)
+	convLittleEndian(b[offset:offset+4], &arg.Direction)
 	offset += 4
 
 	return arg
@@ -308,15 +308,15 @@ func (a Ardrone3PilotingmoveTo) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3PilotingmoveToArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+8], &arg.Latitude)
+	convLittleEndian(b[offset:offset+8], &arg.Latitude)
 	offset += 8
-	ConvLittleEndianSliceToNumeric(b[offset:offset+8], &arg.Longitude)
+	convLittleEndian(b[offset:offset+8], &arg.Longitude)
 	offset += 8
-	ConvLittleEndianSliceToNumeric(b[offset:offset+8], &arg.Altitude)
+	convLittleEndian(b[offset:offset+8], &arg.Altitude)
 	offset += 8
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Orientationmode)
+	convLittleEndian(b[offset:offset+4], &arg.Orientationmode)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Heading)
+	convLittleEndian(b[offset:offset+4], &arg.Heading)
 	offset += 4
 
 	return arg
@@ -371,11 +371,11 @@ func (a Ardrone3PilotingStartPilotedPOI) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3PilotingStartPilotedPOIArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+8], &arg.Latitude)
+	convLittleEndian(b[offset:offset+8], &arg.Latitude)
 	offset += 8
-	ConvLittleEndianSliceToNumeric(b[offset:offset+8], &arg.Longitude)
+	convLittleEndian(b[offset:offset+8], &arg.Longitude)
 	offset += 8
-	ConvLittleEndianSliceToNumeric(b[offset:offset+8], &arg.Altitude)
+	convLittleEndian(b[offset:offset+8], &arg.Altitude)
 	offset += 8
 
 	return arg
@@ -455,7 +455,7 @@ func (a Ardrone3AnimationsFlip) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3AnimationsFlipArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Direction)
+	convLittleEndian(b[offset:offset+4], &arg.Direction)
 	offset += 4
 
 	return arg
@@ -487,9 +487,9 @@ func (a Ardrone3CameraOrientation) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3CameraOrientationArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Tilt)
+	convLittleEndian(b[offset:offset+1], &arg.Tilt)
 	offset++
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Pan)
+	convLittleEndian(b[offset:offset+1], &arg.Pan)
 	offset++
 
 	return arg
@@ -518,9 +518,9 @@ func (a Ardrone3CameraOrientationV2) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3CameraOrientationV2Arguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Tilt)
+	convLittleEndian(b[offset:offset+4], &arg.Tilt)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Pan)
+	convLittleEndian(b[offset:offset+4], &arg.Pan)
 	offset += 4
 
 	return arg
@@ -549,9 +549,9 @@ func (a Ardrone3CameraVelocity) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3CameraVelocityArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Tilt)
+	convLittleEndian(b[offset:offset+4], &arg.Tilt)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Pan)
+	convLittleEndian(b[offset:offset+4], &arg.Pan)
 	offset += 4
 
 	return arg
@@ -580,7 +580,7 @@ func (a Ardrone3MediaRecordPicture) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3MediaRecordPictureArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Massstorageid)
+	convLittleEndian(b[offset:offset+1], &arg.Massstorageid)
 	offset++
 
 	return arg
@@ -607,9 +607,9 @@ func (a Ardrone3MediaRecordVideo) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3MediaRecordVideoArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Record)
+	convLittleEndian(b[offset:offset+4], &arg.Record)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Massstorageid)
+	convLittleEndian(b[offset:offset+1], &arg.Massstorageid)
 	offset++
 
 	return arg
@@ -662,7 +662,7 @@ func (a Ardrone3MediaRecordVideoV2) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3MediaRecordVideoV2Arguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Record)
+	convLittleEndian(b[offset:offset+4], &arg.Record)
 	offset += 4
 
 	return arg
@@ -692,9 +692,9 @@ func (a Ardrone3MediaRecordStatePictureStateChanged) Decode(b []byte) interface{
 	//TODO: .............
 	arg := Ardrone3MediaRecordStatePictureStateChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.State)
+	convLittleEndian(b[offset:offset+1], &arg.State)
 	offset++
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Massstorageid)
+	convLittleEndian(b[offset:offset+1], &arg.Massstorageid)
 	offset++
 
 	return arg
@@ -721,9 +721,9 @@ func (a Ardrone3MediaRecordStateVideoStateChanged) Decode(b []byte) interface{} 
 	//TODO: .............
 	arg := Ardrone3MediaRecordStateVideoStateChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.State)
+	convLittleEndian(b[offset:offset+4], &arg.State)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Massstorageid)
+	convLittleEndian(b[offset:offset+1], &arg.Massstorageid)
 	offset++
 
 	return arg
@@ -752,9 +752,9 @@ func (a Ardrone3MediaRecordStatePictureStateChangedV2) Decode(b []byte) interfac
 	//TODO: .............
 	arg := Ardrone3MediaRecordStatePictureStateChangedV2Arguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.State)
+	convLittleEndian(b[offset:offset+4], &arg.State)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Error)
+	convLittleEndian(b[offset:offset+4], &arg.Error)
 	offset += 4
 
 	return arg
@@ -783,9 +783,9 @@ func (a Ardrone3MediaRecordStateVideoStateChangedV2) Decode(b []byte) interface{
 	//TODO: .............
 	arg := Ardrone3MediaRecordStateVideoStateChangedV2Arguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.State)
+	convLittleEndian(b[offset:offset+4], &arg.State)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Error)
+	convLittleEndian(b[offset:offset+4], &arg.Error)
 	offset += 4
 
 	return arg
@@ -814,9 +814,9 @@ func (a Ardrone3MediaRecordStateVideoResolutionState) Decode(b []byte) interface
 	//TODO: .............
 	arg := Ardrone3MediaRecordStateVideoResolutionStateArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Streaming)
+	convLittleEndian(b[offset:offset+4], &arg.Streaming)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Recording)
+	convLittleEndian(b[offset:offset+4], &arg.Recording)
 	offset += 4
 
 	return arg
@@ -848,9 +848,9 @@ func (a Ardrone3MediaRecordEventPictureEventChanged) Decode(b []byte) interface{
 	//TODO: .............
 	arg := Ardrone3MediaRecordEventPictureEventChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Event)
+	convLittleEndian(b[offset:offset+4], &arg.Event)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Error)
+	convLittleEndian(b[offset:offset+4], &arg.Error)
 	offset += 4
 
 	return arg
@@ -879,9 +879,9 @@ func (a Ardrone3MediaRecordEventVideoEventChanged) Decode(b []byte) interface{} 
 	//TODO: .............
 	arg := Ardrone3MediaRecordEventVideoEventChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Event)
+	convLittleEndian(b[offset:offset+4], &arg.Event)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Error)
+	convLittleEndian(b[offset:offset+4], &arg.Error)
 	offset += 4
 
 	return arg
@@ -912,7 +912,7 @@ func (a Ardrone3PilotingStateFlyingStateChanged) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3PilotingStateFlyingStateChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.State)
+	convLittleEndian(b[offset:offset+4], &arg.State)
 	offset += 4
 
 	return arg
@@ -940,7 +940,7 @@ func (a Ardrone3PilotingStateAlertStateChanged) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3PilotingStateAlertStateChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.State)
+	convLittleEndian(b[offset:offset+4], &arg.State)
 	offset += 4
 
 	return arg
@@ -969,9 +969,9 @@ func (a Ardrone3PilotingStateNavigateHomeStateChanged) Decode(b []byte) interfac
 	//TODO: .............
 	arg := Ardrone3PilotingStateNavigateHomeStateChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.State)
+	convLittleEndian(b[offset:offset+4], &arg.State)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Reason)
+	convLittleEndian(b[offset:offset+4], &arg.Reason)
 	offset += 4
 
 	return arg
@@ -1001,11 +1001,11 @@ func (a Ardrone3PilotingStatePositionChanged) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3PilotingStatePositionChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+8], &arg.Latitude)
+	convLittleEndian(b[offset:offset+8], &arg.Latitude)
 	offset += 8
-	ConvLittleEndianSliceToNumeric(b[offset:offset+8], &arg.Longitude)
+	convLittleEndian(b[offset:offset+8], &arg.Longitude)
 	offset += 8
-	ConvLittleEndianSliceToNumeric(b[offset:offset+8], &arg.Altitude)
+	convLittleEndian(b[offset:offset+8], &arg.Altitude)
 	offset += 8
 
 	return arg
@@ -1035,11 +1035,11 @@ func (a Ardrone3PilotingStateSpeedChanged) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3PilotingStateSpeedChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.SpeedX)
+	convLittleEndian(b[offset:offset+4], &arg.SpeedX)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.SpeedY)
+	convLittleEndian(b[offset:offset+4], &arg.SpeedY)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.SpeedZ)
+	convLittleEndian(b[offset:offset+4], &arg.SpeedZ)
 	offset += 4
 
 	return arg
@@ -1069,11 +1069,11 @@ func (a Ardrone3PilotingStateAttitudeChanged) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3PilotingStateAttitudeChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Roll)
+	convLittleEndian(b[offset:offset+4], &arg.Roll)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Pitch)
+	convLittleEndian(b[offset:offset+4], &arg.Pitch)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Yaw)
+	convLittleEndian(b[offset:offset+4], &arg.Yaw)
 	offset += 4
 
 	return arg
@@ -1099,7 +1099,7 @@ func (a Ardrone3PilotingStateAutoTakeOffModeChanged) Decode(b []byte) interface{
 	//TODO: .............
 	arg := Ardrone3PilotingStateAutoTakeOffModeChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.State)
+	convLittleEndian(b[offset:offset+1], &arg.State)
 	offset++
 
 	return arg
@@ -1127,7 +1127,7 @@ func (a Ardrone3PilotingStateAltitudeChanged) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3PilotingStateAltitudeChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+8], &arg.Altitude)
+	convLittleEndian(b[offset:offset+8], &arg.Altitude)
 	offset += 8
 
 	return arg
@@ -1160,17 +1160,17 @@ func (a Ardrone3PilotingStateGpsLocationChanged) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3PilotingStateGpsLocationChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+8], &arg.Latitude)
+	convLittleEndian(b[offset:offset+8], &arg.Latitude)
 	offset += 8
-	ConvLittleEndianSliceToNumeric(b[offset:offset+8], &arg.Longitude)
+	convLittleEndian(b[offset:offset+8], &arg.Longitude)
 	offset += 8
-	ConvLittleEndianSliceToNumeric(b[offset:offset+8], &arg.Altitude)
+	convLittleEndian(b[offset:offset+8], &arg.Altitude)
 	offset += 8
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Latitudeaccuracy)
+	convLittleEndian(b[offset:offset+1], &arg.Latitudeaccuracy)
 	offset++
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Longitudeaccuracy)
+	convLittleEndian(b[offset:offset+1], &arg.Longitudeaccuracy)
 	offset++
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Altitudeaccuracy)
+	convLittleEndian(b[offset:offset+1], &arg.Altitudeaccuracy)
 	offset++
 
 	return arg
@@ -1198,7 +1198,7 @@ func (a Ardrone3PilotingStateLandingStateChanged) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3PilotingStateLandingStateChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.State)
+	convLittleEndian(b[offset:offset+4], &arg.State)
 	offset += 4
 
 	return arg
@@ -1226,7 +1226,7 @@ func (a Ardrone3PilotingStateAirSpeedChanged) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3PilotingStateAirSpeedChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.AirSpeed)
+	convLittleEndian(b[offset:offset+4], &arg.AirSpeed)
 	offset += 4
 
 	return arg
@@ -1259,17 +1259,17 @@ func (a Ardrone3PilotingStatemoveToChanged) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3PilotingStatemoveToChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+8], &arg.Latitude)
+	convLittleEndian(b[offset:offset+8], &arg.Latitude)
 	offset += 8
-	ConvLittleEndianSliceToNumeric(b[offset:offset+8], &arg.Longitude)
+	convLittleEndian(b[offset:offset+8], &arg.Longitude)
 	offset += 8
-	ConvLittleEndianSliceToNumeric(b[offset:offset+8], &arg.Altitude)
+	convLittleEndian(b[offset:offset+8], &arg.Altitude)
 	offset += 8
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Orientationmode)
+	convLittleEndian(b[offset:offset+4], &arg.Orientationmode)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Heading)
+	convLittleEndian(b[offset:offset+4], &arg.Heading)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Status)
+	convLittleEndian(b[offset:offset+4], &arg.Status)
 	offset += 4
 
 	return arg
@@ -1297,7 +1297,7 @@ func (a Ardrone3PilotingStateMotionState) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3PilotingStateMotionStateArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.State)
+	convLittleEndian(b[offset:offset+4], &arg.State)
 	offset += 4
 
 	return arg
@@ -1328,13 +1328,13 @@ func (a Ardrone3PilotingStatePilotedPOI) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3PilotingStatePilotedPOIArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+8], &arg.Latitude)
+	convLittleEndian(b[offset:offset+8], &arg.Latitude)
 	offset += 8
-	ConvLittleEndianSliceToNumeric(b[offset:offset+8], &arg.Longitude)
+	convLittleEndian(b[offset:offset+8], &arg.Longitude)
 	offset += 8
-	ConvLittleEndianSliceToNumeric(b[offset:offset+8], &arg.Altitude)
+	convLittleEndian(b[offset:offset+8], &arg.Altitude)
 	offset += 8
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Status)
+	convLittleEndian(b[offset:offset+4], &arg.Status)
 	offset += 4
 
 	return arg
@@ -1362,7 +1362,7 @@ func (a Ardrone3PilotingStateReturnHomeBatteryCapacity) Decode(b []byte) interfa
 	//TODO: .............
 	arg := Ardrone3PilotingStateReturnHomeBatteryCapacityArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Status)
+	convLittleEndian(b[offset:offset+4], &arg.Status)
 	offset += 4
 
 	return arg
@@ -1397,23 +1397,23 @@ func (a Ardrone3PilotingStatemoveByChanged) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3PilotingStatemoveByChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.DXAsked)
+	convLittleEndian(b[offset:offset+4], &arg.DXAsked)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.DYAsked)
+	convLittleEndian(b[offset:offset+4], &arg.DYAsked)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.DZAsked)
+	convLittleEndian(b[offset:offset+4], &arg.DZAsked)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.DPsiAsked)
+	convLittleEndian(b[offset:offset+4], &arg.DPsiAsked)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.DX)
+	convLittleEndian(b[offset:offset+4], &arg.DX)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.DY)
+	convLittleEndian(b[offset:offset+4], &arg.DY)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.DZ)
+	convLittleEndian(b[offset:offset+4], &arg.DZ)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.DPsi)
+	convLittleEndian(b[offset:offset+4], &arg.DPsi)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Status)
+	convLittleEndian(b[offset:offset+4], &arg.Status)
 	offset += 4
 
 	return arg
@@ -1442,9 +1442,9 @@ func (a Ardrone3PilotingStateHoveringWarning) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3PilotingStateHoveringWarningArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Nogpstoodark)
+	convLittleEndian(b[offset:offset+1], &arg.Nogpstoodark)
 	offset++
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Nogpstoohigh)
+	convLittleEndian(b[offset:offset+1], &arg.Nogpstoohigh)
 	offset++
 
 	return arg
@@ -1473,9 +1473,9 @@ func (a Ardrone3PilotingStateForcedLandingAutoTrigger) Decode(b []byte) interfac
 	//TODO: .............
 	arg := Ardrone3PilotingStateForcedLandingAutoTriggerArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Reason)
+	convLittleEndian(b[offset:offset+4], &arg.Reason)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Delay)
+	convLittleEndian(b[offset:offset+4], &arg.Delay)
 	offset += 4
 
 	return arg
@@ -1503,7 +1503,7 @@ func (a Ardrone3PilotingStateWindStateChanged) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3PilotingStateWindStateChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.State)
+	convLittleEndian(b[offset:offset+4], &arg.State)
 	offset += 4
 
 	return arg
@@ -1538,15 +1538,15 @@ func (a Ardrone3PilotingEventmoveByEnd) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3PilotingEventmoveByEndArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.DX)
+	convLittleEndian(b[offset:offset+4], &arg.DX)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.DY)
+	convLittleEndian(b[offset:offset+4], &arg.DY)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.DZ)
+	convLittleEndian(b[offset:offset+4], &arg.DZ)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.DPsi)
+	convLittleEndian(b[offset:offset+4], &arg.DPsi)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Error)
+	convLittleEndian(b[offset:offset+4], &arg.Error)
 	offset += 4
 
 	return arg
@@ -1577,7 +1577,7 @@ func (a Ardrone3NetworkWifiScan) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3NetworkWifiScanArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Band)
+	convLittleEndian(b[offset:offset+4], &arg.Band)
 	offset += 4
 
 	return arg
@@ -1645,11 +1645,11 @@ func (a Ardrone3NetworkStateWifiScanListChanged) Decode(b []byte) interface{} {
 	}
 	arg.Ssid = string(b[offset : offset+stringEnd])
 	offset += stringEnd
-	ConvLittleEndianSliceToNumeric(b[offset:offset+2], &arg.Rssi)
+	convLittleEndian(b[offset:offset+2], &arg.Rssi)
 	offset += 2
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Band)
+	convLittleEndian(b[offset:offset+4], &arg.Band)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Channel)
+	convLittleEndian(b[offset:offset+1], &arg.Channel)
 	offset++
 
 	return arg
@@ -1704,11 +1704,11 @@ func (a Ardrone3NetworkStateWifiAuthChannelListChanged) Decode(b []byte) interfa
 	//TODO: .............
 	arg := Ardrone3NetworkStateWifiAuthChannelListChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Band)
+	convLittleEndian(b[offset:offset+4], &arg.Band)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Channel)
+	convLittleEndian(b[offset:offset+1], &arg.Channel)
 	offset++
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Inorout)
+	convLittleEndian(b[offset:offset+1], &arg.Inorout)
 	offset++
 
 	return arg
@@ -1764,7 +1764,7 @@ func (a Ardrone3PilotingSettingsMaxAltitude) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3PilotingSettingsMaxAltitudeArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Current)
+	convLittleEndian(b[offset:offset+4], &arg.Current)
 	offset += 4
 
 	return arg
@@ -1792,7 +1792,7 @@ func (a Ardrone3PilotingSettingsMaxTilt) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3PilotingSettingsMaxTiltArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Current)
+	convLittleEndian(b[offset:offset+4], &arg.Current)
 	offset += 4
 
 	return arg
@@ -1818,7 +1818,7 @@ func (a Ardrone3PilotingSettingsAbsolutControl) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3PilotingSettingsAbsolutControlArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.On)
+	convLittleEndian(b[offset:offset+1], &arg.On)
 	offset++
 
 	return arg
@@ -1846,7 +1846,7 @@ func (a Ardrone3PilotingSettingsMaxDistance) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3PilotingSettingsMaxDistanceArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Value)
+	convLittleEndian(b[offset:offset+4], &arg.Value)
 	offset += 4
 
 	return arg
@@ -1874,7 +1874,7 @@ func (a Ardrone3PilotingSettingsNoFlyOverMaxDistance) Decode(b []byte) interface
 	//TODO: .............
 	arg := Ardrone3PilotingSettingsNoFlyOverMaxDistanceArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.ShouldNotFlyOver)
+	convLittleEndian(b[offset:offset+1], &arg.ShouldNotFlyOver)
 	offset++
 
 	return arg
@@ -1902,7 +1902,7 @@ func (a Ardrone3PilotingSettingssetAutonomousFlightMaxHorizontalSpeed) Decode(b 
 	//TODO: .............
 	arg := Ardrone3PilotingSettingssetAutonomousFlightMaxHorizontalSpeedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Value)
+	convLittleEndian(b[offset:offset+4], &arg.Value)
 	offset += 4
 
 	return arg
@@ -1930,7 +1930,7 @@ func (a Ardrone3PilotingSettingssetAutonomousFlightMaxVerticalSpeed) Decode(b []
 	//TODO: .............
 	arg := Ardrone3PilotingSettingssetAutonomousFlightMaxVerticalSpeedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Value)
+	convLittleEndian(b[offset:offset+4], &arg.Value)
 	offset += 4
 
 	return arg
@@ -1958,7 +1958,7 @@ func (a Ardrone3PilotingSettingssetAutonomousFlightMaxHorizontalAcceleration) De
 	//TODO: .............
 	arg := Ardrone3PilotingSettingssetAutonomousFlightMaxHorizontalAccelerationArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Value)
+	convLittleEndian(b[offset:offset+4], &arg.Value)
 	offset += 4
 
 	return arg
@@ -1986,7 +1986,7 @@ func (a Ardrone3PilotingSettingssetAutonomousFlightMaxVerticalAcceleration) Deco
 	//TODO: .............
 	arg := Ardrone3PilotingSettingssetAutonomousFlightMaxVerticalAccelerationArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Value)
+	convLittleEndian(b[offset:offset+4], &arg.Value)
 	offset += 4
 
 	return arg
@@ -2014,7 +2014,7 @@ func (a Ardrone3PilotingSettingssetAutonomousFlightMaxRotationSpeed) Decode(b []
 	//TODO: .............
 	arg := Ardrone3PilotingSettingssetAutonomousFlightMaxRotationSpeedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Value)
+	convLittleEndian(b[offset:offset+4], &arg.Value)
 	offset += 4
 
 	return arg
@@ -2042,7 +2042,7 @@ func (a Ardrone3PilotingSettingsBankedTurn) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3PilotingSettingsBankedTurnArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Value)
+	convLittleEndian(b[offset:offset+1], &arg.Value)
 	offset++
 
 	return arg
@@ -2070,7 +2070,7 @@ func (a Ardrone3PilotingSettingsMinAltitude) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3PilotingSettingsMinAltitudeArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Current)
+	convLittleEndian(b[offset:offset+4], &arg.Current)
 	offset += 4
 
 	return arg
@@ -2098,7 +2098,7 @@ func (a Ardrone3PilotingSettingsCirclingDirection) Decode(b []byte) interface{} 
 	//TODO: .............
 	arg := Ardrone3PilotingSettingsCirclingDirectionArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Value)
+	convLittleEndian(b[offset:offset+4], &arg.Value)
 	offset += 4
 
 	return arg
@@ -2126,7 +2126,7 @@ func (a Ardrone3PilotingSettingsCirclingRadius) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3PilotingSettingsCirclingRadiusArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+2], &arg.Value)
+	convLittleEndian(b[offset:offset+2], &arg.Value)
 	offset += 2
 
 	return arg
@@ -2154,7 +2154,7 @@ func (a Ardrone3PilotingSettingsCirclingAltitude) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3PilotingSettingsCirclingAltitudeArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+2], &arg.Value)
+	convLittleEndian(b[offset:offset+2], &arg.Value)
 	offset += 2
 
 	return arg
@@ -2182,7 +2182,7 @@ func (a Ardrone3PilotingSettingsPitchMode) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3PilotingSettingsPitchModeArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Value)
+	convLittleEndian(b[offset:offset+4], &arg.Value)
 	offset += 4
 
 	return arg
@@ -2210,7 +2210,7 @@ func (a Ardrone3PilotingSettingsSetMotionDetectionMode) Decode(b []byte) interfa
 	//TODO: .............
 	arg := Ardrone3PilotingSettingsSetMotionDetectionModeArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Enable)
+	convLittleEndian(b[offset:offset+1], &arg.Enable)
 	offset++
 
 	return arg
@@ -2243,11 +2243,11 @@ func (a Ardrone3PilotingSettingsStateMaxAltitudeChanged) Decode(b []byte) interf
 	//TODO: .............
 	arg := Ardrone3PilotingSettingsStateMaxAltitudeChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Current)
+	convLittleEndian(b[offset:offset+4], &arg.Current)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Min)
+	convLittleEndian(b[offset:offset+4], &arg.Min)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Max)
+	convLittleEndian(b[offset:offset+4], &arg.Max)
 	offset += 4
 
 	return arg
@@ -2277,11 +2277,11 @@ func (a Ardrone3PilotingSettingsStateMaxTiltChanged) Decode(b []byte) interface{
 	//TODO: .............
 	arg := Ardrone3PilotingSettingsStateMaxTiltChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Current)
+	convLittleEndian(b[offset:offset+4], &arg.Current)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Min)
+	convLittleEndian(b[offset:offset+4], &arg.Min)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Max)
+	convLittleEndian(b[offset:offset+4], &arg.Max)
 	offset += 4
 
 	return arg
@@ -2307,7 +2307,7 @@ func (a Ardrone3PilotingSettingsStateAbsolutControlChanged) Decode(b []byte) int
 	//TODO: .............
 	arg := Ardrone3PilotingSettingsStateAbsolutControlChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.On)
+	convLittleEndian(b[offset:offset+1], &arg.On)
 	offset++
 
 	return arg
@@ -2337,11 +2337,11 @@ func (a Ardrone3PilotingSettingsStateMaxDistanceChanged) Decode(b []byte) interf
 	//TODO: .............
 	arg := Ardrone3PilotingSettingsStateMaxDistanceChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Current)
+	convLittleEndian(b[offset:offset+4], &arg.Current)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Min)
+	convLittleEndian(b[offset:offset+4], &arg.Min)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Max)
+	convLittleEndian(b[offset:offset+4], &arg.Max)
 	offset += 4
 
 	return arg
@@ -2369,7 +2369,7 @@ func (a Ardrone3PilotingSettingsStateNoFlyOverMaxDistanceChanged) Decode(b []byt
 	//TODO: .............
 	arg := Ardrone3PilotingSettingsStateNoFlyOverMaxDistanceChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.ShouldNotFlyOver)
+	convLittleEndian(b[offset:offset+1], &arg.ShouldNotFlyOver)
 	offset++
 
 	return arg
@@ -2397,7 +2397,7 @@ func (a Ardrone3PilotingSettingsStateAutonomousFlightMaxHorizontalSpeed) Decode(
 	//TODO: .............
 	arg := Ardrone3PilotingSettingsStateAutonomousFlightMaxHorizontalSpeedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Value)
+	convLittleEndian(b[offset:offset+4], &arg.Value)
 	offset += 4
 
 	return arg
@@ -2425,7 +2425,7 @@ func (a Ardrone3PilotingSettingsStateAutonomousFlightMaxVerticalSpeed) Decode(b 
 	//TODO: .............
 	arg := Ardrone3PilotingSettingsStateAutonomousFlightMaxVerticalSpeedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Value)
+	convLittleEndian(b[offset:offset+4], &arg.Value)
 	offset += 4
 
 	return arg
@@ -2453,7 +2453,7 @@ func (a Ardrone3PilotingSettingsStateAutonomousFlightMaxHorizontalAcceleration) 
 	//TODO: .............
 	arg := Ardrone3PilotingSettingsStateAutonomousFlightMaxHorizontalAccelerationArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Value)
+	convLittleEndian(b[offset:offset+4], &arg.Value)
 	offset += 4
 
 	return arg
@@ -2481,7 +2481,7 @@ func (a Ardrone3PilotingSettingsStateAutonomousFlightMaxVerticalAcceleration) De
 	//TODO: .............
 	arg := Ardrone3PilotingSettingsStateAutonomousFlightMaxVerticalAccelerationArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Value)
+	convLittleEndian(b[offset:offset+4], &arg.Value)
 	offset += 4
 
 	return arg
@@ -2509,7 +2509,7 @@ func (a Ardrone3PilotingSettingsStateAutonomousFlightMaxRotationSpeed) Decode(b 
 	//TODO: .............
 	arg := Ardrone3PilotingSettingsStateAutonomousFlightMaxRotationSpeedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Value)
+	convLittleEndian(b[offset:offset+4], &arg.Value)
 	offset += 4
 
 	return arg
@@ -2537,7 +2537,7 @@ func (a Ardrone3PilotingSettingsStateBankedTurnChanged) Decode(b []byte) interfa
 	//TODO: .............
 	arg := Ardrone3PilotingSettingsStateBankedTurnChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.State)
+	convLittleEndian(b[offset:offset+1], &arg.State)
 	offset++
 
 	return arg
@@ -2567,11 +2567,11 @@ func (a Ardrone3PilotingSettingsStateMinAltitudeChanged) Decode(b []byte) interf
 	//TODO: .............
 	arg := Ardrone3PilotingSettingsStateMinAltitudeChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Current)
+	convLittleEndian(b[offset:offset+4], &arg.Current)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Min)
+	convLittleEndian(b[offset:offset+4], &arg.Min)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Max)
+	convLittleEndian(b[offset:offset+4], &arg.Max)
 	offset += 4
 
 	return arg
@@ -2599,7 +2599,7 @@ func (a Ardrone3PilotingSettingsStateCirclingDirectionChanged) Decode(b []byte) 
 	//TODO: .............
 	arg := Ardrone3PilotingSettingsStateCirclingDirectionChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Value)
+	convLittleEndian(b[offset:offset+4], &arg.Value)
 	offset += 4
 
 	return arg
@@ -2629,11 +2629,11 @@ func (a Ardrone3PilotingSettingsStateCirclingRadiusChanged) Decode(b []byte) int
 	//TODO: .............
 	arg := Ardrone3PilotingSettingsStateCirclingRadiusChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+2], &arg.Current)
+	convLittleEndian(b[offset:offset+2], &arg.Current)
 	offset += 2
-	ConvLittleEndianSliceToNumeric(b[offset:offset+2], &arg.Min)
+	convLittleEndian(b[offset:offset+2], &arg.Min)
 	offset += 2
-	ConvLittleEndianSliceToNumeric(b[offset:offset+2], &arg.Max)
+	convLittleEndian(b[offset:offset+2], &arg.Max)
 	offset += 2
 
 	return arg
@@ -2663,11 +2663,11 @@ func (a Ardrone3PilotingSettingsStateCirclingAltitudeChanged) Decode(b []byte) i
 	//TODO: .............
 	arg := Ardrone3PilotingSettingsStateCirclingAltitudeChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+2], &arg.Current)
+	convLittleEndian(b[offset:offset+2], &arg.Current)
 	offset += 2
-	ConvLittleEndianSliceToNumeric(b[offset:offset+2], &arg.Min)
+	convLittleEndian(b[offset:offset+2], &arg.Min)
 	offset += 2
-	ConvLittleEndianSliceToNumeric(b[offset:offset+2], &arg.Max)
+	convLittleEndian(b[offset:offset+2], &arg.Max)
 	offset += 2
 
 	return arg
@@ -2695,7 +2695,7 @@ func (a Ardrone3PilotingSettingsStatePitchModeChanged) Decode(b []byte) interfac
 	//TODO: .............
 	arg := Ardrone3PilotingSettingsStatePitchModeChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Value)
+	convLittleEndian(b[offset:offset+4], &arg.Value)
 	offset += 4
 
 	return arg
@@ -2723,7 +2723,7 @@ func (a Ardrone3PilotingSettingsStateMotionDetection) Decode(b []byte) interface
 	//TODO: .............
 	arg := Ardrone3PilotingSettingsStateMotionDetectionArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Enabled)
+	convLittleEndian(b[offset:offset+1], &arg.Enabled)
 	offset++
 
 	return arg
@@ -2754,7 +2754,7 @@ func (a Ardrone3SpeedSettingsMaxVerticalSpeed) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3SpeedSettingsMaxVerticalSpeedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Current)
+	convLittleEndian(b[offset:offset+4], &arg.Current)
 	offset += 4
 
 	return arg
@@ -2782,7 +2782,7 @@ func (a Ardrone3SpeedSettingsMaxRotationSpeed) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3SpeedSettingsMaxRotationSpeedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Current)
+	convLittleEndian(b[offset:offset+4], &arg.Current)
 	offset += 4
 
 	return arg
@@ -2810,7 +2810,7 @@ func (a Ardrone3SpeedSettingsHullProtection) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3SpeedSettingsHullProtectionArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Present)
+	convLittleEndian(b[offset:offset+1], &arg.Present)
 	offset++
 
 	return arg
@@ -2836,7 +2836,7 @@ func (a Ardrone3SpeedSettingsOutdoor) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3SpeedSettingsOutdoorArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Outdoor)
+	convLittleEndian(b[offset:offset+1], &arg.Outdoor)
 	offset++
 
 	return arg
@@ -2864,7 +2864,7 @@ func (a Ardrone3SpeedSettingsMaxPitchRollRotationSpeed) Decode(b []byte) interfa
 	//TODO: .............
 	arg := Ardrone3SpeedSettingsMaxPitchRollRotationSpeedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Current)
+	convLittleEndian(b[offset:offset+4], &arg.Current)
 	offset += 4
 
 	return arg
@@ -2897,11 +2897,11 @@ func (a Ardrone3SpeedSettingsStateMaxVerticalSpeedChanged) Decode(b []byte) inte
 	//TODO: .............
 	arg := Ardrone3SpeedSettingsStateMaxVerticalSpeedChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Current)
+	convLittleEndian(b[offset:offset+4], &arg.Current)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Min)
+	convLittleEndian(b[offset:offset+4], &arg.Min)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Max)
+	convLittleEndian(b[offset:offset+4], &arg.Max)
 	offset += 4
 
 	return arg
@@ -2931,11 +2931,11 @@ func (a Ardrone3SpeedSettingsStateMaxRotationSpeedChanged) Decode(b []byte) inte
 	//TODO: .............
 	arg := Ardrone3SpeedSettingsStateMaxRotationSpeedChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Current)
+	convLittleEndian(b[offset:offset+4], &arg.Current)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Min)
+	convLittleEndian(b[offset:offset+4], &arg.Min)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Max)
+	convLittleEndian(b[offset:offset+4], &arg.Max)
 	offset += 4
 
 	return arg
@@ -2963,7 +2963,7 @@ func (a Ardrone3SpeedSettingsStateHullProtectionChanged) Decode(b []byte) interf
 	//TODO: .............
 	arg := Ardrone3SpeedSettingsStateHullProtectionChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Present)
+	convLittleEndian(b[offset:offset+1], &arg.Present)
 	offset++
 
 	return arg
@@ -2989,7 +2989,7 @@ func (a Ardrone3SpeedSettingsStateOutdoorChanged) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3SpeedSettingsStateOutdoorChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Outdoor)
+	convLittleEndian(b[offset:offset+1], &arg.Outdoor)
 	offset++
 
 	return arg
@@ -3019,11 +3019,11 @@ func (a Ardrone3SpeedSettingsStateMaxPitchRollRotationSpeedChanged) Decode(b []b
 	//TODO: .............
 	arg := Ardrone3SpeedSettingsStateMaxPitchRollRotationSpeedChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Current)
+	convLittleEndian(b[offset:offset+4], &arg.Current)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Min)
+	convLittleEndian(b[offset:offset+4], &arg.Min)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Max)
+	convLittleEndian(b[offset:offset+4], &arg.Max)
 	offset += 4
 
 	return arg
@@ -3056,11 +3056,11 @@ func (a Ardrone3NetworkSettingsWifiSelection) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3NetworkSettingsWifiSelectionArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.TypeX)
+	convLittleEndian(b[offset:offset+4], &arg.TypeX)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Band)
+	convLittleEndian(b[offset:offset+4], &arg.Band)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Channel)
+	convLittleEndian(b[offset:offset+1], &arg.Channel)
 	offset++
 
 	return arg
@@ -3092,7 +3092,7 @@ func (a Ardrone3NetworkSettingswifiSecurity) Decode(b []byte) interface{} {
 	var err error
 	arg := Ardrone3NetworkSettingswifiSecurityArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.TypeX)
+	convLittleEndian(b[offset:offset+4], &arg.TypeX)
 	offset += 4
 
 	stringEnd, err = getLengthOfStringData(b[offset:])
@@ -3101,7 +3101,7 @@ func (a Ardrone3NetworkSettingswifiSecurity) Decode(b []byte) interface{} {
 	}
 	arg.Key = string(b[offset : offset+stringEnd])
 	offset += stringEnd
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.KeyType)
+	convLittleEndian(b[offset:offset+4], &arg.KeyType)
 	offset += 4
 
 	return arg
@@ -3134,11 +3134,11 @@ func (a Ardrone3NetworkSettingsStateWifiSelectionChanged) Decode(b []byte) inter
 	//TODO: .............
 	arg := Ardrone3NetworkSettingsStateWifiSelectionChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.TypeX)
+	convLittleEndian(b[offset:offset+4], &arg.TypeX)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Band)
+	convLittleEndian(b[offset:offset+4], &arg.Band)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Channel)
+	convLittleEndian(b[offset:offset+1], &arg.Channel)
 	offset++
 
 	return arg
@@ -3164,7 +3164,7 @@ func (a Ardrone3NetworkSettingsStatewifiSecurityChanged) Decode(b []byte) interf
 	//TODO: .............
 	arg := Ardrone3NetworkSettingsStatewifiSecurityChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.TypeX)
+	convLittleEndian(b[offset:offset+4], &arg.TypeX)
 	offset += 4
 
 	return arg
@@ -3196,7 +3196,7 @@ func (a Ardrone3NetworkSettingsStatewifiSecurity) Decode(b []byte) interface{} {
 	var err error
 	arg := Ardrone3NetworkSettingsStatewifiSecurityArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.TypeX)
+	convLittleEndian(b[offset:offset+4], &arg.TypeX)
 	offset += 4
 
 	stringEnd, err = getLengthOfStringData(b[offset:])
@@ -3205,7 +3205,7 @@ func (a Ardrone3NetworkSettingsStatewifiSecurity) Decode(b []byte) interface{} {
 	}
 	arg.Key = string(b[offset : offset+stringEnd])
 	offset += stringEnd
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.KeyType)
+	convLittleEndian(b[offset:offset+4], &arg.KeyType)
 	offset += 4
 
 	return arg
@@ -3239,7 +3239,7 @@ func (a Ardrone3SettingsStateProductMotorVersionListChanged) Decode(b []byte) in
 	var err error
 	arg := Ardrone3SettingsStateProductMotorVersionListChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Motornumber)
+	convLittleEndian(b[offset:offset+1], &arg.Motornumber)
 	offset++
 
 	stringEnd, err = getLengthOfStringData(b[offset:])
@@ -3332,9 +3332,9 @@ func (a Ardrone3SettingsStateMotorErrorStateChanged) Decode(b []byte) interface{
 	//TODO: .............
 	arg := Ardrone3SettingsStateMotorErrorStateChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.MotorIds)
+	convLittleEndian(b[offset:offset+1], &arg.MotorIds)
 	offset++
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.MotorError)
+	convLittleEndian(b[offset:offset+4], &arg.MotorError)
 	offset += 4
 
 	return arg
@@ -3397,11 +3397,11 @@ func (a Ardrone3SettingsStateMotorFlightsStatusChanged) Decode(b []byte) interfa
 	//TODO: .............
 	arg := Ardrone3SettingsStateMotorFlightsStatusChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+2], &arg.NbFlights)
+	convLittleEndian(b[offset:offset+2], &arg.NbFlights)
 	offset += 2
-	ConvLittleEndianSliceToNumeric(b[offset:offset+2], &arg.LastFlightDuration)
+	convLittleEndian(b[offset:offset+2], &arg.LastFlightDuration)
 	offset += 2
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.TotalFlightDuration)
+	convLittleEndian(b[offset:offset+4], &arg.TotalFlightDuration)
 	offset += 4
 
 	return arg
@@ -3429,7 +3429,7 @@ func (a Ardrone3SettingsStateMotorErrorLastErrorChanged) Decode(b []byte) interf
 	//TODO: .............
 	arg := Ardrone3SettingsStateMotorErrorLastErrorChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.MotorError)
+	convLittleEndian(b[offset:offset+4], &arg.MotorError)
 	offset += 4
 
 	return arg
@@ -3524,7 +3524,7 @@ func (a Ardrone3PictureSettingsPictureFormatSelection) Decode(b []byte) interfac
 	//TODO: .............
 	arg := Ardrone3PictureSettingsPictureFormatSelectionArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.TypeX)
+	convLittleEndian(b[offset:offset+4], &arg.TypeX)
 	offset += 4
 
 	return arg
@@ -3552,7 +3552,7 @@ func (a Ardrone3PictureSettingsAutoWhiteBalanceSelection) Decode(b []byte) inter
 	//TODO: .............
 	arg := Ardrone3PictureSettingsAutoWhiteBalanceSelectionArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.TypeX)
+	convLittleEndian(b[offset:offset+4], &arg.TypeX)
 	offset += 4
 
 	return arg
@@ -3580,7 +3580,7 @@ func (a Ardrone3PictureSettingsExpositionSelection) Decode(b []byte) interface{}
 	//TODO: .............
 	arg := Ardrone3PictureSettingsExpositionSelectionArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Value)
+	convLittleEndian(b[offset:offset+4], &arg.Value)
 	offset += 4
 
 	return arg
@@ -3608,7 +3608,7 @@ func (a Ardrone3PictureSettingsSaturationSelection) Decode(b []byte) interface{}
 	//TODO: .............
 	arg := Ardrone3PictureSettingsSaturationSelectionArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Value)
+	convLittleEndian(b[offset:offset+4], &arg.Value)
 	offset += 4
 
 	return arg
@@ -3637,9 +3637,9 @@ func (a Ardrone3PictureSettingsTimelapseSelection) Decode(b []byte) interface{} 
 	//TODO: .............
 	arg := Ardrone3PictureSettingsTimelapseSelectionArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Enabled)
+	convLittleEndian(b[offset:offset+1], &arg.Enabled)
 	offset++
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Interval)
+	convLittleEndian(b[offset:offset+4], &arg.Interval)
 	offset += 4
 
 	return arg
@@ -3668,9 +3668,9 @@ func (a Ardrone3PictureSettingsVideoAutorecordSelection) Decode(b []byte) interf
 	//TODO: .............
 	arg := Ardrone3PictureSettingsVideoAutorecordSelectionArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Enabled)
+	convLittleEndian(b[offset:offset+1], &arg.Enabled)
 	offset++
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Massstorageid)
+	convLittleEndian(b[offset:offset+1], &arg.Massstorageid)
 	offset++
 
 	return arg
@@ -3698,7 +3698,7 @@ func (a Ardrone3PictureSettingsVideoStabilizationMode) Decode(b []byte) interfac
 	//TODO: .............
 	arg := Ardrone3PictureSettingsVideoStabilizationModeArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Mode)
+	convLittleEndian(b[offset:offset+4], &arg.Mode)
 	offset += 4
 
 	return arg
@@ -3726,7 +3726,7 @@ func (a Ardrone3PictureSettingsVideoRecordingMode) Decode(b []byte) interface{} 
 	//TODO: .............
 	arg := Ardrone3PictureSettingsVideoRecordingModeArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Mode)
+	convLittleEndian(b[offset:offset+4], &arg.Mode)
 	offset += 4
 
 	return arg
@@ -3754,7 +3754,7 @@ func (a Ardrone3PictureSettingsVideoFramerate) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3PictureSettingsVideoFramerateArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Framerate)
+	convLittleEndian(b[offset:offset+4], &arg.Framerate)
 	offset += 4
 
 	return arg
@@ -3782,7 +3782,7 @@ func (a Ardrone3PictureSettingsVideoResolutions) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3PictureSettingsVideoResolutionsArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.TypeX)
+	convLittleEndian(b[offset:offset+4], &arg.TypeX)
 	offset += 4
 
 	return arg
@@ -3813,7 +3813,7 @@ func (a Ardrone3PictureSettingsStatePictureFormatChanged) Decode(b []byte) inter
 	//TODO: .............
 	arg := Ardrone3PictureSettingsStatePictureFormatChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.TypeX)
+	convLittleEndian(b[offset:offset+4], &arg.TypeX)
 	offset += 4
 
 	return arg
@@ -3841,7 +3841,7 @@ func (a Ardrone3PictureSettingsStateAutoWhiteBalanceChanged) Decode(b []byte) in
 	//TODO: .............
 	arg := Ardrone3PictureSettingsStateAutoWhiteBalanceChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.TypeX)
+	convLittleEndian(b[offset:offset+4], &arg.TypeX)
 	offset += 4
 
 	return arg
@@ -3871,11 +3871,11 @@ func (a Ardrone3PictureSettingsStateExpositionChanged) Decode(b []byte) interfac
 	//TODO: .............
 	arg := Ardrone3PictureSettingsStateExpositionChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Value)
+	convLittleEndian(b[offset:offset+4], &arg.Value)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Min)
+	convLittleEndian(b[offset:offset+4], &arg.Min)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Max)
+	convLittleEndian(b[offset:offset+4], &arg.Max)
 	offset += 4
 
 	return arg
@@ -3905,11 +3905,11 @@ func (a Ardrone3PictureSettingsStateSaturationChanged) Decode(b []byte) interfac
 	//TODO: .............
 	arg := Ardrone3PictureSettingsStateSaturationChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Value)
+	convLittleEndian(b[offset:offset+4], &arg.Value)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Min)
+	convLittleEndian(b[offset:offset+4], &arg.Min)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Max)
+	convLittleEndian(b[offset:offset+4], &arg.Max)
 	offset += 4
 
 	return arg
@@ -3940,13 +3940,13 @@ func (a Ardrone3PictureSettingsStateTimelapseChanged) Decode(b []byte) interface
 	//TODO: .............
 	arg := Ardrone3PictureSettingsStateTimelapseChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Enabled)
+	convLittleEndian(b[offset:offset+1], &arg.Enabled)
 	offset++
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Interval)
+	convLittleEndian(b[offset:offset+4], &arg.Interval)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.MinInterval)
+	convLittleEndian(b[offset:offset+4], &arg.MinInterval)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.MaxInterval)
+	convLittleEndian(b[offset:offset+4], &arg.MaxInterval)
 	offset += 4
 
 	return arg
@@ -3975,9 +3975,9 @@ func (a Ardrone3PictureSettingsStateVideoAutorecordChanged) Decode(b []byte) int
 	//TODO: .............
 	arg := Ardrone3PictureSettingsStateVideoAutorecordChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Enabled)
+	convLittleEndian(b[offset:offset+1], &arg.Enabled)
 	offset++
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Massstorageid)
+	convLittleEndian(b[offset:offset+1], &arg.Massstorageid)
 	offset++
 
 	return arg
@@ -4005,7 +4005,7 @@ func (a Ardrone3PictureSettingsStateVideoStabilizationModeChanged) Decode(b []by
 	//TODO: .............
 	arg := Ardrone3PictureSettingsStateVideoStabilizationModeChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Mode)
+	convLittleEndian(b[offset:offset+4], &arg.Mode)
 	offset += 4
 
 	return arg
@@ -4033,7 +4033,7 @@ func (a Ardrone3PictureSettingsStateVideoRecordingModeChanged) Decode(b []byte) 
 	//TODO: .............
 	arg := Ardrone3PictureSettingsStateVideoRecordingModeChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Mode)
+	convLittleEndian(b[offset:offset+4], &arg.Mode)
 	offset += 4
 
 	return arg
@@ -4061,7 +4061,7 @@ func (a Ardrone3PictureSettingsStateVideoFramerateChanged) Decode(b []byte) inte
 	//TODO: .............
 	arg := Ardrone3PictureSettingsStateVideoFramerateChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Framerate)
+	convLittleEndian(b[offset:offset+4], &arg.Framerate)
 	offset += 4
 
 	return arg
@@ -4089,7 +4089,7 @@ func (a Ardrone3PictureSettingsStateVideoResolutionsChanged) Decode(b []byte) in
 	//TODO: .............
 	arg := Ardrone3PictureSettingsStateVideoResolutionsChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.TypeX)
+	convLittleEndian(b[offset:offset+4], &arg.TypeX)
 	offset += 4
 
 	return arg
@@ -4120,7 +4120,7 @@ func (a Ardrone3MediaStreamingVideoEnable) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3MediaStreamingVideoEnableArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Enable)
+	convLittleEndian(b[offset:offset+1], &arg.Enable)
 	offset++
 
 	return arg
@@ -4148,7 +4148,7 @@ func (a Ardrone3MediaStreamingVideoStreamMode) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3MediaStreamingVideoStreamModeArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Mode)
+	convLittleEndian(b[offset:offset+4], &arg.Mode)
 	offset += 4
 
 	return arg
@@ -4179,7 +4179,7 @@ func (a Ardrone3MediaStreamingStateVideoEnableChanged) Decode(b []byte) interfac
 	//TODO: .............
 	arg := Ardrone3MediaStreamingStateVideoEnableChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Enabled)
+	convLittleEndian(b[offset:offset+4], &arg.Enabled)
 	offset += 4
 
 	return arg
@@ -4203,7 +4203,7 @@ func (a Ardrone3MediaStreamingStateVideoStreamModeChanged) Decode(b []byte) inte
 	//TODO: .............
 	arg := Ardrone3MediaStreamingStateVideoStreamModeChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Mode)
+	convLittleEndian(b[offset:offset+4], &arg.Mode)
 	offset += 4
 
 	return arg
@@ -4234,11 +4234,11 @@ func (a Ardrone3GPSSettingsSetHome) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3GPSSettingsSetHomeArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+8], &arg.Latitude)
+	convLittleEndian(b[offset:offset+8], &arg.Latitude)
 	offset += 8
-	ConvLittleEndianSliceToNumeric(b[offset:offset+8], &arg.Longitude)
+	convLittleEndian(b[offset:offset+8], &arg.Longitude)
 	offset += 8
-	ConvLittleEndianSliceToNumeric(b[offset:offset+8], &arg.Altitude)
+	convLittleEndian(b[offset:offset+8], &arg.Altitude)
 	offset += 8
 
 	return arg
@@ -4295,15 +4295,15 @@ func (a Ardrone3GPSSettingsSendControllerGPS) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3GPSSettingsSendControllerGPSArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+8], &arg.Latitude)
+	convLittleEndian(b[offset:offset+8], &arg.Latitude)
 	offset += 8
-	ConvLittleEndianSliceToNumeric(b[offset:offset+8], &arg.Longitude)
+	convLittleEndian(b[offset:offset+8], &arg.Longitude)
 	offset += 8
-	ConvLittleEndianSliceToNumeric(b[offset:offset+8], &arg.Altitude)
+	convLittleEndian(b[offset:offset+8], &arg.Altitude)
 	offset += 8
-	ConvLittleEndianSliceToNumeric(b[offset:offset+8], &arg.HorizontalAccuracy)
+	convLittleEndian(b[offset:offset+8], &arg.HorizontalAccuracy)
 	offset += 8
-	ConvLittleEndianSliceToNumeric(b[offset:offset+8], &arg.VerticalAccuracy)
+	convLittleEndian(b[offset:offset+8], &arg.VerticalAccuracy)
 	offset += 8
 
 	return arg
@@ -4331,7 +4331,7 @@ func (a Ardrone3GPSSettingsHomeType) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3GPSSettingsHomeTypeArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.TypeX)
+	convLittleEndian(b[offset:offset+4], &arg.TypeX)
 	offset += 4
 
 	return arg
@@ -4359,7 +4359,7 @@ func (a Ardrone3GPSSettingsReturnHomeDelay) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3GPSSettingsReturnHomeDelayArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+2], &arg.Delay)
+	convLittleEndian(b[offset:offset+2], &arg.Delay)
 	offset += 2
 
 	return arg
@@ -4387,7 +4387,7 @@ func (a Ardrone3GPSSettingsReturnHomeMinAltitude) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3GPSSettingsReturnHomeMinAltitudeArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Value)
+	convLittleEndian(b[offset:offset+4], &arg.Value)
 	offset += 4
 
 	return arg
@@ -4420,11 +4420,11 @@ func (a Ardrone3GPSSettingsStateHomeChanged) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3GPSSettingsStateHomeChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+8], &arg.Latitude)
+	convLittleEndian(b[offset:offset+8], &arg.Latitude)
 	offset += 8
-	ConvLittleEndianSliceToNumeric(b[offset:offset+8], &arg.Longitude)
+	convLittleEndian(b[offset:offset+8], &arg.Longitude)
 	offset += 8
-	ConvLittleEndianSliceToNumeric(b[offset:offset+8], &arg.Altitude)
+	convLittleEndian(b[offset:offset+8], &arg.Altitude)
 	offset += 8
 
 	return arg
@@ -4454,11 +4454,11 @@ func (a Ardrone3GPSSettingsStateResetHomeChanged) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3GPSSettingsStateResetHomeChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+8], &arg.Latitude)
+	convLittleEndian(b[offset:offset+8], &arg.Latitude)
 	offset += 8
-	ConvLittleEndianSliceToNumeric(b[offset:offset+8], &arg.Longitude)
+	convLittleEndian(b[offset:offset+8], &arg.Longitude)
 	offset += 8
-	ConvLittleEndianSliceToNumeric(b[offset:offset+8], &arg.Altitude)
+	convLittleEndian(b[offset:offset+8], &arg.Altitude)
 	offset += 8
 
 	return arg
@@ -4486,7 +4486,7 @@ func (a Ardrone3GPSSettingsStateGPSFixStateChanged) Decode(b []byte) interface{}
 	//TODO: .............
 	arg := Ardrone3GPSSettingsStateGPSFixStateChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Fixed)
+	convLittleEndian(b[offset:offset+1], &arg.Fixed)
 	offset++
 
 	return arg
@@ -4514,7 +4514,7 @@ func (a Ardrone3GPSSettingsStateGPSUpdateStateChanged) Decode(b []byte) interfac
 	//TODO: .............
 	arg := Ardrone3GPSSettingsStateGPSUpdateStateChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.State)
+	convLittleEndian(b[offset:offset+4], &arg.State)
 	offset += 4
 
 	return arg
@@ -4542,7 +4542,7 @@ func (a Ardrone3GPSSettingsStateHomeTypeChanged) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3GPSSettingsStateHomeTypeChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.TypeX)
+	convLittleEndian(b[offset:offset+4], &arg.TypeX)
 	offset += 4
 
 	return arg
@@ -4570,7 +4570,7 @@ func (a Ardrone3GPSSettingsStateReturnHomeDelayChanged) Decode(b []byte) interfa
 	//TODO: .............
 	arg := Ardrone3GPSSettingsStateReturnHomeDelayChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+2], &arg.Delay)
+	convLittleEndian(b[offset:offset+2], &arg.Delay)
 	offset += 2
 
 	return arg
@@ -4598,9 +4598,9 @@ func (a Ardrone3GPSSettingsStateGeofenceCenterChanged) Decode(b []byte) interfac
 	//TODO: .............
 	arg := Ardrone3GPSSettingsStateGeofenceCenterChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+8], &arg.Latitude)
+	convLittleEndian(b[offset:offset+8], &arg.Latitude)
 	offset += 8
-	ConvLittleEndianSliceToNumeric(b[offset:offset+8], &arg.Longitude)
+	convLittleEndian(b[offset:offset+8], &arg.Longitude)
 	offset += 8
 
 	return arg
@@ -4629,11 +4629,11 @@ func (a Ardrone3GPSSettingsStateReturnHomeMinAltitudeChanged) Decode(b []byte) i
 	//TODO: .............
 	arg := Ardrone3GPSSettingsStateReturnHomeMinAltitudeChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Value)
+	convLittleEndian(b[offset:offset+4], &arg.Value)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Min)
+	convLittleEndian(b[offset:offset+4], &arg.Min)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Max)
+	convLittleEndian(b[offset:offset+4], &arg.Max)
 	offset += 4
 
 	return arg
@@ -4665,9 +4665,9 @@ func (a Ardrone3CameraStateOrientation) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3CameraStateOrientationArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Tilt)
+	convLittleEndian(b[offset:offset+1], &arg.Tilt)
 	offset++
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Pan)
+	convLittleEndian(b[offset:offset+1], &arg.Pan)
 	offset++
 
 	return arg
@@ -4696,9 +4696,9 @@ func (a Ardrone3CameraStatedefaultCameraOrientation) Decode(b []byte) interface{
 	//TODO: .............
 	arg := Ardrone3CameraStatedefaultCameraOrientationArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Tilt)
+	convLittleEndian(b[offset:offset+1], &arg.Tilt)
 	offset++
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Pan)
+	convLittleEndian(b[offset:offset+1], &arg.Pan)
 	offset++
 
 	return arg
@@ -4727,9 +4727,9 @@ func (a Ardrone3CameraStateOrientationV2) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3CameraStateOrientationV2Arguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Tilt)
+	convLittleEndian(b[offset:offset+4], &arg.Tilt)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Pan)
+	convLittleEndian(b[offset:offset+4], &arg.Pan)
 	offset += 4
 
 	return arg
@@ -4758,9 +4758,9 @@ func (a Ardrone3CameraStatedefaultCameraOrientationV2) Decode(b []byte) interfac
 	//TODO: .............
 	arg := Ardrone3CameraStatedefaultCameraOrientationV2Arguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Tilt)
+	convLittleEndian(b[offset:offset+4], &arg.Tilt)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Pan)
+	convLittleEndian(b[offset:offset+4], &arg.Pan)
 	offset += 4
 
 	return arg
@@ -4789,9 +4789,9 @@ func (a Ardrone3CameraStateVelocityRange) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3CameraStateVelocityRangeArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Maxtilt)
+	convLittleEndian(b[offset:offset+4], &arg.Maxtilt)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Maxpan)
+	convLittleEndian(b[offset:offset+4], &arg.Maxpan)
 	offset += 4
 
 	return arg
@@ -4822,7 +4822,7 @@ func (a Ardrone3AntiflickeringelectricFrequency) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3AntiflickeringelectricFrequencyArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Frequency)
+	convLittleEndian(b[offset:offset+4], &arg.Frequency)
 	offset += 4
 
 	return arg
@@ -4850,7 +4850,7 @@ func (a Ardrone3AntiflickeringsetMode) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3AntiflickeringsetModeArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Mode)
+	convLittleEndian(b[offset:offset+4], &arg.Mode)
 	offset += 4
 
 	return arg
@@ -4881,7 +4881,7 @@ func (a Ardrone3AntiflickeringStateelectricFrequencyChanged) Decode(b []byte) in
 	//TODO: .............
 	arg := Ardrone3AntiflickeringStateelectricFrequencyChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Frequency)
+	convLittleEndian(b[offset:offset+4], &arg.Frequency)
 	offset += 4
 
 	return arg
@@ -4909,7 +4909,7 @@ func (a Ardrone3AntiflickeringStatemodeChanged) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3AntiflickeringStatemodeChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Mode)
+	convLittleEndian(b[offset:offset+4], &arg.Mode)
 	offset += 4
 
 	return arg
@@ -4940,7 +4940,7 @@ func (a Ardrone3GPSStateNumberOfSatelliteChanged) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3GPSStateNumberOfSatelliteChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.NumberOfSatellite)
+	convLittleEndian(b[offset:offset+1], &arg.NumberOfSatellite)
 	offset++
 
 	return arg
@@ -4969,9 +4969,9 @@ func (a Ardrone3GPSStateHomeTypeAvailabilityChanged) Decode(b []byte) interface{
 	//TODO: .............
 	arg := Ardrone3GPSStateHomeTypeAvailabilityChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.TypeX)
+	convLittleEndian(b[offset:offset+4], &arg.TypeX)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Available)
+	convLittleEndian(b[offset:offset+1], &arg.Available)
 	offset++
 
 	return arg
@@ -4999,7 +4999,7 @@ func (a Ardrone3GPSStateHomeTypeChosenChanged) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3GPSStateHomeTypeChosenChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.TypeX)
+	convLittleEndian(b[offset:offset+4], &arg.TypeX)
 	offset += 4
 
 	return arg
@@ -5028,7 +5028,7 @@ func (a Ardrone3PROStateFeatures) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3PROStateFeaturesArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+8], &arg.Features)
+	convLittleEndian(b[offset:offset+8], &arg.Features)
 	offset += 8
 
 	return arg
@@ -5065,9 +5065,9 @@ func (a Ardrone3AccessoryStateConnectedAccessories) Decode(b []byte) interface{}
 	var err error
 	arg := Ardrone3AccessoryStateConnectedAccessoriesArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Id)
+	convLittleEndian(b[offset:offset+1], &arg.Id)
 	offset++
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Accessorytype)
+	convLittleEndian(b[offset:offset+4], &arg.Accessorytype)
 	offset += 4
 
 	stringEnd, err = getLengthOfStringData(b[offset:])
@@ -5083,7 +5083,7 @@ func (a Ardrone3AccessoryStateConnectedAccessories) Decode(b []byte) interface{}
 	}
 	arg.SwVersion = string(b[offset : offset+stringEnd])
 	offset += stringEnd
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Listflags)
+	convLittleEndian(b[offset:offset+1], &arg.Listflags)
 	offset++
 
 	return arg
@@ -5112,11 +5112,11 @@ func (a Ardrone3AccessoryStateBattery) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3AccessoryStateBatteryArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Id)
+	convLittleEndian(b[offset:offset+1], &arg.Id)
 	offset++
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.BatteryLevel)
+	convLittleEndian(b[offset:offset+1], &arg.BatteryLevel)
 	offset++
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Listflags)
+	convLittleEndian(b[offset:offset+1], &arg.Listflags)
 	offset++
 
 	return arg
@@ -5200,7 +5200,7 @@ func (a Ardrone3SoundStateAlertSound) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := Ardrone3SoundStateAlertSoundArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.State)
+	convLittleEndian(b[offset:offset+4], &arg.State)
 	offset += 4
 
 	return arg
@@ -5262,7 +5262,7 @@ func (a CommonNetworkEventDisconnection) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := CommonNetworkEventDisconnectionArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Cause)
+	convLittleEndian(b[offset:offset+4], &arg.Cause)
 	offset += 4
 
 	return arg
@@ -5413,7 +5413,7 @@ func (a CommonSettingsAutoCountry) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := CommonSettingsAutoCountryArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Automatic)
+	convLittleEndian(b[offset:offset+1], &arg.Automatic)
 	offset++
 
 	return arg
@@ -5677,7 +5677,7 @@ func (a CommonSettingsStateAutoCountryChanged) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := CommonSettingsStateAutoCountryChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Automatic)
+	convLittleEndian(b[offset:offset+1], &arg.Automatic)
 	offset++
 
 	return arg
@@ -5926,7 +5926,7 @@ func (a CommonCommonStateBatteryStateChanged) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := CommonCommonStateBatteryStateChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Percent)
+	convLittleEndian(b[offset:offset+1], &arg.Percent)
 	offset++
 
 	return arg
@@ -5957,7 +5957,7 @@ func (a CommonCommonStateMassStorageStateListChanged) Decode(b []byte) interface
 	var err error
 	arg := CommonCommonStateMassStorageStateListChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Massstorageid)
+	convLittleEndian(b[offset:offset+1], &arg.Massstorageid)
 	offset++
 
 	stringEnd, err = getLengthOfStringData(b[offset:])
@@ -5997,17 +5997,17 @@ func (a CommonCommonStateMassStorageInfoStateListChanged) Decode(b []byte) inter
 	//TODO: .............
 	arg := CommonCommonStateMassStorageInfoStateListChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Massstorageid)
+	convLittleEndian(b[offset:offset+1], &arg.Massstorageid)
 	offset++
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Size)
+	convLittleEndian(b[offset:offset+4], &arg.Size)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Usedsize)
+	convLittleEndian(b[offset:offset+4], &arg.Usedsize)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Plugged)
+	convLittleEndian(b[offset:offset+1], &arg.Plugged)
 	offset++
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Full)
+	convLittleEndian(b[offset:offset+1], &arg.Full)
 	offset++
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Internal)
+	convLittleEndian(b[offset:offset+1], &arg.Internal)
 	offset++
 
 	return arg
@@ -6105,11 +6105,11 @@ func (a CommonCommonStateMassStorageInfoRemainingListChanged) Decode(b []byte) i
 	//TODO: .............
 	arg := CommonCommonStateMassStorageInfoRemainingListChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Freespace)
+	convLittleEndian(b[offset:offset+4], &arg.Freespace)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+2], &arg.Rectime)
+	convLittleEndian(b[offset:offset+2], &arg.Rectime)
 	offset += 2
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Photoremaining)
+	convLittleEndian(b[offset:offset+4], &arg.Photoremaining)
 	offset += 4
 
 	return arg
@@ -6137,7 +6137,7 @@ func (a CommonCommonStateWifiSignalChanged) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := CommonCommonStateWifiSignalChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+2], &arg.Rssi)
+	convLittleEndian(b[offset:offset+2], &arg.Rssi)
 	offset += 2
 
 	return arg
@@ -6166,9 +6166,9 @@ func (a CommonCommonStateSensorsStatesListChanged) Decode(b []byte) interface{} 
 	//TODO: .............
 	arg := CommonCommonStateSensorsStatesListChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.SensorName)
+	convLittleEndian(b[offset:offset+4], &arg.SensorName)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.SensorState)
+	convLittleEndian(b[offset:offset+1], &arg.SensorState)
 	offset++
 
 	return arg
@@ -6196,7 +6196,7 @@ func (a CommonCommonStateProductModel) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := CommonCommonStateProductModelArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Model)
+	convLittleEndian(b[offset:offset+4], &arg.Model)
 	offset += 4
 
 	return arg
@@ -6225,7 +6225,7 @@ func (a CommonCommonStateCountryListKnown) Decode(b []byte) interface{} {
 	var err error
 	arg := CommonCommonStateCountryListKnownArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.ListFlags)
+	convLittleEndian(b[offset:offset+1], &arg.ListFlags)
 	offset++
 
 	stringEnd, err = getLengthOfStringData(b[offset:])
@@ -6262,15 +6262,15 @@ func (a CommonCommonStateDeprecatedMassStorageContentChanged) Decode(b []byte) i
 	//TODO: .............
 	arg := CommonCommonStateDeprecatedMassStorageContentChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Massstorageid)
+	convLittleEndian(b[offset:offset+1], &arg.Massstorageid)
 	offset++
-	ConvLittleEndianSliceToNumeric(b[offset:offset+2], &arg.NbPhotos)
+	convLittleEndian(b[offset:offset+2], &arg.NbPhotos)
 	offset += 2
-	ConvLittleEndianSliceToNumeric(b[offset:offset+2], &arg.NbVideos)
+	convLittleEndian(b[offset:offset+2], &arg.NbVideos)
 	offset += 2
-	ConvLittleEndianSliceToNumeric(b[offset:offset+2], &arg.NbPuds)
+	convLittleEndian(b[offset:offset+2], &arg.NbPuds)
 	offset += 2
-	ConvLittleEndianSliceToNumeric(b[offset:offset+2], &arg.NbCrashLogs)
+	convLittleEndian(b[offset:offset+2], &arg.NbCrashLogs)
 	offset += 2
 
 	return arg
@@ -6303,17 +6303,17 @@ func (a CommonCommonStateMassStorageContent) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := CommonCommonStateMassStorageContentArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Massstorageid)
+	convLittleEndian(b[offset:offset+1], &arg.Massstorageid)
 	offset++
-	ConvLittleEndianSliceToNumeric(b[offset:offset+2], &arg.NbPhotos)
+	convLittleEndian(b[offset:offset+2], &arg.NbPhotos)
 	offset += 2
-	ConvLittleEndianSliceToNumeric(b[offset:offset+2], &arg.NbVideos)
+	convLittleEndian(b[offset:offset+2], &arg.NbVideos)
 	offset += 2
-	ConvLittleEndianSliceToNumeric(b[offset:offset+2], &arg.NbPuds)
+	convLittleEndian(b[offset:offset+2], &arg.NbPuds)
 	offset += 2
-	ConvLittleEndianSliceToNumeric(b[offset:offset+2], &arg.NbCrashLogs)
+	convLittleEndian(b[offset:offset+2], &arg.NbCrashLogs)
 	offset += 2
-	ConvLittleEndianSliceToNumeric(b[offset:offset+2], &arg.NbRawPhotos)
+	convLittleEndian(b[offset:offset+2], &arg.NbRawPhotos)
 	offset += 2
 
 	return arg
@@ -6344,13 +6344,13 @@ func (a CommonCommonStateMassStorageContentForCurrentRun) Decode(b []byte) inter
 	//TODO: .............
 	arg := CommonCommonStateMassStorageContentForCurrentRunArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Massstorageid)
+	convLittleEndian(b[offset:offset+1], &arg.Massstorageid)
 	offset++
-	ConvLittleEndianSliceToNumeric(b[offset:offset+2], &arg.NbPhotos)
+	convLittleEndian(b[offset:offset+2], &arg.NbPhotos)
 	offset += 2
-	ConvLittleEndianSliceToNumeric(b[offset:offset+2], &arg.NbVideos)
+	convLittleEndian(b[offset:offset+2], &arg.NbVideos)
 	offset += 2
-	ConvLittleEndianSliceToNumeric(b[offset:offset+2], &arg.NbRawPhotos)
+	convLittleEndian(b[offset:offset+2], &arg.NbRawPhotos)
 	offset += 2
 
 	return arg
@@ -6378,9 +6378,9 @@ func (a CommonCommonStateVideoRecordingTimestamp) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := CommonCommonStateVideoRecordingTimestampArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+8], &arg.StartTimestamp)
+	convLittleEndian(b[offset:offset+8], &arg.StartTimestamp)
 	offset += 8
-	ConvLittleEndianSliceToNumeric(b[offset:offset+8], &arg.StopTimestamp)
+	convLittleEndian(b[offset:offset+8], &arg.StopTimestamp)
 	offset += 8
 
 	return arg
@@ -6443,7 +6443,7 @@ func (a CommonCommonStateLinkSignalQuality) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := CommonCommonStateLinkSignalQualityArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Value)
+	convLittleEndian(b[offset:offset+1], &arg.Value)
 	offset++
 
 	return arg
@@ -6583,7 +6583,7 @@ func (a CommonOverHeatStateOverHeatRegulationChanged) Decode(b []byte) interface
 	//TODO: .............
 	arg := CommonOverHeatStateOverHeatRegulationChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.RegulationType)
+	convLittleEndian(b[offset:offset+1], &arg.RegulationType)
 	offset++
 
 	return arg
@@ -6614,7 +6614,7 @@ func (a CommonControllerisPiloting) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := CommonControllerisPilotingArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Piloting)
+	convLittleEndian(b[offset:offset+1], &arg.Piloting)
 	offset++
 
 	return arg
@@ -6648,9 +6648,9 @@ func (a CommonControllerPeerStateChanged) Decode(b []byte) interface{} {
 	var err error
 	arg := CommonControllerPeerStateChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.State)
+	convLittleEndian(b[offset:offset+4], &arg.State)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.TypeX)
+	convLittleEndian(b[offset:offset+4], &arg.TypeX)
 	offset += 4
 
 	stringEnd, err = getLengthOfStringData(b[offset:])
@@ -6702,7 +6702,7 @@ func (a CommonWifiSettingsOutdoorSetting) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := CommonWifiSettingsOutdoorSettingArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Outdoor)
+	convLittleEndian(b[offset:offset+1], &arg.Outdoor)
 	offset++
 
 	return arg
@@ -6733,7 +6733,7 @@ func (a CommonWifiSettingsStateoutdoorSettingsChanged) Decode(b []byte) interfac
 	//TODO: .............
 	arg := CommonWifiSettingsStateoutdoorSettingsChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Outdoor)
+	convLittleEndian(b[offset:offset+1], &arg.Outdoor)
 	offset++
 
 	return arg
@@ -6774,7 +6774,7 @@ func (a CommonMavlinkStart) Decode(b []byte) interface{} {
 	}
 	arg.Filepath = string(b[offset : offset+stringEnd])
 	offset += stringEnd
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.TypeX)
+	convLittleEndian(b[offset:offset+4], &arg.TypeX)
 	offset += 4
 
 	return arg
@@ -6859,7 +6859,7 @@ func (a CommonMavlinkStateMavlinkFilePlayingStateChanged) Decode(b []byte) inter
 	var err error
 	arg := CommonMavlinkStateMavlinkFilePlayingStateChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.State)
+	convLittleEndian(b[offset:offset+4], &arg.State)
 	offset += 4
 
 	stringEnd, err = getLengthOfStringData(b[offset:])
@@ -6868,7 +6868,7 @@ func (a CommonMavlinkStateMavlinkFilePlayingStateChanged) Decode(b []byte) inter
 	}
 	arg.Filepath = string(b[offset : offset+stringEnd])
 	offset += stringEnd
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.TypeX)
+	convLittleEndian(b[offset:offset+4], &arg.TypeX)
 	offset += 4
 
 	return arg
@@ -6896,7 +6896,7 @@ func (a CommonMavlinkStateMavlinkPlayErrorStateChanged) Decode(b []byte) interfa
 	//TODO: .............
 	arg := CommonMavlinkStateMavlinkPlayErrorStateChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Error)
+	convLittleEndian(b[offset:offset+4], &arg.Error)
 	offset += 4
 
 	return arg
@@ -6924,7 +6924,7 @@ func (a CommonMavlinkStateMissionItemExecuted) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := CommonMavlinkStateMissionItemExecutedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Idx)
+	convLittleEndian(b[offset:offset+4], &arg.Idx)
 	offset += 4
 
 	return arg
@@ -6954,7 +6954,7 @@ func (a CommonFlightPlanSettingsReturnHomeOnDisconnect) Decode(b []byte) interfa
 	//TODO: .............
 	arg := CommonFlightPlanSettingsReturnHomeOnDisconnectArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Value)
+	convLittleEndian(b[offset:offset+1], &arg.Value)
 	offset++
 
 	return arg
@@ -6985,9 +6985,9 @@ func (a CommonFlightPlanSettingsStateReturnHomeOnDisconnectChanged) Decode(b []b
 	//TODO: .............
 	arg := CommonFlightPlanSettingsStateReturnHomeOnDisconnectChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.State)
+	convLittleEndian(b[offset:offset+1], &arg.State)
 	offset++
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.IsReadOnly)
+	convLittleEndian(b[offset:offset+1], &arg.IsReadOnly)
 	offset++
 
 	return arg
@@ -7018,7 +7018,7 @@ func (a CommonCalibrationMagnetoCalibration) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := CommonCalibrationMagnetoCalibrationArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Calibrate)
+	convLittleEndian(b[offset:offset+1], &arg.Calibrate)
 	offset++
 
 	return arg
@@ -7046,7 +7046,7 @@ func (a CommonCalibrationPitotCalibration) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := CommonCalibrationPitotCalibrationArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Calibrate)
+	convLittleEndian(b[offset:offset+1], &arg.Calibrate)
 	offset++
 
 	return arg
@@ -7080,13 +7080,13 @@ func (a CommonCalibrationStateMagnetoCalibrationStateChanged) Decode(b []byte) i
 	//TODO: .............
 	arg := CommonCalibrationStateMagnetoCalibrationStateChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.XAxisCalibration)
+	convLittleEndian(b[offset:offset+1], &arg.XAxisCalibration)
 	offset++
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.YAxisCalibration)
+	convLittleEndian(b[offset:offset+1], &arg.YAxisCalibration)
 	offset++
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.ZAxisCalibration)
+	convLittleEndian(b[offset:offset+1], &arg.ZAxisCalibration)
 	offset++
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.CalibrationFailed)
+	convLittleEndian(b[offset:offset+1], &arg.CalibrationFailed)
 	offset++
 
 	return arg
@@ -7114,7 +7114,7 @@ func (a CommonCalibrationStateMagnetoCalibrationRequiredState) Decode(b []byte) 
 	//TODO: .............
 	arg := CommonCalibrationStateMagnetoCalibrationRequiredStateArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Required)
+	convLittleEndian(b[offset:offset+1], &arg.Required)
 	offset++
 
 	return arg
@@ -7142,7 +7142,7 @@ func (a CommonCalibrationStateMagnetoCalibrationAxisToCalibrateChanged) Decode(b
 	//TODO: .............
 	arg := CommonCalibrationStateMagnetoCalibrationAxisToCalibrateChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Axis)
+	convLittleEndian(b[offset:offset+4], &arg.Axis)
 	offset += 4
 
 	return arg
@@ -7170,7 +7170,7 @@ func (a CommonCalibrationStateMagnetoCalibrationStartedChanged) Decode(b []byte)
 	//TODO: .............
 	arg := CommonCalibrationStateMagnetoCalibrationStartedChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Started)
+	convLittleEndian(b[offset:offset+1], &arg.Started)
 	offset++
 
 	return arg
@@ -7195,9 +7195,9 @@ func (a CommonCalibrationStatePitotCalibrationStateChanged) Decode(b []byte) int
 	//TODO: .............
 	arg := CommonCalibrationStatePitotCalibrationStateChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.State)
+	convLittleEndian(b[offset:offset+4], &arg.State)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.LastError)
+	convLittleEndian(b[offset:offset+1], &arg.LastError)
 	offset++
 
 	return arg
@@ -7232,15 +7232,15 @@ func (a CommonCameraSettingsStateCameraSettingsChanged) Decode(b []byte) interfa
 	//TODO: .............
 	arg := CommonCameraSettingsStateCameraSettingsChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Fov)
+	convLittleEndian(b[offset:offset+4], &arg.Fov)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.PanMax)
+	convLittleEndian(b[offset:offset+4], &arg.PanMax)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.PanMin)
+	convLittleEndian(b[offset:offset+4], &arg.PanMin)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.TiltMax)
+	convLittleEndian(b[offset:offset+4], &arg.TiltMax)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.TiltMin)
+	convLittleEndian(b[offset:offset+4], &arg.TiltMin)
 	offset += 4
 
 	return arg
@@ -7272,9 +7272,9 @@ func (a CommonGPSControllerPositionForRun) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := CommonGPSControllerPositionForRunArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+8], &arg.Latitude)
+	convLittleEndian(b[offset:offset+8], &arg.Latitude)
 	offset += 8
-	ConvLittleEndianSliceToNumeric(b[offset:offset+8], &arg.Longitude)
+	convLittleEndian(b[offset:offset+8], &arg.Longitude)
 	offset += 8
 
 	return arg
@@ -7305,7 +7305,7 @@ func (a CommonFlightPlanStateAvailabilityStateChanged) Decode(b []byte) interfac
 	//TODO: .............
 	arg := CommonFlightPlanStateAvailabilityStateChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.AvailabilityState)
+	convLittleEndian(b[offset:offset+1], &arg.AvailabilityState)
 	offset++
 
 	return arg
@@ -7334,9 +7334,9 @@ func (a CommonFlightPlanStateComponentStateListChanged) Decode(b []byte) interfa
 	//TODO: .............
 	arg := CommonFlightPlanStateComponentStateListChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Component)
+	convLittleEndian(b[offset:offset+4], &arg.Component)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.State)
+	convLittleEndian(b[offset:offset+1], &arg.State)
 	offset++
 
 	return arg
@@ -7364,7 +7364,7 @@ func (a CommonFlightPlanStateLockStateChanged) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := CommonFlightPlanStateLockStateChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.LockState)
+	convLittleEndian(b[offset:offset+1], &arg.LockState)
 	offset++
 
 	return arg
@@ -7543,7 +7543,7 @@ func (a CommonAudioControllerReadyForStreaming) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := CommonAudioControllerReadyForStreamingArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Ready)
+	convLittleEndian(b[offset:offset+1], &arg.Ready)
 	offset++
 
 	return arg
@@ -7574,7 +7574,7 @@ func (a CommonAudioStateAudioStreamingRunning) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := CommonAudioStateAudioStreamingRunningArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Running)
+	convLittleEndian(b[offset:offset+1], &arg.Running)
 	offset++
 
 	return arg
@@ -7606,9 +7606,9 @@ func (a CommonHeadlightsintensity) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := CommonHeadlightsintensityArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Left)
+	convLittleEndian(b[offset:offset+1], &arg.Left)
 	offset++
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Right)
+	convLittleEndian(b[offset:offset+1], &arg.Right)
 	offset++
 
 	return arg
@@ -7640,9 +7640,9 @@ func (a CommonHeadlightsStateintensityChanged) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := CommonHeadlightsStateintensityChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Left)
+	convLittleEndian(b[offset:offset+1], &arg.Left)
 	offset++
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Right)
+	convLittleEndian(b[offset:offset+1], &arg.Right)
 	offset++
 
 	return arg
@@ -7673,7 +7673,7 @@ func (a CommonAnimationsStartAnimation) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := CommonAnimationsStartAnimationArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Anim)
+	convLittleEndian(b[offset:offset+4], &arg.Anim)
 	offset += 4
 
 	return arg
@@ -7701,7 +7701,7 @@ func (a CommonAnimationsStopAnimation) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := CommonAnimationsStopAnimationArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Anim)
+	convLittleEndian(b[offset:offset+4], &arg.Anim)
 	offset += 4
 
 	return arg
@@ -7757,7 +7757,7 @@ func (a CommonAnimationsStateList) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := CommonAnimationsStateListArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Anim)
+	convLittleEndian(b[offset:offset+4], &arg.Anim)
 	offset += 4
 
 	return arg
@@ -7788,7 +7788,7 @@ func (a CommonAccessoryConfig) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := CommonAccessoryConfigArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Accessory)
+	convLittleEndian(b[offset:offset+4], &arg.Accessory)
 	offset += 4
 
 	return arg
@@ -7819,7 +7819,7 @@ func (a CommonAccessoryStateSupportedAccessoriesListChanged) Decode(b []byte) in
 	//TODO: .............
 	arg := CommonAccessoryStateSupportedAccessoriesListChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Accessory)
+	convLittleEndian(b[offset:offset+4], &arg.Accessory)
 	offset += 4
 
 	return arg
@@ -7848,9 +7848,9 @@ func (a CommonAccessoryStateAccessoryConfigChanged) Decode(b []byte) interface{}
 	//TODO: .............
 	arg := CommonAccessoryStateAccessoryConfigChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.NewAccessory)
+	convLittleEndian(b[offset:offset+4], &arg.NewAccessory)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Error)
+	convLittleEndian(b[offset:offset+4], &arg.Error)
 	offset += 4
 
 	return arg
@@ -7878,7 +7878,7 @@ func (a CommonAccessoryStateAccessoryConfigModificationEnabled) Decode(b []byte)
 	//TODO: .............
 	arg := CommonAccessoryStateAccessoryConfigModificationEnabledArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Enabled)
+	convLittleEndian(b[offset:offset+1], &arg.Enabled)
 	offset++
 
 	return arg
@@ -7909,7 +7909,7 @@ func (a CommonChargerSetMaxChargeRate) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := CommonChargerSetMaxChargeRateArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Rate)
+	convLittleEndian(b[offset:offset+4], &arg.Rate)
 	offset += 4
 
 	return arg
@@ -7938,7 +7938,7 @@ func (a CommonChargerStateMaxChargeRateChanged) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := CommonChargerStateMaxChargeRateChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Rate)
+	convLittleEndian(b[offset:offset+4], &arg.Rate)
 	offset += 4
 
 	return arg
@@ -7965,9 +7965,9 @@ func (a CommonChargerStateCurrentChargeStateChanged) Decode(b []byte) interface{
 	//TODO: .............
 	arg := CommonChargerStateCurrentChargeStateChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Status)
+	convLittleEndian(b[offset:offset+4], &arg.Status)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Phase)
+	convLittleEndian(b[offset:offset+4], &arg.Phase)
 	offset += 4
 
 	return arg
@@ -7993,7 +7993,7 @@ func (a CommonChargerStateLastChargeRateChanged) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := CommonChargerStateLastChargeRateChangedArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Rate)
+	convLittleEndian(b[offset:offset+4], &arg.Rate)
 	offset += 4
 
 	return arg
@@ -8024,13 +8024,13 @@ func (a CommonChargerStateChargingInfo) Decode(b []byte) interface{} {
 	//TODO: .............
 	arg := CommonChargerStateChargingInfoArguments{}
 	var offset = 0
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Phase)
+	convLittleEndian(b[offset:offset+4], &arg.Phase)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Rate)
+	convLittleEndian(b[offset:offset+4], &arg.Rate)
 	offset += 4
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.Intensity)
+	convLittleEndian(b[offset:offset+1], &arg.Intensity)
 	offset++
-	ConvLittleEndianSliceToNumeric(b[offset:offset+1], &arg.FullChargingTime)
+	convLittleEndian(b[offset:offset+1], &arg.FullChargingTime)
 	offset++
 
 	return arg
@@ -8144,7 +8144,7 @@ func (a CommonUpdateStateUpdateStateChanged) Decode(b []byte) interface{} {
 	}
 	arg.TargetVersion = string(b[offset : offset+stringEnd])
 	offset += stringEnd
-	ConvLittleEndianSliceToNumeric(b[offset:offset+4], &arg.Status)
+	convLittleEndian(b[offset:offset+4], &arg.Status)
 	offset += 4
 
 	return arg
@@ -8465,10 +8465,10 @@ func getLengthOfStringData(b []byte) (int, error) {
 	return 0, err
 }
 
-// ConvLittleEndianSliceToNumeric takes a []byte, and an *out variable of type
+// convLittleEndian takes a []byte, and an *out variable of type
 // uint8/int8/uint16/int16/uint32/int32/uint64/int64/float32/float64
 // and convert the []byte, and places the result into the *out variable.
-func ConvLittleEndianSliceToNumeric(in []byte, out interface{}) {
+func convLittleEndian(in []byte, out interface{}) {
 	switch out := out.(type) {
 	case *uint8:
 		*out = uint8(in[0])
@@ -8495,47 +8495,4 @@ func ConvLittleEndianSliceToNumeric(in []byte, out interface{}) {
 	case *string:
 		*out = string(in)
 	}
-}
-
-// ConvLittleEndianNumericToSlice takes a a value of any of the standard types
-// uint8/int8/uint16/int16/uint32/int32/uint64/int64/float32/float64
-// and convert to a []byte.
-func ConvLittleEndianNumericToSlice(value interface{}) []byte {
-	var b []byte
-
-	switch v := value.(type) {
-	case uint8:
-		b = []byte{byte(v)}
-	case int8:
-		b = []byte{byte(v)}
-	case uint16:
-		b = make([]byte, 2)
-		binary.LittleEndian.PutUint16(b, v)
-	case int16:
-		b = make([]byte, 2)
-		binary.LittleEndian.PutUint16(b, uint16(v))
-	case uint32:
-		b = make([]byte, 4)
-		binary.LittleEndian.PutUint32(b, v)
-	case int32:
-		b = make([]byte, 4)
-		binary.LittleEndian.PutUint32(b, uint32(v))
-	case uint64:
-		b = make([]byte, 8)
-		binary.LittleEndian.PutUint64(b, v)
-	case int64:
-		b = make([]byte, 8)
-		binary.LittleEndian.PutUint64(b, uint64(v))
-	case float32:
-		b = make([]byte, 4)
-		binary.LittleEndian.PutUint32(b, math.Float32bits(v))
-	case float64:
-		b = make([]byte, 8)
-		binary.LittleEndian.PutUint64(b, math.Float64bits(v))
-	case string:
-		b = []byte(v)
-
-	}
-
-	return b
 }
