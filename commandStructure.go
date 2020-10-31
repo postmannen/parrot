@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"math"
+	"reflect"
 )
 
 type ProjectDef uint8
@@ -40,6 +41,23 @@ func (a Ardrone3PilotingTakeOff) Decode(b []byte) interface{} {
 	// No arguments to decode here !!
 
 	return arg
+}
+func (a Ardrone3PilotingTakeOff) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var PilotingTakeOff = Ardrone3PilotingTakeOff{
@@ -84,6 +102,23 @@ func (a Ardrone3PilotingPCMD) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a Ardrone3PilotingPCMD) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var PilotingPCMD = Ardrone3PilotingPCMD{
 	Project: ProjectArdrone3,
@@ -109,6 +144,23 @@ func (a Ardrone3PilotingLanding) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a Ardrone3PilotingLanding) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var PilotingLanding = Ardrone3PilotingLanding{
 	Project: ProjectArdrone3,
@@ -133,6 +185,23 @@ func (a Ardrone3PilotingEmergency) Decode(b []byte) interface{} {
 	// No arguments to decode here !!
 
 	return arg
+}
+func (a Ardrone3PilotingEmergency) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var PilotingEmergency = Ardrone3PilotingEmergency{
@@ -162,6 +231,23 @@ func (a Ardrone3PilotingNavigateHome) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a Ardrone3PilotingNavigateHome) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var PilotingNavigateHome = Ardrone3PilotingNavigateHome{
 	Project: ProjectArdrone3,
@@ -187,6 +273,23 @@ func (a Ardrone3PilotingAutoTakeOffMode) Decode(b []byte) interface{} {
 	offset++
 
 	return arg
+}
+func (a Ardrone3PilotingAutoTakeOffMode) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var PilotingAutoTakeOffMode = Ardrone3PilotingAutoTakeOffMode{
@@ -225,6 +328,23 @@ func (a Ardrone3PilotingmoveBy) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a Ardrone3PilotingmoveBy) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var PilotingmoveBy = Ardrone3PilotingmoveBy{
 	Project: ProjectArdrone3,
@@ -253,6 +373,23 @@ func (a Ardrone3PilotingUserTakeOff) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a Ardrone3PilotingUserTakeOff) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var PilotingUserTakeOff = Ardrone3PilotingUserTakeOff{
 	Project: ProjectArdrone3,
@@ -280,6 +417,23 @@ func (a Ardrone3PilotingCircle) Decode(b []byte) interface{} {
 	offset += 4
 
 	return arg
+}
+func (a Ardrone3PilotingCircle) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var PilotingCircle = Ardrone3PilotingCircle{
@@ -321,6 +475,23 @@ func (a Ardrone3PilotingmoveTo) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a Ardrone3PilotingmoveTo) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var PilotingmoveTo = Ardrone3PilotingmoveTo{
 	Project: ProjectArdrone3,
@@ -345,6 +516,23 @@ func (a Ardrone3PilotingCancelMoveTo) Decode(b []byte) interface{} {
 	// No arguments to decode here !!
 
 	return arg
+}
+func (a Ardrone3PilotingCancelMoveTo) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var PilotingCancelMoveTo = Ardrone3PilotingCancelMoveTo{
@@ -380,6 +568,23 @@ func (a Ardrone3PilotingStartPilotedPOI) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a Ardrone3PilotingStartPilotedPOI) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var PilotingStartPilotedPOI = Ardrone3PilotingStartPilotedPOI{
 	Project: ProjectArdrone3,
@@ -405,6 +610,23 @@ func (a Ardrone3PilotingStopPilotedPOI) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a Ardrone3PilotingStopPilotedPOI) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var PilotingStopPilotedPOI = Ardrone3PilotingStopPilotedPOI{
 	Project: ProjectArdrone3,
@@ -428,6 +650,23 @@ func (a Ardrone3PilotingCancelMoveBy) Decode(b []byte) interface{} {
 	// No arguments to decode here !!
 
 	return arg
+}
+func (a Ardrone3PilotingCancelMoveBy) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var PilotingCancelMoveBy = Ardrone3PilotingCancelMoveBy{
@@ -459,6 +698,23 @@ func (a Ardrone3AnimationsFlip) Decode(b []byte) interface{} {
 	offset += 4
 
 	return arg
+}
+func (a Ardrone3AnimationsFlip) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var AnimationsFlip = Ardrone3AnimationsFlip{
@@ -494,6 +750,23 @@ func (a Ardrone3CameraOrientation) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a Ardrone3CameraOrientation) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var CameraOrientation = Ardrone3CameraOrientation{
 	Project: ProjectArdrone3,
@@ -524,6 +797,23 @@ func (a Ardrone3CameraOrientationV2) Decode(b []byte) interface{} {
 	offset += 4
 
 	return arg
+}
+func (a Ardrone3CameraOrientationV2) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var CameraOrientationV2 = Ardrone3CameraOrientationV2{
@@ -556,6 +846,23 @@ func (a Ardrone3CameraVelocity) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a Ardrone3CameraVelocity) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var CameraVelocity = Ardrone3CameraVelocity{
 	Project: ProjectArdrone3,
@@ -584,6 +891,23 @@ func (a Ardrone3MediaRecordPicture) Decode(b []byte) interface{} {
 	offset++
 
 	return arg
+}
+func (a Ardrone3MediaRecordPicture) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var MediaRecordPicture = Ardrone3MediaRecordPicture{
@@ -614,6 +938,23 @@ func (a Ardrone3MediaRecordVideo) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a Ardrone3MediaRecordVideo) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var MediaRecordVideo = Ardrone3MediaRecordVideo{
 	Project: ProjectArdrone3,
@@ -638,6 +979,23 @@ func (a Ardrone3MediaRecordPictureV2) Decode(b []byte) interface{} {
 	// No arguments to decode here !!
 
 	return arg
+}
+func (a Ardrone3MediaRecordPictureV2) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var MediaRecordPictureV2 = Ardrone3MediaRecordPictureV2{
@@ -666,6 +1024,23 @@ func (a Ardrone3MediaRecordVideoV2) Decode(b []byte) interface{} {
 	offset += 4
 
 	return arg
+}
+func (a Ardrone3MediaRecordVideoV2) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var MediaRecordVideoV2 = Ardrone3MediaRecordVideoV2{
@@ -699,6 +1074,23 @@ func (a Ardrone3MediaRecordStatePictureStateChanged) Decode(b []byte) interface{
 
 	return arg
 }
+func (a Ardrone3MediaRecordStatePictureStateChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var MediaRecordStatePictureStateChanged = Ardrone3MediaRecordStatePictureStateChanged{
 	Project: ProjectArdrone3,
@@ -727,6 +1119,23 @@ func (a Ardrone3MediaRecordStateVideoStateChanged) Decode(b []byte) interface{} 
 	offset++
 
 	return arg
+}
+func (a Ardrone3MediaRecordStateVideoStateChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var MediaRecordStateVideoStateChanged = Ardrone3MediaRecordStateVideoStateChanged{
@@ -759,6 +1168,23 @@ func (a Ardrone3MediaRecordStatePictureStateChangedV2) Decode(b []byte) interfac
 
 	return arg
 }
+func (a Ardrone3MediaRecordStatePictureStateChangedV2) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var MediaRecordStatePictureStateChangedV2 = Ardrone3MediaRecordStatePictureStateChangedV2{
 	Project: ProjectArdrone3,
@@ -790,6 +1216,23 @@ func (a Ardrone3MediaRecordStateVideoStateChangedV2) Decode(b []byte) interface{
 
 	return arg
 }
+func (a Ardrone3MediaRecordStateVideoStateChangedV2) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var MediaRecordStateVideoStateChangedV2 = Ardrone3MediaRecordStateVideoStateChangedV2{
 	Project: ProjectArdrone3,
@@ -820,6 +1263,23 @@ func (a Ardrone3MediaRecordStateVideoResolutionState) Decode(b []byte) interface
 	offset += 4
 
 	return arg
+}
+func (a Ardrone3MediaRecordStateVideoResolutionState) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var MediaRecordStateVideoResolutionState = Ardrone3MediaRecordStateVideoResolutionState{
@@ -855,6 +1315,23 @@ func (a Ardrone3MediaRecordEventPictureEventChanged) Decode(b []byte) interface{
 
 	return arg
 }
+func (a Ardrone3MediaRecordEventPictureEventChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var MediaRecordEventPictureEventChanged = Ardrone3MediaRecordEventPictureEventChanged{
 	Project: ProjectArdrone3,
@@ -885,6 +1362,23 @@ func (a Ardrone3MediaRecordEventVideoEventChanged) Decode(b []byte) interface{} 
 	offset += 4
 
 	return arg
+}
+func (a Ardrone3MediaRecordEventVideoEventChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var MediaRecordEventVideoEventChanged = Ardrone3MediaRecordEventVideoEventChanged{
@@ -917,6 +1411,23 @@ func (a Ardrone3PilotingStateFlyingStateChanged) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a Ardrone3PilotingStateFlyingStateChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var PilotingStateFlyingStateChanged = Ardrone3PilotingStateFlyingStateChanged{
 	Project: ProjectArdrone3,
@@ -944,6 +1455,23 @@ func (a Ardrone3PilotingStateAlertStateChanged) Decode(b []byte) interface{} {
 	offset += 4
 
 	return arg
+}
+func (a Ardrone3PilotingStateAlertStateChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var PilotingStateAlertStateChanged = Ardrone3PilotingStateAlertStateChanged{
@@ -975,6 +1503,23 @@ func (a Ardrone3PilotingStateNavigateHomeStateChanged) Decode(b []byte) interfac
 	offset += 4
 
 	return arg
+}
+func (a Ardrone3PilotingStateNavigateHomeStateChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var PilotingStateNavigateHomeStateChanged = Ardrone3PilotingStateNavigateHomeStateChanged{
@@ -1010,6 +1555,23 @@ func (a Ardrone3PilotingStatePositionChanged) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a Ardrone3PilotingStatePositionChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var PilotingStatePositionChanged = Ardrone3PilotingStatePositionChanged{
 	Project: ProjectArdrone3,
@@ -1043,6 +1605,23 @@ func (a Ardrone3PilotingStateSpeedChanged) Decode(b []byte) interface{} {
 	offset += 4
 
 	return arg
+}
+func (a Ardrone3PilotingStateSpeedChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var PilotingStateSpeedChanged = Ardrone3PilotingStateSpeedChanged{
@@ -1078,6 +1657,23 @@ func (a Ardrone3PilotingStateAttitudeChanged) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a Ardrone3PilotingStateAttitudeChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var PilotingStateAttitudeChanged = Ardrone3PilotingStateAttitudeChanged{
 	Project: ProjectArdrone3,
@@ -1103,6 +1699,23 @@ func (a Ardrone3PilotingStateAutoTakeOffModeChanged) Decode(b []byte) interface{
 	offset++
 
 	return arg
+}
+func (a Ardrone3PilotingStateAutoTakeOffModeChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var PilotingStateAutoTakeOffModeChanged = Ardrone3PilotingStateAutoTakeOffModeChanged{
@@ -1131,6 +1744,23 @@ func (a Ardrone3PilotingStateAltitudeChanged) Decode(b []byte) interface{} {
 	offset += 8
 
 	return arg
+}
+func (a Ardrone3PilotingStateAltitudeChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var PilotingStateAltitudeChanged = Ardrone3PilotingStateAltitudeChanged{
@@ -1175,6 +1805,23 @@ func (a Ardrone3PilotingStateGpsLocationChanged) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a Ardrone3PilotingStateGpsLocationChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var PilotingStateGpsLocationChanged = Ardrone3PilotingStateGpsLocationChanged{
 	Project: ProjectArdrone3,
@@ -1203,6 +1850,23 @@ func (a Ardrone3PilotingStateLandingStateChanged) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a Ardrone3PilotingStateLandingStateChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var PilotingStateLandingStateChanged = Ardrone3PilotingStateLandingStateChanged{
 	Project: ProjectArdrone3,
@@ -1230,6 +1894,23 @@ func (a Ardrone3PilotingStateAirSpeedChanged) Decode(b []byte) interface{} {
 	offset += 4
 
 	return arg
+}
+func (a Ardrone3PilotingStateAirSpeedChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var PilotingStateAirSpeedChanged = Ardrone3PilotingStateAirSpeedChanged{
@@ -1274,6 +1955,23 @@ func (a Ardrone3PilotingStatemoveToChanged) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a Ardrone3PilotingStatemoveToChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var PilotingStatemoveToChanged = Ardrone3PilotingStatemoveToChanged{
 	Project: ProjectArdrone3,
@@ -1301,6 +1999,23 @@ func (a Ardrone3PilotingStateMotionState) Decode(b []byte) interface{} {
 	offset += 4
 
 	return arg
+}
+func (a Ardrone3PilotingStateMotionState) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var PilotingStateMotionState = Ardrone3PilotingStateMotionState{
@@ -1339,6 +2054,23 @@ func (a Ardrone3PilotingStatePilotedPOI) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a Ardrone3PilotingStatePilotedPOI) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var PilotingStatePilotedPOI = Ardrone3PilotingStatePilotedPOI{
 	Project: ProjectArdrone3,
@@ -1366,6 +2098,23 @@ func (a Ardrone3PilotingStateReturnHomeBatteryCapacity) Decode(b []byte) interfa
 	offset += 4
 
 	return arg
+}
+func (a Ardrone3PilotingStateReturnHomeBatteryCapacity) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var PilotingStateReturnHomeBatteryCapacity = Ardrone3PilotingStateReturnHomeBatteryCapacity{
@@ -1418,6 +2167,23 @@ func (a Ardrone3PilotingStatemoveByChanged) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a Ardrone3PilotingStatemoveByChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var PilotingStatemoveByChanged = Ardrone3PilotingStatemoveByChanged{
 	Project: ProjectArdrone3,
@@ -1448,6 +2214,23 @@ func (a Ardrone3PilotingStateHoveringWarning) Decode(b []byte) interface{} {
 	offset++
 
 	return arg
+}
+func (a Ardrone3PilotingStateHoveringWarning) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var PilotingStateHoveringWarning = Ardrone3PilotingStateHoveringWarning{
@@ -1480,6 +2263,23 @@ func (a Ardrone3PilotingStateForcedLandingAutoTrigger) Decode(b []byte) interfac
 
 	return arg
 }
+func (a Ardrone3PilotingStateForcedLandingAutoTrigger) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var PilotingStateForcedLandingAutoTrigger = Ardrone3PilotingStateForcedLandingAutoTrigger{
 	Project: ProjectArdrone3,
@@ -1507,6 +2307,23 @@ func (a Ardrone3PilotingStateWindStateChanged) Decode(b []byte) interface{} {
 	offset += 4
 
 	return arg
+}
+func (a Ardrone3PilotingStateWindStateChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var PilotingStateWindStateChanged = Ardrone3PilotingStateWindStateChanged{
@@ -1551,6 +2368,23 @@ func (a Ardrone3PilotingEventmoveByEnd) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a Ardrone3PilotingEventmoveByEnd) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var PilotingEventmoveByEnd = Ardrone3PilotingEventmoveByEnd{
 	Project: ProjectArdrone3,
@@ -1582,6 +2416,23 @@ func (a Ardrone3NetworkWifiScan) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a Ardrone3NetworkWifiScan) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var NetworkWifiScan = Ardrone3NetworkWifiScan{
 	Project: ProjectArdrone3,
@@ -1606,6 +2457,23 @@ func (a Ardrone3NetworkWifiAuthChannel) Decode(b []byte) interface{} {
 	// No arguments to decode here !!
 
 	return arg
+}
+func (a Ardrone3NetworkWifiAuthChannel) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var NetworkWifiAuthChannel = Ardrone3NetworkWifiAuthChannel{
@@ -1654,6 +2522,23 @@ func (a Ardrone3NetworkStateWifiScanListChanged) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a Ardrone3NetworkStateWifiScanListChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var NetworkStateWifiScanListChanged = Ardrone3NetworkStateWifiScanListChanged{
 	Project: ProjectArdrone3,
@@ -1678,6 +2563,23 @@ func (a Ardrone3NetworkStateAllWifiScanChanged) Decode(b []byte) interface{} {
 	// No arguments to decode here !!
 
 	return arg
+}
+func (a Ardrone3NetworkStateAllWifiScanChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var NetworkStateAllWifiScanChanged = Ardrone3NetworkStateAllWifiScanChanged{
@@ -1713,6 +2615,23 @@ func (a Ardrone3NetworkStateWifiAuthChannelListChanged) Decode(b []byte) interfa
 
 	return arg
 }
+func (a Ardrone3NetworkStateWifiAuthChannelListChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var NetworkStateWifiAuthChannelListChanged = Ardrone3NetworkStateWifiAuthChannelListChanged{
 	Project: ProjectArdrone3,
@@ -1737,6 +2656,23 @@ func (a Ardrone3NetworkStateAllWifiAuthChannelChanged) Decode(b []byte) interfac
 	// No arguments to decode here !!
 
 	return arg
+}
+func (a Ardrone3NetworkStateAllWifiAuthChannelChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var NetworkStateAllWifiAuthChannelChanged = Ardrone3NetworkStateAllWifiAuthChannelChanged{
@@ -1769,6 +2705,23 @@ func (a Ardrone3PilotingSettingsMaxAltitude) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a Ardrone3PilotingSettingsMaxAltitude) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var PilotingSettingsMaxAltitude = Ardrone3PilotingSettingsMaxAltitude{
 	Project: ProjectArdrone3,
@@ -1797,6 +2750,23 @@ func (a Ardrone3PilotingSettingsMaxTilt) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a Ardrone3PilotingSettingsMaxTilt) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var PilotingSettingsMaxTilt = Ardrone3PilotingSettingsMaxTilt{
 	Project: ProjectArdrone3,
@@ -1822,6 +2792,23 @@ func (a Ardrone3PilotingSettingsAbsolutControl) Decode(b []byte) interface{} {
 	offset++
 
 	return arg
+}
+func (a Ardrone3PilotingSettingsAbsolutControl) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var PilotingSettingsAbsolutControl = Ardrone3PilotingSettingsAbsolutControl{
@@ -1851,6 +2838,23 @@ func (a Ardrone3PilotingSettingsMaxDistance) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a Ardrone3PilotingSettingsMaxDistance) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var PilotingSettingsMaxDistance = Ardrone3PilotingSettingsMaxDistance{
 	Project: ProjectArdrone3,
@@ -1878,6 +2882,23 @@ func (a Ardrone3PilotingSettingsNoFlyOverMaxDistance) Decode(b []byte) interface
 	offset++
 
 	return arg
+}
+func (a Ardrone3PilotingSettingsNoFlyOverMaxDistance) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var PilotingSettingsNoFlyOverMaxDistance = Ardrone3PilotingSettingsNoFlyOverMaxDistance{
@@ -1907,6 +2928,23 @@ func (a Ardrone3PilotingSettingssetAutonomousFlightMaxHorizontalSpeed) Decode(b 
 
 	return arg
 }
+func (a Ardrone3PilotingSettingssetAutonomousFlightMaxHorizontalSpeed) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var PilotingSettingssetAutonomousFlightMaxHorizontalSpeed = Ardrone3PilotingSettingssetAutonomousFlightMaxHorizontalSpeed{
 	Project: ProjectArdrone3,
@@ -1934,6 +2972,23 @@ func (a Ardrone3PilotingSettingssetAutonomousFlightMaxVerticalSpeed) Decode(b []
 	offset += 4
 
 	return arg
+}
+func (a Ardrone3PilotingSettingssetAutonomousFlightMaxVerticalSpeed) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var PilotingSettingssetAutonomousFlightMaxVerticalSpeed = Ardrone3PilotingSettingssetAutonomousFlightMaxVerticalSpeed{
@@ -1963,6 +3018,23 @@ func (a Ardrone3PilotingSettingssetAutonomousFlightMaxHorizontalAcceleration) De
 
 	return arg
 }
+func (a Ardrone3PilotingSettingssetAutonomousFlightMaxHorizontalAcceleration) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var PilotingSettingssetAutonomousFlightMaxHorizontalAcceleration = Ardrone3PilotingSettingssetAutonomousFlightMaxHorizontalAcceleration{
 	Project: ProjectArdrone3,
@@ -1990,6 +3062,23 @@ func (a Ardrone3PilotingSettingssetAutonomousFlightMaxVerticalAcceleration) Deco
 	offset += 4
 
 	return arg
+}
+func (a Ardrone3PilotingSettingssetAutonomousFlightMaxVerticalAcceleration) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var PilotingSettingssetAutonomousFlightMaxVerticalAcceleration = Ardrone3PilotingSettingssetAutonomousFlightMaxVerticalAcceleration{
@@ -2019,6 +3108,23 @@ func (a Ardrone3PilotingSettingssetAutonomousFlightMaxRotationSpeed) Decode(b []
 
 	return arg
 }
+func (a Ardrone3PilotingSettingssetAutonomousFlightMaxRotationSpeed) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var PilotingSettingssetAutonomousFlightMaxRotationSpeed = Ardrone3PilotingSettingssetAutonomousFlightMaxRotationSpeed{
 	Project: ProjectArdrone3,
@@ -2046,6 +3152,23 @@ func (a Ardrone3PilotingSettingsBankedTurn) Decode(b []byte) interface{} {
 	offset++
 
 	return arg
+}
+func (a Ardrone3PilotingSettingsBankedTurn) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var PilotingSettingsBankedTurn = Ardrone3PilotingSettingsBankedTurn{
@@ -2075,6 +3198,23 @@ func (a Ardrone3PilotingSettingsMinAltitude) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a Ardrone3PilotingSettingsMinAltitude) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var PilotingSettingsMinAltitude = Ardrone3PilotingSettingsMinAltitude{
 	Project: ProjectArdrone3,
@@ -2102,6 +3242,23 @@ func (a Ardrone3PilotingSettingsCirclingDirection) Decode(b []byte) interface{} 
 	offset += 4
 
 	return arg
+}
+func (a Ardrone3PilotingSettingsCirclingDirection) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var PilotingSettingsCirclingDirection = Ardrone3PilotingSettingsCirclingDirection{
@@ -2131,6 +3288,23 @@ func (a Ardrone3PilotingSettingsCirclingRadius) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a Ardrone3PilotingSettingsCirclingRadius) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var PilotingSettingsCirclingRadius = Ardrone3PilotingSettingsCirclingRadius{
 	Project: ProjectArdrone3,
@@ -2158,6 +3332,23 @@ func (a Ardrone3PilotingSettingsCirclingAltitude) Decode(b []byte) interface{} {
 	offset += 2
 
 	return arg
+}
+func (a Ardrone3PilotingSettingsCirclingAltitude) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var PilotingSettingsCirclingAltitude = Ardrone3PilotingSettingsCirclingAltitude{
@@ -2187,6 +3378,23 @@ func (a Ardrone3PilotingSettingsPitchMode) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a Ardrone3PilotingSettingsPitchMode) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var PilotingSettingsPitchMode = Ardrone3PilotingSettingsPitchMode{
 	Project: ProjectArdrone3,
@@ -2214,6 +3422,23 @@ func (a Ardrone3PilotingSettingsSetMotionDetectionMode) Decode(b []byte) interfa
 	offset++
 
 	return arg
+}
+func (a Ardrone3PilotingSettingsSetMotionDetectionMode) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var PilotingSettingsSetMotionDetectionMode = Ardrone3PilotingSettingsSetMotionDetectionMode{
@@ -2252,6 +3477,23 @@ func (a Ardrone3PilotingSettingsStateMaxAltitudeChanged) Decode(b []byte) interf
 
 	return arg
 }
+func (a Ardrone3PilotingSettingsStateMaxAltitudeChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var PilotingSettingsStateMaxAltitudeChanged = Ardrone3PilotingSettingsStateMaxAltitudeChanged{
 	Project: ProjectArdrone3,
@@ -2286,6 +3528,23 @@ func (a Ardrone3PilotingSettingsStateMaxTiltChanged) Decode(b []byte) interface{
 
 	return arg
 }
+func (a Ardrone3PilotingSettingsStateMaxTiltChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var PilotingSettingsStateMaxTiltChanged = Ardrone3PilotingSettingsStateMaxTiltChanged{
 	Project: ProjectArdrone3,
@@ -2311,6 +3570,23 @@ func (a Ardrone3PilotingSettingsStateAbsolutControlChanged) Decode(b []byte) int
 	offset++
 
 	return arg
+}
+func (a Ardrone3PilotingSettingsStateAbsolutControlChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var PilotingSettingsStateAbsolutControlChanged = Ardrone3PilotingSettingsStateAbsolutControlChanged{
@@ -2346,6 +3622,23 @@ func (a Ardrone3PilotingSettingsStateMaxDistanceChanged) Decode(b []byte) interf
 
 	return arg
 }
+func (a Ardrone3PilotingSettingsStateMaxDistanceChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var PilotingSettingsStateMaxDistanceChanged = Ardrone3PilotingSettingsStateMaxDistanceChanged{
 	Project: ProjectArdrone3,
@@ -2373,6 +3666,23 @@ func (a Ardrone3PilotingSettingsStateNoFlyOverMaxDistanceChanged) Decode(b []byt
 	offset++
 
 	return arg
+}
+func (a Ardrone3PilotingSettingsStateNoFlyOverMaxDistanceChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var PilotingSettingsStateNoFlyOverMaxDistanceChanged = Ardrone3PilotingSettingsStateNoFlyOverMaxDistanceChanged{
@@ -2402,6 +3712,23 @@ func (a Ardrone3PilotingSettingsStateAutonomousFlightMaxHorizontalSpeed) Decode(
 
 	return arg
 }
+func (a Ardrone3PilotingSettingsStateAutonomousFlightMaxHorizontalSpeed) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var PilotingSettingsStateAutonomousFlightMaxHorizontalSpeed = Ardrone3PilotingSettingsStateAutonomousFlightMaxHorizontalSpeed{
 	Project: ProjectArdrone3,
@@ -2429,6 +3756,23 @@ func (a Ardrone3PilotingSettingsStateAutonomousFlightMaxVerticalSpeed) Decode(b 
 	offset += 4
 
 	return arg
+}
+func (a Ardrone3PilotingSettingsStateAutonomousFlightMaxVerticalSpeed) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var PilotingSettingsStateAutonomousFlightMaxVerticalSpeed = Ardrone3PilotingSettingsStateAutonomousFlightMaxVerticalSpeed{
@@ -2458,6 +3802,23 @@ func (a Ardrone3PilotingSettingsStateAutonomousFlightMaxHorizontalAcceleration) 
 
 	return arg
 }
+func (a Ardrone3PilotingSettingsStateAutonomousFlightMaxHorizontalAcceleration) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var PilotingSettingsStateAutonomousFlightMaxHorizontalAcceleration = Ardrone3PilotingSettingsStateAutonomousFlightMaxHorizontalAcceleration{
 	Project: ProjectArdrone3,
@@ -2485,6 +3846,23 @@ func (a Ardrone3PilotingSettingsStateAutonomousFlightMaxVerticalAcceleration) De
 	offset += 4
 
 	return arg
+}
+func (a Ardrone3PilotingSettingsStateAutonomousFlightMaxVerticalAcceleration) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var PilotingSettingsStateAutonomousFlightMaxVerticalAcceleration = Ardrone3PilotingSettingsStateAutonomousFlightMaxVerticalAcceleration{
@@ -2514,6 +3892,23 @@ func (a Ardrone3PilotingSettingsStateAutonomousFlightMaxRotationSpeed) Decode(b 
 
 	return arg
 }
+func (a Ardrone3PilotingSettingsStateAutonomousFlightMaxRotationSpeed) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var PilotingSettingsStateAutonomousFlightMaxRotationSpeed = Ardrone3PilotingSettingsStateAutonomousFlightMaxRotationSpeed{
 	Project: ProjectArdrone3,
@@ -2541,6 +3936,23 @@ func (a Ardrone3PilotingSettingsStateBankedTurnChanged) Decode(b []byte) interfa
 	offset++
 
 	return arg
+}
+func (a Ardrone3PilotingSettingsStateBankedTurnChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var PilotingSettingsStateBankedTurnChanged = Ardrone3PilotingSettingsStateBankedTurnChanged{
@@ -2576,6 +3988,23 @@ func (a Ardrone3PilotingSettingsStateMinAltitudeChanged) Decode(b []byte) interf
 
 	return arg
 }
+func (a Ardrone3PilotingSettingsStateMinAltitudeChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var PilotingSettingsStateMinAltitudeChanged = Ardrone3PilotingSettingsStateMinAltitudeChanged{
 	Project: ProjectArdrone3,
@@ -2603,6 +4032,23 @@ func (a Ardrone3PilotingSettingsStateCirclingDirectionChanged) Decode(b []byte) 
 	offset += 4
 
 	return arg
+}
+func (a Ardrone3PilotingSettingsStateCirclingDirectionChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var PilotingSettingsStateCirclingDirectionChanged = Ardrone3PilotingSettingsStateCirclingDirectionChanged{
@@ -2638,6 +4084,23 @@ func (a Ardrone3PilotingSettingsStateCirclingRadiusChanged) Decode(b []byte) int
 
 	return arg
 }
+func (a Ardrone3PilotingSettingsStateCirclingRadiusChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var PilotingSettingsStateCirclingRadiusChanged = Ardrone3PilotingSettingsStateCirclingRadiusChanged{
 	Project: ProjectArdrone3,
@@ -2672,6 +4135,23 @@ func (a Ardrone3PilotingSettingsStateCirclingAltitudeChanged) Decode(b []byte) i
 
 	return arg
 }
+func (a Ardrone3PilotingSettingsStateCirclingAltitudeChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var PilotingSettingsStateCirclingAltitudeChanged = Ardrone3PilotingSettingsStateCirclingAltitudeChanged{
 	Project: ProjectArdrone3,
@@ -2700,6 +4180,23 @@ func (a Ardrone3PilotingSettingsStatePitchModeChanged) Decode(b []byte) interfac
 
 	return arg
 }
+func (a Ardrone3PilotingSettingsStatePitchModeChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var PilotingSettingsStatePitchModeChanged = Ardrone3PilotingSettingsStatePitchModeChanged{
 	Project: ProjectArdrone3,
@@ -2727,6 +4224,23 @@ func (a Ardrone3PilotingSettingsStateMotionDetection) Decode(b []byte) interface
 	offset++
 
 	return arg
+}
+func (a Ardrone3PilotingSettingsStateMotionDetection) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var PilotingSettingsStateMotionDetection = Ardrone3PilotingSettingsStateMotionDetection{
@@ -2759,6 +4273,23 @@ func (a Ardrone3SpeedSettingsMaxVerticalSpeed) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a Ardrone3SpeedSettingsMaxVerticalSpeed) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var SpeedSettingsMaxVerticalSpeed = Ardrone3SpeedSettingsMaxVerticalSpeed{
 	Project: ProjectArdrone3,
@@ -2786,6 +4317,23 @@ func (a Ardrone3SpeedSettingsMaxRotationSpeed) Decode(b []byte) interface{} {
 	offset += 4
 
 	return arg
+}
+func (a Ardrone3SpeedSettingsMaxRotationSpeed) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var SpeedSettingsMaxRotationSpeed = Ardrone3SpeedSettingsMaxRotationSpeed{
@@ -2815,6 +4363,23 @@ func (a Ardrone3SpeedSettingsHullProtection) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a Ardrone3SpeedSettingsHullProtection) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var SpeedSettingsHullProtection = Ardrone3SpeedSettingsHullProtection{
 	Project: ProjectArdrone3,
@@ -2840,6 +4405,23 @@ func (a Ardrone3SpeedSettingsOutdoor) Decode(b []byte) interface{} {
 	offset++
 
 	return arg
+}
+func (a Ardrone3SpeedSettingsOutdoor) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var SpeedSettingsOutdoor = Ardrone3SpeedSettingsOutdoor{
@@ -2868,6 +4450,23 @@ func (a Ardrone3SpeedSettingsMaxPitchRollRotationSpeed) Decode(b []byte) interfa
 	offset += 4
 
 	return arg
+}
+func (a Ardrone3SpeedSettingsMaxPitchRollRotationSpeed) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var SpeedSettingsMaxPitchRollRotationSpeed = Ardrone3SpeedSettingsMaxPitchRollRotationSpeed{
@@ -2906,6 +4505,23 @@ func (a Ardrone3SpeedSettingsStateMaxVerticalSpeedChanged) Decode(b []byte) inte
 
 	return arg
 }
+func (a Ardrone3SpeedSettingsStateMaxVerticalSpeedChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var SpeedSettingsStateMaxVerticalSpeedChanged = Ardrone3SpeedSettingsStateMaxVerticalSpeedChanged{
 	Project: ProjectArdrone3,
@@ -2940,6 +4556,23 @@ func (a Ardrone3SpeedSettingsStateMaxRotationSpeedChanged) Decode(b []byte) inte
 
 	return arg
 }
+func (a Ardrone3SpeedSettingsStateMaxRotationSpeedChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var SpeedSettingsStateMaxRotationSpeedChanged = Ardrone3SpeedSettingsStateMaxRotationSpeedChanged{
 	Project: ProjectArdrone3,
@@ -2968,6 +4601,23 @@ func (a Ardrone3SpeedSettingsStateHullProtectionChanged) Decode(b []byte) interf
 
 	return arg
 }
+func (a Ardrone3SpeedSettingsStateHullProtectionChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var SpeedSettingsStateHullProtectionChanged = Ardrone3SpeedSettingsStateHullProtectionChanged{
 	Project: ProjectArdrone3,
@@ -2993,6 +4643,23 @@ func (a Ardrone3SpeedSettingsStateOutdoorChanged) Decode(b []byte) interface{} {
 	offset++
 
 	return arg
+}
+func (a Ardrone3SpeedSettingsStateOutdoorChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var SpeedSettingsStateOutdoorChanged = Ardrone3SpeedSettingsStateOutdoorChanged{
@@ -3027,6 +4694,23 @@ func (a Ardrone3SpeedSettingsStateMaxPitchRollRotationSpeedChanged) Decode(b []b
 	offset += 4
 
 	return arg
+}
+func (a Ardrone3SpeedSettingsStateMaxPitchRollRotationSpeedChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var SpeedSettingsStateMaxPitchRollRotationSpeedChanged = Ardrone3SpeedSettingsStateMaxPitchRollRotationSpeedChanged{
@@ -3064,6 +4748,23 @@ func (a Ardrone3NetworkSettingsWifiSelection) Decode(b []byte) interface{} {
 	offset++
 
 	return arg
+}
+func (a Ardrone3NetworkSettingsWifiSelection) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var NetworkSettingsWifiSelection = Ardrone3NetworkSettingsWifiSelection{
@@ -3106,6 +4807,23 @@ func (a Ardrone3NetworkSettingswifiSecurity) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a Ardrone3NetworkSettingswifiSecurity) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var NetworkSettingswifiSecurity = Ardrone3NetworkSettingswifiSecurity{
 	Project: ProjectArdrone3,
@@ -3143,6 +4861,23 @@ func (a Ardrone3NetworkSettingsStateWifiSelectionChanged) Decode(b []byte) inter
 
 	return arg
 }
+func (a Ardrone3NetworkSettingsStateWifiSelectionChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var NetworkSettingsStateWifiSelectionChanged = Ardrone3NetworkSettingsStateWifiSelectionChanged{
 	Project: ProjectArdrone3,
@@ -3168,6 +4903,23 @@ func (a Ardrone3NetworkSettingsStatewifiSecurityChanged) Decode(b []byte) interf
 	offset += 4
 
 	return arg
+}
+func (a Ardrone3NetworkSettingsStatewifiSecurityChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var NetworkSettingsStatewifiSecurityChanged = Ardrone3NetworkSettingsStatewifiSecurityChanged{
@@ -3209,6 +4961,23 @@ func (a Ardrone3NetworkSettingsStatewifiSecurity) Decode(b []byte) interface{} {
 	offset += 4
 
 	return arg
+}
+func (a Ardrone3NetworkSettingsStatewifiSecurity) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var NetworkSettingsStatewifiSecurity = Ardrone3NetworkSettingsStatewifiSecurity{
@@ -3265,6 +5034,23 @@ func (a Ardrone3SettingsStateProductMotorVersionListChanged) Decode(b []byte) in
 
 	return arg
 }
+func (a Ardrone3SettingsStateProductMotorVersionListChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var SettingsStateProductMotorVersionListChanged = Ardrone3SettingsStateProductMotorVersionListChanged{
 	Project: ProjectArdrone3,
@@ -3308,6 +5094,23 @@ func (a Ardrone3SettingsStateProductGPSVersionChanged) Decode(b []byte) interfac
 
 	return arg
 }
+func (a Ardrone3SettingsStateProductGPSVersionChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var SettingsStateProductGPSVersionChanged = Ardrone3SettingsStateProductGPSVersionChanged{
 	Project: ProjectArdrone3,
@@ -3338,6 +5141,23 @@ func (a Ardrone3SettingsStateMotorErrorStateChanged) Decode(b []byte) interface{
 	offset += 4
 
 	return arg
+}
+func (a Ardrone3SettingsStateMotorErrorStateChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var SettingsStateMotorErrorStateChanged = Ardrone3SettingsStateMotorErrorStateChanged{
@@ -3371,6 +5191,23 @@ func (a Ardrone3SettingsStateMotorSoftwareVersionChanged) Decode(b []byte) inter
 	offset += stringEnd
 
 	return arg
+}
+func (a Ardrone3SettingsStateMotorSoftwareVersionChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var SettingsStateMotorSoftwareVersionChanged = Ardrone3SettingsStateMotorSoftwareVersionChanged{
@@ -3406,6 +5243,23 @@ func (a Ardrone3SettingsStateMotorFlightsStatusChanged) Decode(b []byte) interfa
 
 	return arg
 }
+func (a Ardrone3SettingsStateMotorFlightsStatusChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var SettingsStateMotorFlightsStatusChanged = Ardrone3SettingsStateMotorFlightsStatusChanged{
 	Project: ProjectArdrone3,
@@ -3433,6 +5287,23 @@ func (a Ardrone3SettingsStateMotorErrorLastErrorChanged) Decode(b []byte) interf
 	offset += 4
 
 	return arg
+}
+func (a Ardrone3SettingsStateMotorErrorLastErrorChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var SettingsStateMotorErrorLastErrorChanged = Ardrone3SettingsStateMotorErrorLastErrorChanged{
@@ -3467,6 +5338,23 @@ func (a Ardrone3SettingsStateP7ID) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a Ardrone3SettingsStateP7ID) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var SettingsStateP7ID = Ardrone3SettingsStateP7ID{
 	Project: ProjectArdrone3,
@@ -3497,6 +5385,23 @@ func (a Ardrone3SettingsStateCPUID) Decode(b []byte) interface{} {
 	offset += stringEnd
 
 	return arg
+}
+func (a Ardrone3SettingsStateCPUID) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var SettingsStateCPUID = Ardrone3SettingsStateCPUID{
@@ -3529,6 +5434,23 @@ func (a Ardrone3PictureSettingsPictureFormatSelection) Decode(b []byte) interfac
 
 	return arg
 }
+func (a Ardrone3PictureSettingsPictureFormatSelection) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var PictureSettingsPictureFormatSelection = Ardrone3PictureSettingsPictureFormatSelection{
 	Project: ProjectArdrone3,
@@ -3556,6 +5478,23 @@ func (a Ardrone3PictureSettingsAutoWhiteBalanceSelection) Decode(b []byte) inter
 	offset += 4
 
 	return arg
+}
+func (a Ardrone3PictureSettingsAutoWhiteBalanceSelection) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var PictureSettingsAutoWhiteBalanceSelection = Ardrone3PictureSettingsAutoWhiteBalanceSelection{
@@ -3585,6 +5524,23 @@ func (a Ardrone3PictureSettingsExpositionSelection) Decode(b []byte) interface{}
 
 	return arg
 }
+func (a Ardrone3PictureSettingsExpositionSelection) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var PictureSettingsExpositionSelection = Ardrone3PictureSettingsExpositionSelection{
 	Project: ProjectArdrone3,
@@ -3612,6 +5568,23 @@ func (a Ardrone3PictureSettingsSaturationSelection) Decode(b []byte) interface{}
 	offset += 4
 
 	return arg
+}
+func (a Ardrone3PictureSettingsSaturationSelection) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var PictureSettingsSaturationSelection = Ardrone3PictureSettingsSaturationSelection{
@@ -3644,6 +5617,23 @@ func (a Ardrone3PictureSettingsTimelapseSelection) Decode(b []byte) interface{} 
 
 	return arg
 }
+func (a Ardrone3PictureSettingsTimelapseSelection) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var PictureSettingsTimelapseSelection = Ardrone3PictureSettingsTimelapseSelection{
 	Project: ProjectArdrone3,
@@ -3675,6 +5665,23 @@ func (a Ardrone3PictureSettingsVideoAutorecordSelection) Decode(b []byte) interf
 
 	return arg
 }
+func (a Ardrone3PictureSettingsVideoAutorecordSelection) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var PictureSettingsVideoAutorecordSelection = Ardrone3PictureSettingsVideoAutorecordSelection{
 	Project: ProjectArdrone3,
@@ -3702,6 +5709,23 @@ func (a Ardrone3PictureSettingsVideoStabilizationMode) Decode(b []byte) interfac
 	offset += 4
 
 	return arg
+}
+func (a Ardrone3PictureSettingsVideoStabilizationMode) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var PictureSettingsVideoStabilizationMode = Ardrone3PictureSettingsVideoStabilizationMode{
@@ -3731,6 +5755,23 @@ func (a Ardrone3PictureSettingsVideoRecordingMode) Decode(b []byte) interface{} 
 
 	return arg
 }
+func (a Ardrone3PictureSettingsVideoRecordingMode) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var PictureSettingsVideoRecordingMode = Ardrone3PictureSettingsVideoRecordingMode{
 	Project: ProjectArdrone3,
@@ -3759,6 +5800,23 @@ func (a Ardrone3PictureSettingsVideoFramerate) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a Ardrone3PictureSettingsVideoFramerate) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var PictureSettingsVideoFramerate = Ardrone3PictureSettingsVideoFramerate{
 	Project: ProjectArdrone3,
@@ -3786,6 +5844,23 @@ func (a Ardrone3PictureSettingsVideoResolutions) Decode(b []byte) interface{} {
 	offset += 4
 
 	return arg
+}
+func (a Ardrone3PictureSettingsVideoResolutions) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var PictureSettingsVideoResolutions = Ardrone3PictureSettingsVideoResolutions{
@@ -3818,6 +5893,23 @@ func (a Ardrone3PictureSettingsStatePictureFormatChanged) Decode(b []byte) inter
 
 	return arg
 }
+func (a Ardrone3PictureSettingsStatePictureFormatChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var PictureSettingsStatePictureFormatChanged = Ardrone3PictureSettingsStatePictureFormatChanged{
 	Project: ProjectArdrone3,
@@ -3845,6 +5937,23 @@ func (a Ardrone3PictureSettingsStateAutoWhiteBalanceChanged) Decode(b []byte) in
 	offset += 4
 
 	return arg
+}
+func (a Ardrone3PictureSettingsStateAutoWhiteBalanceChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var PictureSettingsStateAutoWhiteBalanceChanged = Ardrone3PictureSettingsStateAutoWhiteBalanceChanged{
@@ -3880,6 +5989,23 @@ func (a Ardrone3PictureSettingsStateExpositionChanged) Decode(b []byte) interfac
 
 	return arg
 }
+func (a Ardrone3PictureSettingsStateExpositionChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var PictureSettingsStateExpositionChanged = Ardrone3PictureSettingsStateExpositionChanged{
 	Project: ProjectArdrone3,
@@ -3913,6 +6039,23 @@ func (a Ardrone3PictureSettingsStateSaturationChanged) Decode(b []byte) interfac
 	offset += 4
 
 	return arg
+}
+func (a Ardrone3PictureSettingsStateSaturationChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var PictureSettingsStateSaturationChanged = Ardrone3PictureSettingsStateSaturationChanged{
@@ -3951,6 +6094,23 @@ func (a Ardrone3PictureSettingsStateTimelapseChanged) Decode(b []byte) interface
 
 	return arg
 }
+func (a Ardrone3PictureSettingsStateTimelapseChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var PictureSettingsStateTimelapseChanged = Ardrone3PictureSettingsStateTimelapseChanged{
 	Project: ProjectArdrone3,
@@ -3982,6 +6142,23 @@ func (a Ardrone3PictureSettingsStateVideoAutorecordChanged) Decode(b []byte) int
 
 	return arg
 }
+func (a Ardrone3PictureSettingsStateVideoAutorecordChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var PictureSettingsStateVideoAutorecordChanged = Ardrone3PictureSettingsStateVideoAutorecordChanged{
 	Project: ProjectArdrone3,
@@ -4009,6 +6186,23 @@ func (a Ardrone3PictureSettingsStateVideoStabilizationModeChanged) Decode(b []by
 	offset += 4
 
 	return arg
+}
+func (a Ardrone3PictureSettingsStateVideoStabilizationModeChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var PictureSettingsStateVideoStabilizationModeChanged = Ardrone3PictureSettingsStateVideoStabilizationModeChanged{
@@ -4038,6 +6232,23 @@ func (a Ardrone3PictureSettingsStateVideoRecordingModeChanged) Decode(b []byte) 
 
 	return arg
 }
+func (a Ardrone3PictureSettingsStateVideoRecordingModeChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var PictureSettingsStateVideoRecordingModeChanged = Ardrone3PictureSettingsStateVideoRecordingModeChanged{
 	Project: ProjectArdrone3,
@@ -4066,6 +6277,23 @@ func (a Ardrone3PictureSettingsStateVideoFramerateChanged) Decode(b []byte) inte
 
 	return arg
 }
+func (a Ardrone3PictureSettingsStateVideoFramerateChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var PictureSettingsStateVideoFramerateChanged = Ardrone3PictureSettingsStateVideoFramerateChanged{
 	Project: ProjectArdrone3,
@@ -4093,6 +6321,23 @@ func (a Ardrone3PictureSettingsStateVideoResolutionsChanged) Decode(b []byte) in
 	offset += 4
 
 	return arg
+}
+func (a Ardrone3PictureSettingsStateVideoResolutionsChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var PictureSettingsStateVideoResolutionsChanged = Ardrone3PictureSettingsStateVideoResolutionsChanged{
@@ -4125,6 +6370,23 @@ func (a Ardrone3MediaStreamingVideoEnable) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a Ardrone3MediaStreamingVideoEnable) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var MediaStreamingVideoEnable = Ardrone3MediaStreamingVideoEnable{
 	Project: ProjectArdrone3,
@@ -4152,6 +6414,23 @@ func (a Ardrone3MediaStreamingVideoStreamMode) Decode(b []byte) interface{} {
 	offset += 4
 
 	return arg
+}
+func (a Ardrone3MediaStreamingVideoStreamMode) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var MediaStreamingVideoStreamMode = Ardrone3MediaStreamingVideoStreamMode{
@@ -4184,6 +6463,23 @@ func (a Ardrone3MediaStreamingStateVideoEnableChanged) Decode(b []byte) interfac
 
 	return arg
 }
+func (a Ardrone3MediaStreamingStateVideoEnableChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var MediaStreamingStateVideoEnableChanged = Ardrone3MediaStreamingStateVideoEnableChanged{
 	Project: ProjectArdrone3,
@@ -4207,6 +6503,23 @@ func (a Ardrone3MediaStreamingStateVideoStreamModeChanged) Decode(b []byte) inte
 	offset += 4
 
 	return arg
+}
+func (a Ardrone3MediaStreamingStateVideoStreamModeChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var MediaStreamingStateVideoStreamModeChanged = Ardrone3MediaStreamingStateVideoStreamModeChanged{
@@ -4243,6 +6556,23 @@ func (a Ardrone3GPSSettingsSetHome) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a Ardrone3GPSSettingsSetHome) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var GPSSettingsSetHome = Ardrone3GPSSettingsSetHome{
 	Project: ProjectArdrone3,
@@ -4267,6 +6597,23 @@ func (a Ardrone3GPSSettingsResetHome) Decode(b []byte) interface{} {
 	// No arguments to decode here !!
 
 	return arg
+}
+func (a Ardrone3GPSSettingsResetHome) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var GPSSettingsResetHome = Ardrone3GPSSettingsResetHome{
@@ -4308,6 +6655,23 @@ func (a Ardrone3GPSSettingsSendControllerGPS) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a Ardrone3GPSSettingsSendControllerGPS) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var GPSSettingsSendControllerGPS = Ardrone3GPSSettingsSendControllerGPS{
 	Project: ProjectArdrone3,
@@ -4335,6 +6699,23 @@ func (a Ardrone3GPSSettingsHomeType) Decode(b []byte) interface{} {
 	offset += 4
 
 	return arg
+}
+func (a Ardrone3GPSSettingsHomeType) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var GPSSettingsHomeType = Ardrone3GPSSettingsHomeType{
@@ -4364,6 +6745,23 @@ func (a Ardrone3GPSSettingsReturnHomeDelay) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a Ardrone3GPSSettingsReturnHomeDelay) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var GPSSettingsReturnHomeDelay = Ardrone3GPSSettingsReturnHomeDelay{
 	Project: ProjectArdrone3,
@@ -4391,6 +6789,23 @@ func (a Ardrone3GPSSettingsReturnHomeMinAltitude) Decode(b []byte) interface{} {
 	offset += 4
 
 	return arg
+}
+func (a Ardrone3GPSSettingsReturnHomeMinAltitude) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var GPSSettingsReturnHomeMinAltitude = Ardrone3GPSSettingsReturnHomeMinAltitude{
@@ -4429,6 +6844,23 @@ func (a Ardrone3GPSSettingsStateHomeChanged) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a Ardrone3GPSSettingsStateHomeChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var GPSSettingsStateHomeChanged = Ardrone3GPSSettingsStateHomeChanged{
 	Project: ProjectArdrone3,
@@ -4463,6 +6895,23 @@ func (a Ardrone3GPSSettingsStateResetHomeChanged) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a Ardrone3GPSSettingsStateResetHomeChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var GPSSettingsStateResetHomeChanged = Ardrone3GPSSettingsStateResetHomeChanged{
 	Project: ProjectArdrone3,
@@ -4490,6 +6939,23 @@ func (a Ardrone3GPSSettingsStateGPSFixStateChanged) Decode(b []byte) interface{}
 	offset++
 
 	return arg
+}
+func (a Ardrone3GPSSettingsStateGPSFixStateChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var GPSSettingsStateGPSFixStateChanged = Ardrone3GPSSettingsStateGPSFixStateChanged{
@@ -4519,6 +6985,23 @@ func (a Ardrone3GPSSettingsStateGPSUpdateStateChanged) Decode(b []byte) interfac
 
 	return arg
 }
+func (a Ardrone3GPSSettingsStateGPSUpdateStateChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var GPSSettingsStateGPSUpdateStateChanged = Ardrone3GPSSettingsStateGPSUpdateStateChanged{
 	Project: ProjectArdrone3,
@@ -4547,6 +7030,23 @@ func (a Ardrone3GPSSettingsStateHomeTypeChanged) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a Ardrone3GPSSettingsStateHomeTypeChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var GPSSettingsStateHomeTypeChanged = Ardrone3GPSSettingsStateHomeTypeChanged{
 	Project: ProjectArdrone3,
@@ -4574,6 +7074,23 @@ func (a Ardrone3GPSSettingsStateReturnHomeDelayChanged) Decode(b []byte) interfa
 	offset += 2
 
 	return arg
+}
+func (a Ardrone3GPSSettingsStateReturnHomeDelayChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var GPSSettingsStateReturnHomeDelayChanged = Ardrone3GPSSettingsStateReturnHomeDelayChanged{
@@ -4604,6 +7121,23 @@ func (a Ardrone3GPSSettingsStateGeofenceCenterChanged) Decode(b []byte) interfac
 	offset += 8
 
 	return arg
+}
+func (a Ardrone3GPSSettingsStateGeofenceCenterChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var GPSSettingsStateGeofenceCenterChanged = Ardrone3GPSSettingsStateGeofenceCenterChanged{
@@ -4637,6 +7171,23 @@ func (a Ardrone3GPSSettingsStateReturnHomeMinAltitudeChanged) Decode(b []byte) i
 	offset += 4
 
 	return arg
+}
+func (a Ardrone3GPSSettingsStateReturnHomeMinAltitudeChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var GPSSettingsStateReturnHomeMinAltitudeChanged = Ardrone3GPSSettingsStateReturnHomeMinAltitudeChanged{
@@ -4672,6 +7223,23 @@ func (a Ardrone3CameraStateOrientation) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a Ardrone3CameraStateOrientation) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var CameraStateOrientation = Ardrone3CameraStateOrientation{
 	Project: ProjectArdrone3,
@@ -4702,6 +7270,23 @@ func (a Ardrone3CameraStatedefaultCameraOrientation) Decode(b []byte) interface{
 	offset++
 
 	return arg
+}
+func (a Ardrone3CameraStatedefaultCameraOrientation) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var CameraStatedefaultCameraOrientation = Ardrone3CameraStatedefaultCameraOrientation{
@@ -4734,6 +7319,23 @@ func (a Ardrone3CameraStateOrientationV2) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a Ardrone3CameraStateOrientationV2) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var CameraStateOrientationV2 = Ardrone3CameraStateOrientationV2{
 	Project: ProjectArdrone3,
@@ -4764,6 +7366,23 @@ func (a Ardrone3CameraStatedefaultCameraOrientationV2) Decode(b []byte) interfac
 	offset += 4
 
 	return arg
+}
+func (a Ardrone3CameraStatedefaultCameraOrientationV2) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var CameraStatedefaultCameraOrientationV2 = Ardrone3CameraStatedefaultCameraOrientationV2{
@@ -4796,6 +7415,23 @@ func (a Ardrone3CameraStateVelocityRange) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a Ardrone3CameraStateVelocityRange) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var CameraStateVelocityRange = Ardrone3CameraStateVelocityRange{
 	Project: ProjectArdrone3,
@@ -4827,6 +7463,23 @@ func (a Ardrone3AntiflickeringelectricFrequency) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a Ardrone3AntiflickeringelectricFrequency) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var AntiflickeringelectricFrequency = Ardrone3AntiflickeringelectricFrequency{
 	Project: ProjectArdrone3,
@@ -4854,6 +7507,23 @@ func (a Ardrone3AntiflickeringsetMode) Decode(b []byte) interface{} {
 	offset += 4
 
 	return arg
+}
+func (a Ardrone3AntiflickeringsetMode) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var AntiflickeringsetMode = Ardrone3AntiflickeringsetMode{
@@ -4886,6 +7556,23 @@ func (a Ardrone3AntiflickeringStateelectricFrequencyChanged) Decode(b []byte) in
 
 	return arg
 }
+func (a Ardrone3AntiflickeringStateelectricFrequencyChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var AntiflickeringStateelectricFrequencyChanged = Ardrone3AntiflickeringStateelectricFrequencyChanged{
 	Project: ProjectArdrone3,
@@ -4913,6 +7600,23 @@ func (a Ardrone3AntiflickeringStatemodeChanged) Decode(b []byte) interface{} {
 	offset += 4
 
 	return arg
+}
+func (a Ardrone3AntiflickeringStatemodeChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var AntiflickeringStatemodeChanged = Ardrone3AntiflickeringStatemodeChanged{
@@ -4945,6 +7649,23 @@ func (a Ardrone3GPSStateNumberOfSatelliteChanged) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a Ardrone3GPSStateNumberOfSatelliteChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var GPSStateNumberOfSatelliteChanged = Ardrone3GPSStateNumberOfSatelliteChanged{
 	Project: ProjectArdrone3,
@@ -4976,6 +7697,23 @@ func (a Ardrone3GPSStateHomeTypeAvailabilityChanged) Decode(b []byte) interface{
 
 	return arg
 }
+func (a Ardrone3GPSStateHomeTypeAvailabilityChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var GPSStateHomeTypeAvailabilityChanged = Ardrone3GPSStateHomeTypeAvailabilityChanged{
 	Project: ProjectArdrone3,
@@ -5003,6 +7741,23 @@ func (a Ardrone3GPSStateHomeTypeChosenChanged) Decode(b []byte) interface{} {
 	offset += 4
 
 	return arg
+}
+func (a Ardrone3GPSStateHomeTypeChosenChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var GPSStateHomeTypeChosenChanged = Ardrone3GPSStateHomeTypeChosenChanged{
@@ -5032,6 +7787,23 @@ func (a Ardrone3PROStateFeatures) Decode(b []byte) interface{} {
 	offset += 8
 
 	return arg
+}
+func (a Ardrone3PROStateFeatures) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var PROStateFeatures = Ardrone3PROStateFeatures{
@@ -5088,6 +7860,23 @@ func (a Ardrone3AccessoryStateConnectedAccessories) Decode(b []byte) interface{}
 
 	return arg
 }
+func (a Ardrone3AccessoryStateConnectedAccessories) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var AccessoryStateConnectedAccessories = Ardrone3AccessoryStateConnectedAccessories{
 	Project: ProjectArdrone3,
@@ -5121,6 +7910,23 @@ func (a Ardrone3AccessoryStateBattery) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a Ardrone3AccessoryStateBattery) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var AccessoryStateBattery = Ardrone3AccessoryStateBattery{
 	Project: ProjectArdrone3,
@@ -5149,6 +7955,23 @@ func (a Ardrone3SoundStartAlertSound) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a Ardrone3SoundStartAlertSound) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var SoundStartAlertSound = Ardrone3SoundStartAlertSound{
 	Project: ProjectArdrone3,
@@ -5173,6 +7996,23 @@ func (a Ardrone3SoundStopAlertSound) Decode(b []byte) interface{} {
 	// No arguments to decode here !!
 
 	return arg
+}
+func (a Ardrone3SoundStopAlertSound) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var SoundStopAlertSound = Ardrone3SoundStopAlertSound{
@@ -5205,6 +8045,23 @@ func (a Ardrone3SoundStateAlertSound) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a Ardrone3SoundStateAlertSound) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var SoundStateAlertSound = Ardrone3SoundStateAlertSound{
 	Project: ProjectArdrone3,
@@ -5235,6 +8092,23 @@ func (a CommonNetworkDisconnect) Decode(b []byte) interface{} {
 	// No arguments to decode here !!
 
 	return arg
+}
+func (a CommonNetworkDisconnect) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var NetworkDisconnect = CommonNetworkDisconnect{
@@ -5267,6 +8141,23 @@ func (a CommonNetworkEventDisconnection) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a CommonNetworkEventDisconnection) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var NetworkEventDisconnection = CommonNetworkEventDisconnection{
 	Project: ProjectCommon,
@@ -5295,6 +8186,23 @@ func (a CommonSettingsAllSettings) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a CommonSettingsAllSettings) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var SettingsAllSettings = CommonSettingsAllSettings{
 	Project: ProjectCommon,
@@ -5319,6 +8227,23 @@ func (a CommonSettingsReset) Decode(b []byte) interface{} {
 	// No arguments to decode here !!
 
 	return arg
+}
+func (a CommonSettingsReset) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var SettingsReset = CommonSettingsReset{
@@ -5355,6 +8280,23 @@ func (a CommonSettingsProductName) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a CommonSettingsProductName) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var SettingsProductName = CommonSettingsProductName{
 	Project: ProjectCommon,
@@ -5390,6 +8332,23 @@ func (a CommonSettingsCountry) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a CommonSettingsCountry) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var SettingsCountry = CommonSettingsCountry{
 	Project: ProjectCommon,
@@ -5417,6 +8376,23 @@ func (a CommonSettingsAutoCountry) Decode(b []byte) interface{} {
 	offset++
 
 	return arg
+}
+func (a CommonSettingsAutoCountry) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var SettingsAutoCountry = CommonSettingsAutoCountry{
@@ -5446,6 +8422,23 @@ func (a CommonSettingsStateAllSettingsChanged) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a CommonSettingsStateAllSettingsChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var SettingsStateAllSettingsChanged = CommonSettingsStateAllSettingsChanged{
 	Project: ProjectCommon,
@@ -5470,6 +8463,23 @@ func (a CommonSettingsStateResetChanged) Decode(b []byte) interface{} {
 	// No arguments to decode here !!
 
 	return arg
+}
+func (a CommonSettingsStateResetChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var SettingsStateResetChanged = CommonSettingsStateResetChanged{
@@ -5505,6 +8515,23 @@ func (a CommonSettingsStateProductNameChanged) Decode(b []byte) interface{} {
 	offset += stringEnd
 
 	return arg
+}
+func (a CommonSettingsStateProductNameChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var SettingsStateProductNameChanged = CommonSettingsStateProductNameChanged{
@@ -5549,6 +8576,23 @@ func (a CommonSettingsStateProductVersionChanged) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a CommonSettingsStateProductVersionChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var SettingsStateProductVersionChanged = CommonSettingsStateProductVersionChanged{
 	Project: ProjectCommon,
@@ -5583,6 +8627,23 @@ func (a CommonSettingsStateProductSerialHighChanged) Decode(b []byte) interface{
 	offset += stringEnd
 
 	return arg
+}
+func (a CommonSettingsStateProductSerialHighChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var SettingsStateProductSerialHighChanged = CommonSettingsStateProductSerialHighChanged{
@@ -5619,6 +8680,23 @@ func (a CommonSettingsStateProductSerialLowChanged) Decode(b []byte) interface{}
 
 	return arg
 }
+func (a CommonSettingsStateProductSerialLowChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var SettingsStateProductSerialLowChanged = CommonSettingsStateProductSerialLowChanged{
 	Project: ProjectCommon,
@@ -5654,6 +8732,23 @@ func (a CommonSettingsStateCountryChanged) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a CommonSettingsStateCountryChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var SettingsStateCountryChanged = CommonSettingsStateCountryChanged{
 	Project: ProjectCommon,
@@ -5681,6 +8776,23 @@ func (a CommonSettingsStateAutoCountryChanged) Decode(b []byte) interface{} {
 	offset++
 
 	return arg
+}
+func (a CommonSettingsStateAutoCountryChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var SettingsStateAutoCountryChanged = CommonSettingsStateAutoCountryChanged{
@@ -5717,6 +8829,23 @@ func (a CommonSettingsStateBoardIdChanged) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a CommonSettingsStateBoardIdChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var SettingsStateBoardIdChanged = CommonSettingsStateBoardIdChanged{
 	Project: ProjectCommon,
@@ -5744,6 +8873,23 @@ func (a CommonCommonAllStates) Decode(b []byte) interface{} {
 	// No arguments to decode here !!
 
 	return arg
+}
+func (a CommonCommonAllStates) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var CommonAllStates = CommonCommonAllStates{
@@ -5780,6 +8926,23 @@ func (a CommonCommonCurrentDate) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a CommonCommonCurrentDate) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var CommonCurrentDate = CommonCommonCurrentDate{
 	Project: ProjectCommon,
@@ -5815,6 +8978,23 @@ func (a CommonCommonCurrentTime) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a CommonCommonCurrentTime) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var CommonCurrentTime = CommonCommonCurrentTime{
 	Project: ProjectCommon,
@@ -5839,6 +9019,23 @@ func (a CommonCommonReboot) Decode(b []byte) interface{} {
 	// No arguments to decode here !!
 
 	return arg
+}
+func (a CommonCommonReboot) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var CommonReboot = CommonCommonReboot{
@@ -5875,6 +9072,23 @@ func (a CommonCommonCurrentDateTime) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a CommonCommonCurrentDateTime) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var CommonCurrentDateTime = CommonCommonCurrentDateTime{
 	Project: ProjectCommon,
@@ -5903,6 +9117,23 @@ func (a CommonCommonStateAllStatesChanged) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a CommonCommonStateAllStatesChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var CommonStateAllStatesChanged = CommonCommonStateAllStatesChanged{
 	Project: ProjectCommon,
@@ -5930,6 +9161,23 @@ func (a CommonCommonStateBatteryStateChanged) Decode(b []byte) interface{} {
 	offset++
 
 	return arg
+}
+func (a CommonCommonStateBatteryStateChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var CommonStateBatteryStateChanged = CommonCommonStateBatteryStateChanged{
@@ -5968,6 +9216,23 @@ func (a CommonCommonStateMassStorageStateListChanged) Decode(b []byte) interface
 	offset += stringEnd
 
 	return arg
+}
+func (a CommonCommonStateMassStorageStateListChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var CommonStateMassStorageStateListChanged = CommonCommonStateMassStorageStateListChanged{
@@ -6012,6 +9277,23 @@ func (a CommonCommonStateMassStorageInfoStateListChanged) Decode(b []byte) inter
 
 	return arg
 }
+func (a CommonCommonStateMassStorageInfoStateListChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var CommonStateMassStorageInfoStateListChanged = CommonCommonStateMassStorageInfoStateListChanged{
 	Project: ProjectCommon,
@@ -6046,6 +9328,23 @@ func (a CommonCommonStateCurrentDateChanged) Decode(b []byte) interface{} {
 	offset += stringEnd
 
 	return arg
+}
+func (a CommonCommonStateCurrentDateChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var CommonStateCurrentDateChanged = CommonCommonStateCurrentDateChanged{
@@ -6082,6 +9381,23 @@ func (a CommonCommonStateCurrentTimeChanged) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a CommonCommonStateCurrentTimeChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var CommonStateCurrentTimeChanged = CommonCommonStateCurrentTimeChanged{
 	Project: ProjectCommon,
@@ -6114,6 +9430,23 @@ func (a CommonCommonStateMassStorageInfoRemainingListChanged) Decode(b []byte) i
 
 	return arg
 }
+func (a CommonCommonStateMassStorageInfoRemainingListChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var CommonStateMassStorageInfoRemainingListChanged = CommonCommonStateMassStorageInfoRemainingListChanged{
 	Project: ProjectCommon,
@@ -6141,6 +9474,23 @@ func (a CommonCommonStateWifiSignalChanged) Decode(b []byte) interface{} {
 	offset += 2
 
 	return arg
+}
+func (a CommonCommonStateWifiSignalChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var CommonStateWifiSignalChanged = CommonCommonStateWifiSignalChanged{
@@ -6173,6 +9523,23 @@ func (a CommonCommonStateSensorsStatesListChanged) Decode(b []byte) interface{} 
 
 	return arg
 }
+func (a CommonCommonStateSensorsStatesListChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var CommonStateSensorsStatesListChanged = CommonCommonStateSensorsStatesListChanged{
 	Project: ProjectCommon,
@@ -6200,6 +9567,23 @@ func (a CommonCommonStateProductModel) Decode(b []byte) interface{} {
 	offset += 4
 
 	return arg
+}
+func (a CommonCommonStateProductModel) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var CommonStateProductModel = CommonCommonStateProductModel{
@@ -6236,6 +9620,23 @@ func (a CommonCommonStateCountryListKnown) Decode(b []byte) interface{} {
 	offset += stringEnd
 
 	return arg
+}
+func (a CommonCommonStateCountryListKnown) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var CommonStateCountryListKnown = CommonCommonStateCountryListKnown{
@@ -6274,6 +9675,23 @@ func (a CommonCommonStateDeprecatedMassStorageContentChanged) Decode(b []byte) i
 	offset += 2
 
 	return arg
+}
+func (a CommonCommonStateDeprecatedMassStorageContentChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var CommonStateDeprecatedMassStorageContentChanged = CommonCommonStateDeprecatedMassStorageContentChanged{
@@ -6318,6 +9736,23 @@ func (a CommonCommonStateMassStorageContent) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a CommonCommonStateMassStorageContent) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var CommonStateMassStorageContent = CommonCommonStateMassStorageContent{
 	Project: ProjectCommon,
@@ -6355,6 +9790,23 @@ func (a CommonCommonStateMassStorageContentForCurrentRun) Decode(b []byte) inter
 
 	return arg
 }
+func (a CommonCommonStateMassStorageContentForCurrentRun) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var CommonStateMassStorageContentForCurrentRun = CommonCommonStateMassStorageContentForCurrentRun{
 	Project: ProjectCommon,
@@ -6384,6 +9836,23 @@ func (a CommonCommonStateVideoRecordingTimestamp) Decode(b []byte) interface{} {
 	offset += 8
 
 	return arg
+}
+func (a CommonCommonStateVideoRecordingTimestamp) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var CommonStateVideoRecordingTimestamp = CommonCommonStateVideoRecordingTimestamp{
@@ -6420,6 +9889,23 @@ func (a CommonCommonStateCurrentDateTimeChanged) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a CommonCommonStateCurrentDateTimeChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var CommonStateCurrentDateTimeChanged = CommonCommonStateCurrentDateTimeChanged{
 	Project: ProjectCommon,
@@ -6447,6 +9933,23 @@ func (a CommonCommonStateLinkSignalQuality) Decode(b []byte) interface{} {
 	offset++
 
 	return arg
+}
+func (a CommonCommonStateLinkSignalQuality) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var CommonStateLinkSignalQuality = CommonCommonStateLinkSignalQuality{
@@ -6483,6 +9986,23 @@ func (a CommonCommonStateBootId) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a CommonCommonStateBootId) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var CommonStateBootId = CommonCommonStateBootId{
 	Project: ProjectCommon,
@@ -6511,6 +10031,23 @@ func (a CommonOverHeatSwitchOff) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a CommonOverHeatSwitchOff) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var OverHeatSwitchOff = CommonOverHeatSwitchOff{
 	Project: ProjectCommon,
@@ -6535,6 +10072,23 @@ func (a CommonOverHeatVentilate) Decode(b []byte) interface{} {
 	// No arguments to decode here !!
 
 	return arg
+}
+func (a CommonOverHeatVentilate) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var OverHeatVentilate = CommonOverHeatVentilate{
@@ -6562,6 +10116,23 @@ func (a CommonOverHeatStateOverHeatChanged) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a CommonOverHeatStateOverHeatChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var OverHeatStateOverHeatChanged = CommonOverHeatStateOverHeatChanged{
 	Project: ProjectCommon,
@@ -6587,6 +10158,23 @@ func (a CommonOverHeatStateOverHeatRegulationChanged) Decode(b []byte) interface
 	offset++
 
 	return arg
+}
+func (a CommonOverHeatStateOverHeatRegulationChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var OverHeatStateOverHeatRegulationChanged = CommonOverHeatStateOverHeatRegulationChanged{
@@ -6618,6 +10206,23 @@ func (a CommonControllerisPiloting) Decode(b []byte) interface{} {
 	offset++
 
 	return arg
+}
+func (a CommonControllerisPiloting) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var ControllerisPiloting = CommonControllerisPiloting{
@@ -6676,6 +10281,23 @@ func (a CommonControllerPeerStateChanged) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a CommonControllerPeerStateChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var ControllerPeerStateChanged = CommonControllerPeerStateChanged{
 	Project: ProjectCommon,
@@ -6707,6 +10329,23 @@ func (a CommonWifiSettingsOutdoorSetting) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a CommonWifiSettingsOutdoorSetting) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var WifiSettingsOutdoorSetting = CommonWifiSettingsOutdoorSetting{
 	Project: ProjectCommon,
@@ -6737,6 +10376,23 @@ func (a CommonWifiSettingsStateoutdoorSettingsChanged) Decode(b []byte) interfac
 	offset++
 
 	return arg
+}
+func (a CommonWifiSettingsStateoutdoorSettingsChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var WifiSettingsStateoutdoorSettingsChanged = CommonWifiSettingsStateoutdoorSettingsChanged{
@@ -6779,6 +10435,23 @@ func (a CommonMavlinkStart) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a CommonMavlinkStart) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var MavlinkStart = CommonMavlinkStart{
 	Project: ProjectCommon,
@@ -6804,6 +10477,23 @@ func (a CommonMavlinkPause) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a CommonMavlinkPause) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var MavlinkPause = CommonMavlinkPause{
 	Project: ProjectCommon,
@@ -6828,6 +10518,23 @@ func (a CommonMavlinkStop) Decode(b []byte) interface{} {
 	// No arguments to decode here !!
 
 	return arg
+}
+func (a CommonMavlinkStop) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var MavlinkStop = CommonMavlinkStop{
@@ -6873,6 +10580,23 @@ func (a CommonMavlinkStateMavlinkFilePlayingStateChanged) Decode(b []byte) inter
 
 	return arg
 }
+func (a CommonMavlinkStateMavlinkFilePlayingStateChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var MavlinkStateMavlinkFilePlayingStateChanged = CommonMavlinkStateMavlinkFilePlayingStateChanged{
 	Project: ProjectCommon,
@@ -6901,6 +10625,23 @@ func (a CommonMavlinkStateMavlinkPlayErrorStateChanged) Decode(b []byte) interfa
 
 	return arg
 }
+func (a CommonMavlinkStateMavlinkPlayErrorStateChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var MavlinkStateMavlinkPlayErrorStateChanged = CommonMavlinkStateMavlinkPlayErrorStateChanged{
 	Project: ProjectCommon,
@@ -6928,6 +10669,23 @@ func (a CommonMavlinkStateMissionItemExecuted) Decode(b []byte) interface{} {
 	offset += 4
 
 	return arg
+}
+func (a CommonMavlinkStateMissionItemExecuted) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var MavlinkStateMissionItemExecuted = CommonMavlinkStateMissionItemExecuted{
@@ -6958,6 +10716,23 @@ func (a CommonFlightPlanSettingsReturnHomeOnDisconnect) Decode(b []byte) interfa
 	offset++
 
 	return arg
+}
+func (a CommonFlightPlanSettingsReturnHomeOnDisconnect) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var FlightPlanSettingsReturnHomeOnDisconnect = CommonFlightPlanSettingsReturnHomeOnDisconnect{
@@ -6992,6 +10767,23 @@ func (a CommonFlightPlanSettingsStateReturnHomeOnDisconnectChanged) Decode(b []b
 
 	return arg
 }
+func (a CommonFlightPlanSettingsStateReturnHomeOnDisconnectChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var FlightPlanSettingsStateReturnHomeOnDisconnectChanged = CommonFlightPlanSettingsStateReturnHomeOnDisconnectChanged{
 	Project: ProjectCommon,
@@ -7023,6 +10815,23 @@ func (a CommonCalibrationMagnetoCalibration) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a CommonCalibrationMagnetoCalibration) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var CalibrationMagnetoCalibration = CommonCalibrationMagnetoCalibration{
 	Project: ProjectCommon,
@@ -7050,6 +10859,23 @@ func (a CommonCalibrationPitotCalibration) Decode(b []byte) interface{} {
 	offset++
 
 	return arg
+}
+func (a CommonCalibrationPitotCalibration) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var CalibrationPitotCalibration = CommonCalibrationPitotCalibration{
@@ -7091,6 +10917,23 @@ func (a CommonCalibrationStateMagnetoCalibrationStateChanged) Decode(b []byte) i
 
 	return arg
 }
+func (a CommonCalibrationStateMagnetoCalibrationStateChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var CalibrationStateMagnetoCalibrationStateChanged = CommonCalibrationStateMagnetoCalibrationStateChanged{
 	Project: ProjectCommon,
@@ -7118,6 +10961,23 @@ func (a CommonCalibrationStateMagnetoCalibrationRequiredState) Decode(b []byte) 
 	offset++
 
 	return arg
+}
+func (a CommonCalibrationStateMagnetoCalibrationRequiredState) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var CalibrationStateMagnetoCalibrationRequiredState = CommonCalibrationStateMagnetoCalibrationRequiredState{
@@ -7147,6 +11007,23 @@ func (a CommonCalibrationStateMagnetoCalibrationAxisToCalibrateChanged) Decode(b
 
 	return arg
 }
+func (a CommonCalibrationStateMagnetoCalibrationAxisToCalibrateChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var CalibrationStateMagnetoCalibrationAxisToCalibrateChanged = CommonCalibrationStateMagnetoCalibrationAxisToCalibrateChanged{
 	Project: ProjectCommon,
@@ -7175,6 +11052,23 @@ func (a CommonCalibrationStateMagnetoCalibrationStartedChanged) Decode(b []byte)
 
 	return arg
 }
+func (a CommonCalibrationStateMagnetoCalibrationStartedChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var CalibrationStateMagnetoCalibrationStartedChanged = CommonCalibrationStateMagnetoCalibrationStartedChanged{
 	Project: ProjectCommon,
@@ -7201,6 +11095,23 @@ func (a CommonCalibrationStatePitotCalibrationStateChanged) Decode(b []byte) int
 	offset++
 
 	return arg
+}
+func (a CommonCalibrationStatePitotCalibrationStateChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var CalibrationStatePitotCalibrationStateChanged = CommonCalibrationStatePitotCalibrationStateChanged{
@@ -7245,6 +11156,23 @@ func (a CommonCameraSettingsStateCameraSettingsChanged) Decode(b []byte) interfa
 
 	return arg
 }
+func (a CommonCameraSettingsStateCameraSettingsChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var CameraSettingsStateCameraSettingsChanged = CommonCameraSettingsStateCameraSettingsChanged{
 	Project: ProjectCommon,
@@ -7279,6 +11207,23 @@ func (a CommonGPSControllerPositionForRun) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a CommonGPSControllerPositionForRun) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var GPSControllerPositionForRun = CommonGPSControllerPositionForRun{
 	Project: ProjectCommon,
@@ -7309,6 +11254,23 @@ func (a CommonFlightPlanStateAvailabilityStateChanged) Decode(b []byte) interfac
 	offset++
 
 	return arg
+}
+func (a CommonFlightPlanStateAvailabilityStateChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var FlightPlanStateAvailabilityStateChanged = CommonFlightPlanStateAvailabilityStateChanged{
@@ -7341,6 +11303,23 @@ func (a CommonFlightPlanStateComponentStateListChanged) Decode(b []byte) interfa
 
 	return arg
 }
+func (a CommonFlightPlanStateComponentStateListChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var FlightPlanStateComponentStateListChanged = CommonFlightPlanStateComponentStateListChanged{
 	Project: ProjectCommon,
@@ -7368,6 +11347,23 @@ func (a CommonFlightPlanStateLockStateChanged) Decode(b []byte) interface{} {
 	offset++
 
 	return arg
+}
+func (a CommonFlightPlanStateLockStateChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var FlightPlanStateLockStateChanged = CommonFlightPlanStateLockStateChanged{
@@ -7397,6 +11393,23 @@ func (a CommonFlightPlanEventStartingErrorEvent) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a CommonFlightPlanEventStartingErrorEvent) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var FlightPlanEventStartingErrorEvent = CommonFlightPlanEventStartingErrorEvent{
 	Project: ProjectCommon,
@@ -7421,6 +11434,23 @@ func (a CommonFlightPlanEventSpeedBridleEvent) Decode(b []byte) interface{} {
 	// No arguments to decode here !!
 
 	return arg
+}
+func (a CommonFlightPlanEventSpeedBridleEvent) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var FlightPlanEventSpeedBridleEvent = CommonFlightPlanEventSpeedBridleEvent{
@@ -7455,6 +11485,23 @@ func (a CommonARLibsVersionsStateControllerLibARCommandsVersion) Decode(b []byte
 
 	return arg
 }
+func (a CommonARLibsVersionsStateControllerLibARCommandsVersion) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var ARLibsVersionsStateControllerLibARCommandsVersion = CommonARLibsVersionsStateControllerLibARCommandsVersion{
 	Project: ProjectCommon,
@@ -7485,6 +11532,23 @@ func (a CommonARLibsVersionsStateSkyControllerLibARCommandsVersion) Decode(b []b
 	offset += stringEnd
 
 	return arg
+}
+func (a CommonARLibsVersionsStateSkyControllerLibARCommandsVersion) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var ARLibsVersionsStateSkyControllerLibARCommandsVersion = CommonARLibsVersionsStateSkyControllerLibARCommandsVersion{
@@ -7517,6 +11581,23 @@ func (a CommonARLibsVersionsStateDeviceLibARCommandsVersion) Decode(b []byte) in
 
 	return arg
 }
+func (a CommonARLibsVersionsStateDeviceLibARCommandsVersion) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var ARLibsVersionsStateDeviceLibARCommandsVersion = CommonARLibsVersionsStateDeviceLibARCommandsVersion{
 	Project: ProjectCommon,
@@ -7548,6 +11629,23 @@ func (a CommonAudioControllerReadyForStreaming) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a CommonAudioControllerReadyForStreaming) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var AudioControllerReadyForStreaming = CommonAudioControllerReadyForStreaming{
 	Project: ProjectCommon,
@@ -7578,6 +11676,23 @@ func (a CommonAudioStateAudioStreamingRunning) Decode(b []byte) interface{} {
 	offset++
 
 	return arg
+}
+func (a CommonAudioStateAudioStreamingRunning) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var AudioStateAudioStreamingRunning = CommonAudioStateAudioStreamingRunning{
@@ -7613,6 +11728,23 @@ func (a CommonHeadlightsintensity) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a CommonHeadlightsintensity) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var Headlightsintensity = CommonHeadlightsintensity{
 	Project: ProjectCommon,
@@ -7647,6 +11779,23 @@ func (a CommonHeadlightsStateintensityChanged) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a CommonHeadlightsStateintensityChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var HeadlightsStateintensityChanged = CommonHeadlightsStateintensityChanged{
 	Project: ProjectCommon,
@@ -7678,6 +11827,23 @@ func (a CommonAnimationsStartAnimation) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a CommonAnimationsStartAnimation) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var AnimationsStartAnimation = CommonAnimationsStartAnimation{
 	Project: ProjectCommon,
@@ -7706,6 +11872,23 @@ func (a CommonAnimationsStopAnimation) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a CommonAnimationsStopAnimation) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var AnimationsStopAnimation = CommonAnimationsStopAnimation{
 	Project: ProjectCommon,
@@ -7730,6 +11913,23 @@ func (a CommonAnimationsStopAllAnimations) Decode(b []byte) interface{} {
 	// No arguments to decode here !!
 
 	return arg
+}
+func (a CommonAnimationsStopAllAnimations) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var AnimationsStopAllAnimations = CommonAnimationsStopAllAnimations{
@@ -7762,6 +11962,23 @@ func (a CommonAnimationsStateList) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a CommonAnimationsStateList) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var AnimationsStateList = CommonAnimationsStateList{
 	Project: ProjectCommon,
@@ -7792,6 +12009,23 @@ func (a CommonAccessoryConfig) Decode(b []byte) interface{} {
 	offset += 4
 
 	return arg
+}
+func (a CommonAccessoryConfig) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var AccessoryConfig = CommonAccessoryConfig{
@@ -7824,6 +12058,23 @@ func (a CommonAccessoryStateSupportedAccessoriesListChanged) Decode(b []byte) in
 
 	return arg
 }
+func (a CommonAccessoryStateSupportedAccessoriesListChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var AccessoryStateSupportedAccessoriesListChanged = CommonAccessoryStateSupportedAccessoriesListChanged{
 	Project: ProjectCommon,
@@ -7855,6 +12106,23 @@ func (a CommonAccessoryStateAccessoryConfigChanged) Decode(b []byte) interface{}
 
 	return arg
 }
+func (a CommonAccessoryStateAccessoryConfigChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var AccessoryStateAccessoryConfigChanged = CommonAccessoryStateAccessoryConfigChanged{
 	Project: ProjectCommon,
@@ -7882,6 +12150,23 @@ func (a CommonAccessoryStateAccessoryConfigModificationEnabled) Decode(b []byte)
 	offset++
 
 	return arg
+}
+func (a CommonAccessoryStateAccessoryConfigModificationEnabled) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var AccessoryStateAccessoryConfigModificationEnabled = CommonAccessoryStateAccessoryConfigModificationEnabled{
@@ -7914,6 +12199,23 @@ func (a CommonChargerSetMaxChargeRate) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a CommonChargerSetMaxChargeRate) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var ChargerSetMaxChargeRate = CommonChargerSetMaxChargeRate{
 	Project: ProjectCommon,
@@ -7942,6 +12244,23 @@ func (a CommonChargerStateMaxChargeRateChanged) Decode(b []byte) interface{} {
 	offset += 4
 
 	return arg
+}
+func (a CommonChargerStateMaxChargeRateChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var ChargerStateMaxChargeRateChanged = CommonChargerStateMaxChargeRateChanged{
@@ -7972,6 +12291,23 @@ func (a CommonChargerStateCurrentChargeStateChanged) Decode(b []byte) interface{
 
 	return arg
 }
+func (a CommonChargerStateCurrentChargeStateChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var ChargerStateCurrentChargeStateChanged = CommonChargerStateCurrentChargeStateChanged{
 	Project: ProjectCommon,
@@ -7997,6 +12333,23 @@ func (a CommonChargerStateLastChargeRateChanged) Decode(b []byte) interface{} {
 	offset += 4
 
 	return arg
+}
+func (a CommonChargerStateLastChargeRateChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var ChargerStateLastChargeRateChanged = CommonChargerStateLastChargeRateChanged{
@@ -8034,6 +12387,23 @@ func (a CommonChargerStateChargingInfo) Decode(b []byte) interface{} {
 	offset++
 
 	return arg
+}
+func (a CommonChargerStateChargingInfo) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var ChargerStateChargingInfo = CommonChargerStateChargingInfo{
@@ -8073,6 +12443,23 @@ func (a CommonRunStateRunIdChanged) Decode(b []byte) interface{} {
 
 	return arg
 }
+func (a CommonRunStateRunIdChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
+}
 
 var RunStateRunIdChanged = CommonRunStateRunIdChanged{
 	Project: ProjectCommon,
@@ -8099,6 +12486,23 @@ func (a CommonFactoryReset) Decode(b []byte) interface{} {
 	// No arguments to decode here !!
 
 	return arg
+}
+func (a CommonFactoryReset) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var FactoryReset = CommonFactoryReset{
@@ -8148,6 +12552,23 @@ func (a CommonUpdateStateUpdateStateChanged) Decode(b []byte) interface{} {
 	offset += 4
 
 	return arg
+}
+func (a CommonUpdateStateUpdateStateChanged) Encode(commandStruct interface{}) []byte {
+	//TODO: .............
+
+	var bs []byte
+	valueOf := reflect.ValueOf(commandStruct)
+
+	fmt.Printf("Number of fields in the struct: %v\n", valueOf.NumField())
+	fmt.Println("--------------Iterating fields-----------------")
+	for i := 0; i < valueOf.NumField(); i++ {
+		b := ConvLittleEndianNumericToSlice(valueOf.Field(i))
+		fmt.Printf("mySlice = %#v\n", b)
+
+		bs = append(bs, b...)
+	}
+
+	return bs
 }
 
 var UpdateStateUpdateStateChanged = CommonUpdateStateUpdateStateChanged{
