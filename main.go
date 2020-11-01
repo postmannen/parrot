@@ -40,7 +40,7 @@ type Drone struct {
 	chSendingUDPPacket chan networkUDPPacket
 	// Channel to put the inputAction type send to the drone when
 	// for example a key is pressed on the keyboard.
-	chInputActions chan Decoder
+	chInputActions chan inputAction
 	// Sending to this channel will quit the controller program.
 	chQuit chan struct{}
 	// Sending to this channel will disconnect all network related
@@ -51,6 +51,8 @@ type Drone struct {
 	// The conn object for the UDP connection to send commands to
 	// the drone.
 	connUDPWrite *net.UDPConn
+	// Piloting Command
+	pcmd Ardrone3PilotingPCMDArguments
 }
 
 // NewDrone will initalize all the variables needed for a drone,
@@ -66,9 +68,18 @@ func NewDrone() *Drone {
 
 		chReceivedUDPPacket: make(chan networkUDPPacket),
 		chSendingUDPPacket:  make(chan networkUDPPacket),
-		chInputActions:      make(chan Decoder),
+		chInputActions:      make(chan inputAction),
 		chQuit:              make(chan struct{}),
 		chNetworkConnect:    make(chan struct{}),
+
+		pcmd: Ardrone3PilotingPCMDArguments{
+			Flag:               0,
+			Roll:               0,
+			Pitch:              0,
+			Yaw:                0,
+			Gaz:                0,
+			TimestampAndSeqNum: 0,
+		},
 	}
 }
 
@@ -370,42 +381,42 @@ func (d *Drone) handleReadPackages(packetCreator *udpPacketCreator, ctx context.
 // and then have some logic who reads the actions received over
 // a channel, and then do the logic for landing/takeoff/rotate etc.
 
-// type inputAction int
+type inputAction int
 
-//  const (
-//  	// Standard actions.
-//  	//
-//  	ActionPcmdFlag                inputAction = iota
-//  	ActionPcmdRollLeft            inputAction = iota
-//  	ActionPcmdRollRight           inputAction = iota
-//  	ActionPcmdPitchForward        inputAction = iota
-//  	ActionPcmdPitchBackward       inputAction = iota
-//  	ActionPcmdYawClockwise        inputAction = iota
-//  	ActionPcmdYawCounterClockwise inputAction = iota
-//  	ActionPcmdGazIncMore          inputAction = iota
-//  	ActionPcmdGazIncLess          inputAction = iota
-//  	ActionTakeoff                 inputAction = iota
-//  	ActionLanding                 inputAction = iota
-//  	ActionEmergency               inputAction = iota
-//  	ActionNavigateHome            inputAction = iota // Check how to implement it in xml line 153
-//  	ActionMoveBy                  inputAction = iota // Check how to implement it in xml line 181
-//  	ActionUserTakeoff             inputAction = iota
-//  	ActionMoveTo                  inputAction = iota // Check how to implement it in xml line 259
-//  	ActionCancelMoveTo            inputAction = iota
-//  	ActionStartPilotedPOI         inputAction = iota
-//  	ActionStopPilotedPOI          inputAction = iota
-//  	ActionCancelMoveBy            inputAction = iota
-//
-//  	// Custom actions.
-//  	//
-//  	ActionHow inputAction = iota
-//  	// Flattrim should be performed before a takeoff
-//  	// to calibrate the drone.
-//  	ActionFlatTrim inputAction = iota
-//  	// TODO: Also check out the <class name="PilotingSettings" id="2">"
-//  	// starting at line 1400 in the ardrone3.xml document, for more
-//  	// commands to eventually implement.
-//  )
+const (
+	// Standard actions.
+	//
+	ActionPcmdFlag                inputAction = iota
+	ActionPcmdRollLeft            inputAction = iota
+	ActionPcmdRollRight           inputAction = iota
+	ActionPcmdPitchForward        inputAction = iota
+	ActionPcmdPitchBackward       inputAction = iota
+	ActionPcmdYawClockwise        inputAction = iota
+	ActionPcmdYawCounterClockwise inputAction = iota
+	ActionPcmdGazInc              inputAction = iota
+	ActionPcmdGazDec              inputAction = iota
+	ActionTakeoff                 inputAction = iota
+	ActionLanding                 inputAction = iota
+	ActionEmergency               inputAction = iota
+	ActionNavigateHome            inputAction = iota // Check how to implement it in xml line 153
+	ActionMoveBy                  inputAction = iota // Check how to implement it in xml line 181
+	ActionUserTakeoff             inputAction = iota
+	ActionMoveTo                  inputAction = iota // Check how to implement it in xml line 259
+	ActionCancelMoveTo            inputAction = iota
+	ActionStartPilotedPOI         inputAction = iota
+	ActionStopPilotedPOI          inputAction = iota
+	ActionCancelMoveBy            inputAction = iota
+
+	// Custom actions.
+	//
+	ActionHow inputAction = iota
+	// Flattrim should be performed before a takeoff
+	// to calibrate the drone.
+	ActionFlatTrim inputAction = iota
+	// TODO: Also check out the <class name="PilotingSettings" id="2">"
+	// starting at line 1400 in the ardrone3.xml document, for more
+	// commands to eventually implement.
+)
 
 // readKeyBoardEvent will read keys pressed on the keyboard,
 // and pass on the correct action to be executed.
@@ -441,11 +452,18 @@ func (d *Drone) readKeyBoardEvent(ctx context.Context) {
 			case event.Key == keyboard.KeyEsc:
 				d.chQuit <- struct{}{}
 			case event.Rune == 'q':
+				// Initiate a reconnect of the network.
 				d.chNetworkConnect <- struct{}{}
 			case event.Rune == 't':
-				d.chInputActions <- Ardrone3PilotingTakeOff{}
+				d.chInputActions <- ActionTakeoff
 			case event.Rune == 'l':
-				d.chInputActions <- Ardrone3PilotingLanding{}
+				d.chInputActions <- ActionLanding
+			case event.Key == keyboard.KeyArrowUp:
+				// Up
+				d.chInputActions <- ActionPcmdGazInc
+			case event.Key == keyboard.KeyArrowDown:
+				// Down
+				d.chInputActions <- ActionPcmdGazDec
 			}
 		}
 
@@ -468,17 +486,48 @@ func (d *Drone) handleInputAction(packetCreator udpPacketCreator, ctx context.Co
 			return
 
 		case action := <-d.chInputActions:
-			switch action.(type) {
-			case Ardrone3PilotingTakeOff:
-				p := packetCreator.encodeCmd(Command(PilotingTakeOff))
+			switch action {
+			case ActionTakeoff:
+				p := packetCreator.encodeCmd(Command(PilotingTakeOff), &Ardrone3PilotingTakeOffArguments{})
 				d.chSendingUDPPacket <- p
-			case Ardrone3PilotingLanding:
-				p := packetCreator.encodeCmd(Command(PilotingLanding))
+			case ActionLanding:
+				p := packetCreator.encodeCmd(Command(PilotingLanding), &Ardrone3PilotingLandingArguments{})
 				d.chSendingUDPPacket <- p
+			case ActionPcmdGazInc:
+				d.pcmd.Gaz++
+				d.pcmd.Gaz = d.CheckLimitPcmdField(d.pcmd.Gaz)
+				arg := &Ardrone3PilotingPCMDArguments{
+					Gaz: d.pcmd.Gaz,
+				}
+				d.chSendingUDPPacket <- packetCreator.encodeCmd(Command(PilotingPCMD), arg)
+			case ActionPcmdGazDec:
+				d.pcmd.Gaz--
+				d.pcmd.Gaz = d.CheckLimitPcmdField(d.pcmd.Gaz)
+				arg := &Ardrone3PilotingPCMDArguments{
+					Gaz: d.pcmd.Gaz,
+				}
+				d.chSendingUDPPacket <- packetCreator.encodeCmd(Command(PilotingPCMD), arg)
 			}
 		}
 
 	}
+}
+
+// CheckLimitPcmdField Will check if the number is within the
+// correct limits, if above or below it will be adjusted, and
+// the adjusted value will be returned.
+// If it is within it's limits, it will be returned as is.
+func (d *Drone) CheckLimitPcmdField(number int8) int8 {
+	switch {
+	case number > 100:
+		return 100
+	case number < -100:
+		return -100
+	default:
+		break
+	}
+
+	return number
 }
 
 // TODO: The Pcmd structure below are really not necessary since
@@ -611,7 +660,7 @@ func (u *udpPacketCreator) encodeAck(targetBufferID int, sequenceNR uint8) netwo
 }
 
 // encodeCmd will encode and prepare the Command package to be sent over UDP.
-func (u *udpPacketCreator) encodeCmd(c Command) networkUDPPacket {
+func (u *udpPacketCreator) encodeCmd(c Command, argument Encoder) networkUDPPacket {
 	// Data types:
 	// The ARNetworkAL library supports 4 types of data:
 	//  • Ack(1): Acknowledgment of previously received data
@@ -670,11 +719,14 @@ func (u *udpPacketCreator) encodeCmd(c Command) networkUDPPacket {
 	// Convert the content of the Command from input argument from struct to []byte
 	pdata := convertCMDToBytes(Command(c))
 
+	adata := argument.Encode()
+	log.Printf("%#v\n", adata)
+
 	// The header size is 7 bytes, 1+1+1+4.
 	const headerSize uint32 = 7
 
 	// Get the size, and convert it to a []byte with length of 4.
-	size := uint32(len(pdata)) + headerSize
+	size := uint32(len(pdata)) + uint32(len(adata)) + headerSize
 	var buf bytes.Buffer
 	err := binary.Write(&buf, binary.LittleEndian, size)
 	if err != nil {
@@ -686,6 +738,7 @@ func (u *udpPacketCreator) encodeCmd(c Command) networkUDPPacket {
 	d := []byte{pdataType, ptargetBufferID, psequenceNR}
 	d = append(d, psize...)
 	d = append(d, pdata...)
+	d = append(d, adata...)
 
 	return networkUDPPacket{
 		data: d,
