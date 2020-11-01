@@ -46,6 +46,12 @@ type Drone struct {
 	// Sending to this channel will disconnect all network related
 	// go routines, and then reconnect to the drone.
 	chNetworkConnect chan struct{}
+	// chPcmdPacketScheduler is used to set the frequency of PcmdPacket's
+	// that will be sent from the controller to the drone.
+	// All Pcmd packets from the controller should go through here to not
+	// overwhelm the drone with to many commands which can interupt
+	// other commands.
+	chPcmdPacketScheduler chan networkUDPPacket
 	// The conn object for the UDP network listener
 	connUDPRead net.PacketConn
 	// The conn object for the UDP connection to send commands to
@@ -71,6 +77,13 @@ func NewDrone() *Drone {
 		chInputActions:      make(chan inputAction),
 		chQuit:              make(chan struct{}),
 		chNetworkConnect:    make(chan struct{}),
+		// Creating a buffer of 100 here which should mean that
+		// it can buffer up commands for the next 5 seconds since
+		// pcmd commands are onyl sent each 50 milli second.
+		//
+		// NB: Not sure how this works out, so it might need to be
+		// adjusted or put to 0.
+		chPcmdPacketScheduler: make(chan networkUDPPacket, 100),
 
 		pcmd: Ardrone3PilotingPCMDArguments{
 			Flag:               0,
@@ -499,18 +512,45 @@ func (d *Drone) handleInputAction(packetCreator udpPacketCreator, ctx context.Co
 				arg := &Ardrone3PilotingPCMDArguments{
 					Gaz: d.pcmd.Gaz,
 				}
-				d.chSendingUDPPacket <- packetCreator.encodeCmd(Command(PilotingPCMD), arg)
+				d.chPcmdPacketScheduler <- packetCreator.encodeCmd(Command(PilotingPCMD), arg)
 			case ActionPcmdGazDec:
 				d.pcmd.Gaz--
 				d.pcmd.Gaz = d.CheckLimitPcmdField(d.pcmd.Gaz)
 				arg := &Ardrone3PilotingPCMDArguments{
 					Gaz: d.pcmd.Gaz,
 				}
-				d.chSendingUDPPacket <- packetCreator.encodeCmd(Command(PilotingPCMD), arg)
+				d.chPcmdPacketScheduler <- packetCreator.encodeCmd(Command(PilotingPCMD), arg)
 			}
 		}
 
 	}
+}
+
+// PcmdPacketScheduler
+// The idea here is for every time.After we check if there
+// is a new received packet. If there is we passing it along
+// on the d.chSendingUDPPacket channel, if there is nothing
+// we just nothing and loop again.
+func (d *Drone) PcmdPacketScheduler(ctx context.Context) {
+	duration1 := time.Duration(50) * time.Millisecond
+
+	for {
+		select {
+		case <-ctx.Done():
+			log.Println("info: exiting PcmdPacketScheduler")
+			return
+		case <-time.After(duration1):
+
+			select {
+			case p := <-d.chPcmdPacketScheduler:
+				d.chSendingUDPPacket <- p
+			default:
+				log.Printf("No packets to send, or buffer full\n")
+			}
+		}
+
+	}
+
 }
 
 // CheckLimitPcmdField Will check if the number is within the
@@ -994,6 +1034,11 @@ func (d *Drone) start() {
 		if err != nil {
 			log.Printf("error: failed to DialUDP: %v", err)
 		}
+
+		// Start the scheduler which will make sure that if there are
+		// Pcmd packets to be sent, they are only sent at a fixed 50
+		// milli second interval.
+		go d.PcmdPacketScheduler(ctx)
 
 		// Start the sender of UDP packets,
 		// will send UDP packets received at the Drone.chSendingUDPPacket
