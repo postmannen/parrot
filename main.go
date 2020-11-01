@@ -73,12 +73,18 @@ func NewDrone() *Drone {
 		portRTPControl: "55005",
 
 		chReceivedUDPPacket: make(chan networkUDPPacket),
-		chSendingUDPPacket:  make(chan networkUDPPacket),
-		chInputActions:      make(chan inputAction),
-		chQuit:              make(chan struct{}),
-		chNetworkConnect:    make(chan struct{}),
-		// Creating a buffer of 100 here which should mean that
-		// it can buffer up commands for the next 5 seconds since
+		// Creating a small buffer here since the input
+		// potentially can come from multiple go routines
+		// who want to send packets out.
+		//
+		// NB: This might not work as intended, and maybe
+		// should be lowered or set to 0
+		chSendingUDPPacket: make(chan networkUDPPacket, 10),
+		chInputActions:     make(chan inputAction),
+		chQuit:             make(chan struct{}),
+		chNetworkConnect:   make(chan struct{}),
+		// Creating a buffer of 20 here which should mean that
+		// it can buffer up commands for the next 1 second since
 		// pcmd commands are onyl sent each 50 milli second.
 		//
 		// NB: Not sure how this works out, so it might need to be
@@ -530,7 +536,8 @@ func (d *Drone) handleInputAction(packetCreator udpPacketCreator, ctx context.Co
 // The idea here is for every time.After we check if there
 // is a new received packet. If there is we passing it along
 // on the d.chSendingUDPPacket channel, if there is nothing
-// we just nothing and loop again.
+// we just nothing and loop again. It will also drop packets
+// if the chSendingUDPPacket channel is congested.
 func (d *Drone) PcmdPacketScheduler(ctx context.Context) {
 	duration1 := time.Duration(50) * time.Millisecond
 
@@ -540,7 +547,6 @@ func (d *Drone) PcmdPacketScheduler(ctx context.Context) {
 			log.Println("info: exiting PcmdPacketScheduler")
 			return
 		case <-time.After(duration1):
-
 			select {
 			case p := <-d.chPcmdPacketScheduler:
 				d.chSendingUDPPacket <- p
@@ -548,9 +554,7 @@ func (d *Drone) PcmdPacketScheduler(ctx context.Context) {
 				log.Printf("No packets to send, or buffer full\n")
 			}
 		}
-
 	}
-
 }
 
 // CheckLimitPcmdField Will check if the number is within the
