@@ -464,6 +464,18 @@ func (d *Drone) readKeyBoardEvent() {
 		}
 	}()
 
+	// Since we are resetting the the go routines and thus are stopping
+	// the listener of the input action channel we need to check if it
+	// is a listener available to avoid deadlock.
+	// checkChOpen is a little helper function for just that.
+	//
+	// NB: This function will drop input actions given if the channel is
+	// closed. A benefit of doing just that is that we avoid any commands
+	// that might have been given while the connection was gone to
+	// suddenly be executed when the connection comes back, but this also
+	// implies that we have mechanism's in place to handle continous
+	// flight of the drone incase there is a drop, or the connection have
+	// to be re-established for some reason
 	checkChOpen := func(ch chan inputAction, ia inputAction) {
 		select {
 		case ch <- ia:
