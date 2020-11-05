@@ -464,6 +464,13 @@ func (d *Drone) readKeyBoardEvent() {
 		}
 	}()
 
+	checkChOpen := func(ch chan inputAction, ia inputAction) {
+		select {
+		case ch <- ia:
+		default:
+		}
+	}
+
 	for {
 		select {
 		case event := <-keysEvents:
@@ -482,25 +489,13 @@ func (d *Drone) readKeyBoardEvent() {
 				default:
 				}
 			case event.Rune == 't':
-				select {
-				case d.chInputActions <- ActionTakeoff:
-				default:
-				}
+				checkChOpen(d.chInputActions, ActionTakeoff)
 			case event.Rune == 'l':
-				select {
-				case d.chInputActions <- ActionLanding:
-				default:
-				}
+				checkChOpen(d.chInputActions, ActionLanding)
 			case event.Key == keyboard.KeyArrowUp:
-				select {
-				case d.chInputActions <- ActionPcmdGazInc:
-				default:
-				}
+				checkChOpen(d.chInputActions, ActionPcmdGazInc)
 			case event.Key == keyboard.KeyArrowDown:
-				select {
-				case d.chInputActions <- ActionPcmdGazDec:
-				default:
-				}
+				checkChOpen(d.chInputActions, ActionPcmdGazDec)
 			}
 		}
 
