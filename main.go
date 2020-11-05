@@ -415,7 +415,8 @@ const (
 	ActionTakeoff                 inputAction = iota
 	ActionLanding                 inputAction = iota
 	ActionEmergency               inputAction = iota
-	ActionNavigateHome            inputAction = iota // Check how to implement it in xml line 153
+	ActionNavigateHomeStart       inputAction = iota // Check how to implement it in xml line 153
+	ActionNavigateHomeStop        inputAction = iota // Check how to implement it in xml line 153
 	ActionMoveBy                  inputAction = iota // Check how to implement it in xml line 181
 	ActionUserTakeoff             inputAction = iota
 	ActionMoveTo                  inputAction = iota // Check how to implement it in xml line 259
@@ -494,10 +495,27 @@ func (d *Drone) readKeyBoardEvent() {
 				checkChOpen(d.chInputActions, ActionTakeoff)
 			case event.Rune == 'l':
 				checkChOpen(d.chInputActions, ActionLanding)
-			case event.Key == keyboard.KeyArrowUp:
+			case event.Rune == 'r':
+				checkChOpen(d.chInputActions, ActionNavigateHomeStart)
+			case event.Rune == 'R':
+
+				checkChOpen(d.chInputActions, ActionNavigateHomeStop)
+			case event.Rune == 'w':
 				checkChOpen(d.chInputActions, ActionPcmdGazInc)
-			case event.Key == keyboard.KeyArrowDown:
+			case event.Rune == 's':
 				checkChOpen(d.chInputActions, ActionPcmdGazDec)
+			case event.Rune == 'a':
+				checkChOpen(d.chInputActions, ActionPcmdYawCounterClockwise)
+			case event.Rune == 'd':
+				checkChOpen(d.chInputActions, ActionPcmdYawClockwise)
+			case event.Key == keyboard.KeyArrowUp:
+				checkChOpen(d.chInputActions, ActionPcmdPitchForward)
+			case event.Key == keyboard.KeyArrowDown:
+				checkChOpen(d.chInputActions, ActionPcmdPitchBackward)
+			case event.Key == keyboard.KeyArrowLeft:
+				checkChOpen(d.chInputActions, ActionPcmdRollLeft)
+			case event.Key == keyboard.KeyArrowRight:
+				checkChOpen(d.chInputActions, ActionPcmdRollRight)
 			}
 		}
 
@@ -527,6 +545,13 @@ func (d *Drone) handleInputAction(packetCreator udpPacketCreator, ctx context.Co
 			case ActionLanding:
 				p := packetCreator.encodeCmd(Command(PilotingLanding), &Ardrone3PilotingLandingArguments{})
 				d.chSendingUDPPacket <- p
+			case ActionNavigateHomeStart:
+				p := packetCreator.encodeCmd(Command(PilotingNavigateHome), &Ardrone3PilotingNavigateHomeArguments{Start: 1})
+				d.chSendingUDPPacket <- p
+			case ActionNavigateHomeStop:
+				p := packetCreator.encodeCmd(Command(PilotingNavigateHome), &Ardrone3PilotingNavigateHomeArguments{Start: 0})
+				d.chSendingUDPPacket <- p
+
 			case ActionPcmdGazInc:
 				d.pcmd.Gaz++
 				d.pcmd.Gaz = d.CheckLimitPcmdField(d.pcmd.Gaz)
@@ -539,6 +564,51 @@ func (d *Drone) handleInputAction(packetCreator udpPacketCreator, ctx context.Co
 				d.pcmd.Gaz = d.CheckLimitPcmdField(d.pcmd.Gaz)
 				arg := &Ardrone3PilotingPCMDArguments{
 					Gaz: d.pcmd.Gaz,
+				}
+				d.chPcmdPacketScheduler <- packetCreator.encodeCmd(Command(PilotingPCMD), arg)
+
+			case ActionPcmdYawCounterClockwise:
+				d.pcmd.Yaw--
+				d.pcmd.Yaw = d.CheckLimitPcmdField(d.pcmd.Yaw)
+				arg := &Ardrone3PilotingPCMDArguments{
+					Yaw: d.pcmd.Yaw,
+				}
+				d.chPcmdPacketScheduler <- packetCreator.encodeCmd(Command(PilotingPCMD), arg)
+			case ActionPcmdYawClockwise:
+				d.pcmd.Yaw++
+				d.pcmd.Yaw = d.CheckLimitPcmdField(d.pcmd.Yaw)
+				arg := &Ardrone3PilotingPCMDArguments{
+					Yaw: d.pcmd.Yaw,
+				}
+				d.chPcmdPacketScheduler <- packetCreator.encodeCmd(Command(PilotingPCMD), arg)
+
+			case ActionPcmdPitchForward:
+				d.pcmd.Pitch++
+				d.pcmd.Pitch = d.CheckLimitPcmdField(d.pcmd.Pitch)
+				arg := &Ardrone3PilotingPCMDArguments{
+					Pitch: d.pcmd.Pitch,
+				}
+				d.chPcmdPacketScheduler <- packetCreator.encodeCmd(Command(PilotingPCMD), arg)
+			case ActionPcmdPitchBackward:
+				d.pcmd.Pitch--
+				d.pcmd.Pitch = d.CheckLimitPcmdField(d.pcmd.Pitch)
+				arg := &Ardrone3PilotingPCMDArguments{
+					Pitch: d.pcmd.Pitch,
+				}
+				d.chPcmdPacketScheduler <- packetCreator.encodeCmd(Command(PilotingPCMD), arg)
+
+			case ActionPcmdRollLeft:
+				d.pcmd.Roll--
+				d.pcmd.Roll = d.CheckLimitPcmdField(d.pcmd.Roll)
+				arg := &Ardrone3PilotingPCMDArguments{
+					Roll: d.pcmd.Roll,
+				}
+				d.chPcmdPacketScheduler <- packetCreator.encodeCmd(Command(PilotingPCMD), arg)
+			case ActionPcmdRollRight:
+				d.pcmd.Roll--
+				d.pcmd.Roll = d.CheckLimitPcmdField(d.pcmd.Roll)
+				arg := &Ardrone3PilotingPCMDArguments{
+					Roll: d.pcmd.Roll,
 				}
 				d.chPcmdPacketScheduler <- packetCreator.encodeCmd(Command(PilotingPCMD), arg)
 			}
