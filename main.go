@@ -410,8 +410,10 @@ const (
 	ActionPcmdPitchBackward       inputAction = iota
 	ActionPcmdYawClockwise        inputAction = iota
 	ActionPcmdYawCounterClockwise inputAction = iota
+	ActionPcmdHover               inputAction = iota
 	ActionPcmdGazInc              inputAction = iota
 	ActionPcmdGazDec              inputAction = iota
+	ActionPcmdRepeatLastCmd       inputAction = iota
 	ActionTakeoff                 inputAction = iota
 	ActionLanding                 inputAction = iota
 	ActionEmergency               inputAction = iota
@@ -508,6 +510,10 @@ func (d *Drone) readKeyBoardEvent() {
 				checkChOpen(d.chInputActions, ActionPcmdYawCounterClockwise)
 			case event.Rune == 'd':
 				checkChOpen(d.chInputActions, ActionPcmdYawClockwise)
+
+			case event.Rune == 'h':
+				checkChOpen(d.chInputActions, ActionPcmdHover)
+
 			case event.Key == keyboard.KeyArrowUp:
 				checkChOpen(d.chInputActions, ActionPcmdPitchForward)
 			case event.Key == keyboard.KeyArrowDown:
@@ -516,6 +522,8 @@ func (d *Drone) readKeyBoardEvent() {
 				checkChOpen(d.chInputActions, ActionPcmdRollLeft)
 			case event.Key == keyboard.KeyArrowRight:
 				checkChOpen(d.chInputActions, ActionPcmdRollRight)
+			case event.Key == keyboard.KeySpace:
+				checkChOpen(d.chInputActions, ActionPcmdRepeatLastCmd)
 			}
 		}
 
@@ -553,64 +561,120 @@ func (d *Drone) handleInputAction(packetCreator udpPacketCreator, ctx context.Co
 				d.chSendingUDPPacket <- p
 
 			case ActionPcmdGazInc:
+				if d.pcmd.Gaz < 0 {
+					d.pcmd.Gaz = 0
+				}
+				d.pcmd.Flag = 1
 				d.pcmd.Gaz++
 				d.pcmd.Gaz = d.CheckLimitPcmdField(d.pcmd.Gaz)
 				arg := &Ardrone3PilotingPCMDArguments{
-					Gaz: d.pcmd.Gaz,
+					Flag: 1,
+					Gaz:  d.pcmd.Gaz,
 				}
 				d.chPcmdPacketScheduler <- packetCreator.encodeCmd(Command(PilotingPCMD), arg)
 			case ActionPcmdGazDec:
+				if d.pcmd.Gaz > 0 {
+					d.pcmd.Gaz = 0
+				}
+				d.pcmd.Flag = 1
 				d.pcmd.Gaz--
 				d.pcmd.Gaz = d.CheckLimitPcmdField(d.pcmd.Gaz)
 				arg := &Ardrone3PilotingPCMDArguments{
-					Gaz: d.pcmd.Gaz,
+					Flag: 1,
+					Gaz:  d.pcmd.Gaz,
 				}
 				d.chPcmdPacketScheduler <- packetCreator.encodeCmd(Command(PilotingPCMD), arg)
 
 			case ActionPcmdYawCounterClockwise:
+				if d.pcmd.Yaw > 0 {
+					d.pcmd.Yaw = 0
+				}
+				d.pcmd.Flag = 1
 				d.pcmd.Yaw--
 				d.pcmd.Yaw = d.CheckLimitPcmdField(d.pcmd.Yaw)
 				arg := &Ardrone3PilotingPCMDArguments{
-					Yaw: d.pcmd.Yaw,
+					Flag: 1,
+					Yaw:  d.pcmd.Yaw,
 				}
 				d.chPcmdPacketScheduler <- packetCreator.encodeCmd(Command(PilotingPCMD), arg)
 			case ActionPcmdYawClockwise:
+				if d.pcmd.Yaw < 0 {
+					d.pcmd.Yaw = 0
+				}
+				d.pcmd.Flag = 1
 				d.pcmd.Yaw++
 				d.pcmd.Yaw = d.CheckLimitPcmdField(d.pcmd.Yaw)
 				arg := &Ardrone3PilotingPCMDArguments{
-					Yaw: d.pcmd.Yaw,
+					Flag: 1,
+					Yaw:  d.pcmd.Yaw,
 				}
 				d.chPcmdPacketScheduler <- packetCreator.encodeCmd(Command(PilotingPCMD), arg)
 
+			case ActionPcmdHover:
+				d.pcmd = Ardrone3PilotingPCMDArguments{
+					Flag:               0, // TODO: maybe set this one to ZERO ?
+					Gaz:                0,
+					Pitch:              0,
+					Roll:               0,
+					TimestampAndSeqNum: 0,
+					Yaw:                0,
+				}
+
+				arg := d.pcmd
+				d.chPcmdPacketScheduler <- packetCreator.encodeCmd(Command(PilotingPCMD), arg)
+
 			case ActionPcmdPitchForward:
+				if d.pcmd.Pitch < 0 {
+					d.pcmd.Pitch = 0
+				}
+				d.pcmd.Flag = 1
 				d.pcmd.Pitch++
 				d.pcmd.Pitch = d.CheckLimitPcmdField(d.pcmd.Pitch)
 				arg := &Ardrone3PilotingPCMDArguments{
+					Flag:  1,
 					Pitch: d.pcmd.Pitch,
 				}
 				d.chPcmdPacketScheduler <- packetCreator.encodeCmd(Command(PilotingPCMD), arg)
 			case ActionPcmdPitchBackward:
+				if d.pcmd.Pitch > 0 {
+					d.pcmd.Pitch = 0
+				}
+				d.pcmd.Flag = 1
 				d.pcmd.Pitch--
 				d.pcmd.Pitch = d.CheckLimitPcmdField(d.pcmd.Pitch)
 				arg := &Ardrone3PilotingPCMDArguments{
+					Flag:  1,
 					Pitch: d.pcmd.Pitch,
 				}
 				d.chPcmdPacketScheduler <- packetCreator.encodeCmd(Command(PilotingPCMD), arg)
 
 			case ActionPcmdRollLeft:
+				if d.pcmd.Roll > 0 {
+					d.pcmd.Roll = 0
+				}
+				d.pcmd.Flag = 1
 				d.pcmd.Roll--
 				d.pcmd.Roll = d.CheckLimitPcmdField(d.pcmd.Roll)
 				arg := &Ardrone3PilotingPCMDArguments{
+					Flag: 1,
 					Roll: d.pcmd.Roll,
 				}
 				d.chPcmdPacketScheduler <- packetCreator.encodeCmd(Command(PilotingPCMD), arg)
 			case ActionPcmdRollRight:
+				if d.pcmd.Roll < 0 {
+					d.pcmd.Roll = 0
+				}
+				d.pcmd.Flag = 1
 				d.pcmd.Roll--
 				d.pcmd.Roll = d.CheckLimitPcmdField(d.pcmd.Roll)
 				arg := &Ardrone3PilotingPCMDArguments{
+					Flag: 1,
 					Roll: d.pcmd.Roll,
 				}
 				d.chPcmdPacketScheduler <- packetCreator.encodeCmd(Command(PilotingPCMD), arg)
+
+			case ActionPcmdRepeatLastCmd:
+				d.chPcmdPacketScheduler <- packetCreator.encodeCmd(Command(PilotingPCMD), d.pcmd)
 			}
 		}
 
@@ -649,12 +713,12 @@ func (d *Drone) PcmdPacketScheduler(ctx context.Context) {
 func (d *Drone) CheckLimitPcmdField(number int8) int8 {
 	switch {
 	case number > 100:
-		return 100
+		number = 100
 	case number < -100:
-		return -100
-	default:
-		break
+		number = -100
 	}
+
+	log.Printf("value of PCMD number = %v\n", number)
 
 	return number
 }
