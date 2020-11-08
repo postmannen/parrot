@@ -99,6 +99,17 @@ func (g *GPS) StartHandling() {
 	}
 }
 
+// TODO:
+// We can send moveTo messages telling the location to move to with the
+// Ardrone3Pilotingmoveto command.
+// We can check when that request is fullfilled by checking for a message
+// of type Ardrone3PilotingStatemoveToChanged. Maybe need timeout for this ??
+// We can then issue the next command.
+// For now it seems like we will need a buffer for the moveTo commands, so it
+// will pick the next when the previous is done.
+// Pressing space should add the next moveTo command to the buffer.
+// moveTo paths should be able to be read from file, or other API ? Geofencing ?
+
 // NewDrone will initalize all the variables needed for a drone,
 // like ports used, ip adresses, etc.
 func NewDrone() *Drone {
