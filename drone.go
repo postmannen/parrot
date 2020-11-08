@@ -52,7 +52,21 @@ type Drone struct {
 	gps GPS
 }
 
+// gpsLatLongAlt is used for messaging position data between
+// go routines.
+type gpsLatLonAlt struct {
+	latitude float64
+	// Longitude East/West
+	longitude float64
+	// Altitude height in meters above sea level
+	altitude float64
+}
+
+// GPS will hold all the current values of the current
+// gps location, and also the coordinate to move to
+// next if moveTo action have been issued.
 type GPS struct {
+	chCurrentLocation chan gpsLatLonAlt
 	// connected ?
 	connected bool
 	// latitude North/South
@@ -70,6 +84,21 @@ type GPS struct {
 	altitudeMoveto float64
 }
 
+// StartHandling, start handling incomming gps packages, and fill
+// the registers with the current location values.
+func (g *GPS) StartHandling() {
+	for v := range g.chCurrentLocation {
+		if v.latitude == 500 || v.longitude == 500 || v.altitude == 500 {
+			g.connected = false
+		}
+		g.latitude = v.latitude
+		g.longitude = v.longitude
+		g.altitude = v.altitude
+
+		log.Printf("gps location data: %#v\n", g)
+	}
+}
+
 // NewDrone will initalize all the variables needed for a drone,
 // like ports used, ip adresses, etc.
 func NewDrone() *Drone {
@@ -81,24 +110,12 @@ func NewDrone() *Drone {
 		portRTPStream:  "55004",
 		portRTPControl: "55005",
 
-		chReceivedUDPPacket: make(chan networkUDPPacket),
-		// Creating a small buffer here since the input
-		// potentially can come from multiple go routines
-		// who want to send packets out.
-		//
-		// NB: This might not work as intended, and maybe
-		// should be lowered or set to 0
-		chSendingUDPPacket: make(chan networkUDPPacket, 10),
-		chInputActions:     make(chan inputAction),
-		chQuit:             make(chan struct{}),
-		chNetworkConnect:   make(chan struct{}),
-		// Creating a buffer of 20 here which should mean that
-		// it can buffer up commands for the next 1 second since
-		// pcmd commands are onyl sent each 50 milli second.
-		//
-		// NB: Not sure how this works out, so it might need to be
-		// adjusted or put to 0.
-		chPcmdPacketScheduler: make(chan networkUDPPacket, 100),
+		chReceivedUDPPacket:   make(chan networkUDPPacket),
+		chSendingUDPPacket:    make(chan networkUDPPacket),
+		chInputActions:        make(chan inputAction),
+		chQuit:                make(chan struct{}),
+		chNetworkConnect:      make(chan struct{}),
+		chPcmdPacketScheduler: make(chan networkUDPPacket),
 
 		pcmd: Ardrone3PilotingPCMDArguments{
 			Flag:               0,
@@ -115,13 +132,14 @@ func NewDrone() *Drone {
 		// initiate a moveTo when there is no connection, or add some
 		// lat/lon distance if the current register value are 500.
 		gps: GPS{
-			connected:       false,
-			latitude:        500,
-			longitude:       500,
-			altitude:        500,
-			latitudeMoveTo:  500,
-			longitudeMoveTo: 500,
-			altitudeMoveto:  500,
+			chCurrentLocation: make(chan gpsLatLonAlt),
+			connected:         false,
+			latitude:          500,
+			longitude:         500,
+			altitude:          500,
+			latitudeMoveTo:    500,
+			longitudeMoveTo:   500,
+			altitudeMoveto:    500,
 		},
 	}
 
@@ -137,6 +155,10 @@ func NewDrone() *Drone {
 func (d *Drone) Start() {
 	// Check for keyboard press, and generate appropriate inputActions's.
 	go d.readKeyBoardEvent()
+
+	// Start handling incomming gps packages, and fill the registers with
+	// the current location values.
+	go d.gps.StartHandling()
 
 	for {
 		var err error
