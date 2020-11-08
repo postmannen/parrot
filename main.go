@@ -59,6 +59,12 @@ type Drone struct {
 	connUDPWrite *net.UDPConn
 	// Piloting Command
 	pcmd Ardrone3PilotingPCMDArguments
+	// Latitude North/South
+	latitude float64
+	// Longitude East/West
+	longitude float64
+	// Altitude height in meters above sea level
+	altitude float64
 }
 
 // NewDrone will initalize all the variables needed for a drone,
@@ -376,11 +382,16 @@ func (d *Drone) handleReadPackages(packetCreator *udpPacketCreator, ctx context.
 				fmt.Printf("-- cmd = %+v\r\n", cmd)
 				fmt.Printf("-- Value of cmdArgs = %+v\r\n", cmdArgs)
 				fmt.Printf("-- Type of cmdArgs = %+T\r\n", cmdArgs)
-				switch cmdArgs.(type) {
+				switch cmdArgs := cmdArgs.(type) {
 				case Ardrone3CameraStateOrientationArguments:
 					//log.Printf("** EXECUTING ACTION FOR TYPE, Ardrone3CameraStateOrientationArguments ...........\r\n")
 				case Ardrone3PilotingStateAttitudeChangedArguments:
 					//log.Printf("** EXECUTING ACTION FOR TYPE, Ardrone3PilotingStateAttitudeChangedArguments\r\n")
+				case Ardrone3PilotingStateGpsLocationChangedArguments:
+					d.latitude = cmdArgs.Latitude
+					d.longitude = cmdArgs.Longitude
+					d.altitude = cmdArgs.Altitude
+					log.Printf("GpsLocation arguments: lat=%v, lon=%v, alt=%v\n", d.latitude, d.longitude, d.altitude)
 				}
 				fmt.Printf("-----------------------------------------------------------\r\n")
 
