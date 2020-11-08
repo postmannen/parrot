@@ -1,7 +1,7 @@
 // The latest version of the ardrone3.xml document can be found at
 // https://github.com/Parrot-Developers/arsdk-xml/tree/master/xml
 
-package main
+package parrotbebop
 
 import (
 	"context"
@@ -48,12 +48,26 @@ type Drone struct {
 	connUDPWrite *net.UDPConn
 	// Piloting Command
 	pcmd Ardrone3PilotingPCMDArguments
-	// Latitude North/South
+	// gps Data
+	gps GPS
+}
+
+type GPS struct {
+	// connected ?
+	connected bool
+	// latitude North/South
 	latitude float64
 	// Longitude East/West
 	longitude float64
 	// Altitude height in meters above sea level
 	altitude float64
+
+	// latitude North/South
+	latitudeMoveTo float64
+	// Longitude East/West
+	longitudeMoveTo float64
+	// Altitude height in meters above sea level
+	altitudeMoveto float64
 }
 
 // NewDrone will initalize all the variables needed for a drone,
@@ -94,6 +108,21 @@ func NewDrone() *Drone {
 			Gaz:                0,
 			TimestampAndSeqNum: 0,
 		},
+
+		// The default gps values received from the drone when not
+		// connected is 500. We set all the values 500 and check
+		// later in the code for that value, so we for example don't
+		// initiate a moveTo when there is no connection, or add some
+		// lat/lon distance if the current register value are 500.
+		gps: GPS{
+			connected:       false,
+			latitude:        500,
+			longitude:       500,
+			altitude:        500,
+			latitudeMoveTo:  500,
+			longitudeMoveTo: 500,
+			altitudeMoveto:  500,
+		},
 	}
 
 	go func() {
@@ -105,7 +134,7 @@ func NewDrone() *Drone {
 	return d
 }
 
-func (d *Drone) start() {
+func (d *Drone) Start() {
 	// Check for keyboard press, and generate appropriate inputActions's.
 	go d.readKeyBoardEvent()
 
@@ -181,10 +210,4 @@ func (d *Drone) start() {
 		continue
 
 	}
-}
-
-func main() {
-	drone := NewDrone()
-
-	drone.start()
 }

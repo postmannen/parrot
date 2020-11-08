@@ -1,4 +1,4 @@
-package main
+package parrotbebop
 
 import (
 	"bytes"
@@ -279,22 +279,9 @@ func (d *Drone) handleReadPackages(packetCreator *udpPacketCreator, ctx context.
 					log.Println("error: frame.decode: ", err)
 					break
 				}
-				fmt.Printf("----------COMMAND-------------------------------------------\r\n")
-				fmt.Printf("-- cmd = %+v\r\n", cmd)
-				fmt.Printf("-- Value of cmdArgs = %+v\r\n", cmdArgs)
-				fmt.Printf("-- Type of cmdArgs = %+T\r\n", cmdArgs)
-				switch cmdArgs := cmdArgs.(type) {
-				case Ardrone3CameraStateOrientationArguments:
-					//log.Printf("** EXECUTING ACTION FOR TYPE, Ardrone3CameraStateOrientationArguments ...........\r\n")
-				case Ardrone3PilotingStateAttitudeChangedArguments:
-					//log.Printf("** EXECUTING ACTION FOR TYPE, Ardrone3PilotingStateAttitudeChangedArguments\r\n")
-				case Ardrone3PilotingStateGpsLocationChangedArguments:
-					d.latitude = cmdArgs.Latitude
-					d.longitude = cmdArgs.Longitude
-					d.altitude = cmdArgs.Altitude
-					log.Printf("GpsLocation arguments: lat=%v, lon=%v, alt=%v\n", d.latitude, d.longitude, d.altitude)
-				}
-				fmt.Printf("-----------------------------------------------------------\r\n")
+				// Check the type of the command received from drone, and do
+				// some action.
+				d.checkCmdFromDrone(cmd, cmdArgs)
 
 				// If no more frames, break out of for loop to read
 				// the next package received.

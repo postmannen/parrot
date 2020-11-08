@@ -1,4 +1,4 @@
-package main
+package parrotbebop
 
 import (
 	"encoding/binary"
