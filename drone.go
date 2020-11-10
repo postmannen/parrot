@@ -5,6 +5,7 @@ package parrotbebop
 
 import (
 	"context"
+	"io"
 	"log"
 	"net"
 	"os"
@@ -50,53 +51,9 @@ type Drone struct {
 	pcmd Ardrone3PilotingPCMDArguments
 	// gps Data
 	gps GPS
-}
-
-// gpsLatLongAlt is used for messaging position data between
-// go routines.
-type gpsLatLonAlt struct {
-	latitude float64
-	// Longitude East/West
-	longitude float64
-	// Altitude height in meters above sea level
-	altitude float64
-}
-
-// GPS will hold all the current values of the current
-// gps location, and also the coordinate to move to
-// next if moveTo action have been issued.
-type GPS struct {
-	chCurrentLocation chan gpsLatLonAlt
-	// connected ?
-	connected bool
-	// latitude North/South
-	latitude float64
-	// Longitude East/West
-	longitude float64
-	// Altitude height in meters above sea level
-	altitude float64
-
-	// latitude North/South
-	latitudeMoveTo float64
-	// Longitude East/West
-	longitudeMoveTo float64
-	// Altitude height in meters above sea level
-	altitudeMoveto float64
-}
-
-// StartHandling, start handling incomming gps packages, and fill
-// the registers with the current location values.
-func (g *GPS) StartHandling() {
-	for v := range g.chCurrentLocation {
-		if v.latitude == 500 || v.longitude == 500 || v.altitude == 500 {
-			g.connected = false
-		}
-		g.latitude = v.latitude
-		g.longitude = v.longitude
-		g.altitude = v.altitude
-
-		log.Printf("gps location data: %#v\n", g)
-	}
+	// moveToBuffer is a FIFO buffer for storing the gps positions
+	// of the route to fly.
+	moveToBuffer *moveToBuffer
 }
 
 // TODO:
@@ -152,6 +109,8 @@ func NewDrone() *Drone {
 			longitudeMoveTo:   500,
 			altitudeMoveto:    500,
 		},
+
+		moveToBuffer: newMoveToBuffer(),
 	}
 
 	go func() {
@@ -161,6 +120,102 @@ func NewDrone() *Drone {
 	}()
 
 	return d
+}
+
+// -----------------------------GPS Related---------------------------------------
+
+// gpsLatLongAlt is used for messaging position data between
+// go routines.
+type gpsLatLonAlt struct {
+	latitude float64
+	// Longitude East/West
+	longitude float64
+	// Altitude height in meters above sea level
+	altitude float64
+}
+
+// GPS will hold all the current values of the current
+// gps location, and also the coordinate to move to
+// next if moveTo action have been issued.
+type GPS struct {
+	chCurrentLocation chan gpsLatLonAlt
+	// connected ?
+	connected bool
+	// latitude North/South
+	latitude float64
+	// Longitude East/West
+	longitude float64
+	// Altitude height in meters above sea level
+	altitude float64
+
+	// latitude North/South
+	latitudeMoveTo float64
+	// Longitude East/West
+	longitudeMoveTo float64
+	// Altitude height in meters above sea level
+	altitudeMoveto float64
+}
+
+// StartHandling, start handling incomming gps packages, and fill
+// the registers with the current location values.
+func (g *GPS) StartHandling() {
+	for v := range g.chCurrentLocation {
+		if v.latitude == 500 || v.longitude == 500 || v.altitude == 500 {
+			g.connected = false
+		}
+		g.latitude = v.latitude
+		g.longitude = v.longitude
+		g.altitude = v.altitude
+
+		log.Printf("gps location data: %#v\n", g)
+	}
+}
+
+// --------------------------------------------------------------------
+
+// moveToBuffer holds the data of the buffer,
+type moveToBuffer struct {
+	data          []gpsLatLonAlt
+	chNewWayPoint chan gpsLatLonAlt
+}
+
+// newmoveToBuffer is a push/pop storage for values.
+func newMoveToBuffer() *moveToBuffer {
+	b := moveToBuffer{
+		chNewWayPoint: make(chan gpsLatLonAlt),
+	}
+
+	// Start the moveToBuffer listener, which basically will start
+	// listening on the channel for moveTo messages, and add them
+	// to the moveTo buffer
+	go b.start()
+
+	return &b
+}
+
+func (s *moveToBuffer) start() {
+	for {
+		wp := <-s.chNewWayPoint
+		s.push(wp)
+	}
+}
+
+// push will add another item to the end of the buffer with a normal append
+func (s *moveToBuffer) push(d gpsLatLonAlt) {
+	s.data = append(s.data, d)
+}
+
+// pop will remove and return the first element of the buffer,
+// and will return io.EOF if buffer is empty.
+func (s *moveToBuffer) pop() (gpsLatLonAlt, error) {
+	if len(s.data) == 0 {
+		return gpsLatLonAlt{}, io.EOF
+	}
+
+	v := s.data[0]
+	s.data = append(s.data[0:0], s.data[1:]...)
+
+	return v, nil
 }
 
 func (d *Drone) Start() {
