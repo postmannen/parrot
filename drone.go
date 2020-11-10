@@ -154,6 +154,11 @@ type GPS struct {
 	longitudeMoveTo float64
 	// Altitude height in meters above sea level
 	altitudeMoveto float64
+	// Are the drone currently in a moveTo action ?
+	// This value should be set to true when a moveTo are started,
+	// and it should be set to false when a message from the drone
+	// of type Ardrone3PilotingStatemoveToChanged are received.
+	doingMoveTo bool
 }
 
 // StartHandling, start handling incomming gps packages, and fill

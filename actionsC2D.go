@@ -350,6 +350,8 @@ func (d *Drone) handleInputAction(packetCreator udpPacketCreator, ctx context.Co
 				// The idea here is to use this action with a moveTo command to the drone,
 				// and giving the current moveTo variables as arguments to the moveTo
 				// command.
+				d.gps.doingMoveTo = true
+				// TODO: send the moveTo command here!!!
 				log.Printf("*************************************************************\n")
 				log.Printf("ActionMoveToExecute: current value of buffer: %#v\n", d.gps)
 				log.Printf("*************************************************************\n")

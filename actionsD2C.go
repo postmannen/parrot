@@ -22,6 +22,9 @@ func (d *Drone) checkCmdFromDrone(cmd protocolARCommands, cmdArgs interface{}) {
 			longitude: cmdArgs.Longitude,
 			altitude:  cmdArgs.Altitude,
 		}
+	case Ardrone3PilotingStatemoveToChanged:
+		// Indicated that the drone have moved to the asked position.
+		d.gps.doingMoveTo = false
 	}
 	fmt.Printf("-----------------------------------------------------------\r\n")
 
