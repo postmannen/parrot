@@ -12,29 +12,35 @@ type inputAction int
 const (
 	// Standard actions.
 	//
-	ActionPcmdFlag                inputAction = iota
-	ActionPcmdRollLeft            inputAction = iota
-	ActionPcmdRollRight           inputAction = iota
-	ActionPcmdPitchForward        inputAction = iota
-	ActionPcmdPitchBackward       inputAction = iota
-	ActionPcmdYawClockwise        inputAction = iota
-	ActionPcmdYawCounterClockwise inputAction = iota
-	ActionPcmdHover               inputAction = iota
-	ActionPcmdGazInc              inputAction = iota
-	ActionPcmdGazDec              inputAction = iota
-	ActionPcmdRepeatLastCmd       inputAction = iota
-	ActionTakeoff                 inputAction = iota
-	ActionLanding                 inputAction = iota
-	ActionEmergency               inputAction = iota
-	ActionNavigateHomeStart       inputAction = iota // Check how to implement it in xml line 153
-	ActionNavigateHomeStop        inputAction = iota // Check how to implement it in xml line 153
-	ActionMoveBy                  inputAction = iota // Check how to implement it in xml line 181
-	ActionUserTakeoff             inputAction = iota
-	ActionMoveTo                  inputAction = iota // Check how to implement it in xml line 259
-	ActionCancelMoveTo            inputAction = iota
-	ActionStartPilotedPOI         inputAction = iota
-	ActionStopPilotedPOI          inputAction = iota
-	ActionCancelMoveBy            inputAction = iota
+	ActionPcmdFlag                       inputAction = iota
+	ActionPcmdRollLeft                   inputAction = iota
+	ActionPcmdRollRight                  inputAction = iota
+	ActionPcmdPitchForward               inputAction = iota
+	ActionPcmdPitchBackward              inputAction = iota
+	ActionPcmdYawClockwise               inputAction = iota
+	ActionPcmdYawCounterClockwise        inputAction = iota
+	ActionPcmdHover                      inputAction = iota
+	ActionPcmdGazInc                     inputAction = iota
+	ActionPcmdGazDec                     inputAction = iota
+	ActionPcmdRepeatLastCmd              inputAction = iota
+	ActionTakeoff                        inputAction = iota
+	ActionLanding                        inputAction = iota
+	ActionEmergency                      inputAction = iota
+	ActionNavigateHomeStart              inputAction = iota // Check how to implement it in xml line 153
+	ActionNavigateHomeStop               inputAction = iota // Check how to implement it in xml line 153
+	ActionMoveBy                         inputAction = iota // Check how to implement it in xml line 181
+	ActionUserTakeoff                    inputAction = iota
+	ActionMoveTo                         inputAction = iota // Check how to implement it in xml line 259
+	ActionCancelMoveTo                   inputAction = iota
+	ActionStartPilotedPOI                inputAction = iota
+	ActionStopPilotedPOI                 inputAction = iota
+	ActionCancelMoveBy                   inputAction = iota
+	ActionMoveToLatInc                   inputAction = iota // Direction North
+	ActionMoveToLatDec                   inputAction = iota // Direction South
+	ActionMoveToLonInc                   inputAction = iota // Direction East
+	ActionMoveToLonDec                   inputAction = iota // Direction West
+	ActionMoveToExecute                  inputAction = iota // Execute moveTo next waypoint
+	ActionMoveToSetBufferCurrentPosition inputAction = iota // Set buffer to current position
 
 	// Custom actions.
 	//
@@ -109,8 +115,8 @@ func (d *Drone) readKeyBoardEvent() {
 			case event.Rune == 'r':
 				checkChOpen(d.chInputActions, ActionNavigateHomeStart)
 			case event.Rune == 'R':
-
 				checkChOpen(d.chInputActions, ActionNavigateHomeStop)
+
 			case event.Rune == 'w':
 				checkChOpen(d.chInputActions, ActionPcmdGazInc)
 			case event.Rune == 's':
@@ -119,9 +125,6 @@ func (d *Drone) readKeyBoardEvent() {
 				checkChOpen(d.chInputActions, ActionPcmdYawCounterClockwise)
 			case event.Rune == 'd':
 				checkChOpen(d.chInputActions, ActionPcmdYawClockwise)
-
-			case event.Rune == 'h':
-				checkChOpen(d.chInputActions, ActionPcmdHover)
 
 			case event.Key == keyboard.KeyArrowUp:
 				checkChOpen(d.chInputActions, ActionPcmdPitchForward)
@@ -133,6 +136,23 @@ func (d *Drone) readKeyBoardEvent() {
 				checkChOpen(d.chInputActions, ActionPcmdRollRight)
 			case event.Key == keyboard.KeySpace:
 				checkChOpen(d.chInputActions, ActionPcmdRepeatLastCmd)
+
+			case event.Key == keyboard.KeyCtrlW:
+				checkChOpen(d.chInputActions, ActionMoveToLatInc)
+			case event.Key == keyboard.KeyCtrlS:
+				checkChOpen(d.chInputActions, ActionMoveToLatDec)
+			case event.Key == keyboard.KeyCtrlA:
+				checkChOpen(d.chInputActions, ActionMoveToLonDec)
+			case event.Key == keyboard.KeyCtrlD:
+				checkChOpen(d.chInputActions, ActionMoveToLonInc)
+			case event.Key == keyboard.KeyCtrlX:
+				checkChOpen(d.chInputActions, ActionMoveToSetBufferCurrentPosition)
+			case event.Key == keyboard.KeyCtrlSpace:
+				checkChOpen(d.chInputActions, ActionMoveToExecute)
+
+			case event.Rune == 'h':
+				checkChOpen(d.chInputActions, ActionPcmdHover)
+
 			}
 		}
 
@@ -155,6 +175,7 @@ func (d *Drone) handleInputAction(packetCreator udpPacketCreator, ctx context.Co
 			return
 
 		case action := <-d.chInputActions:
+			// --------------Standard actions
 			switch action {
 			case ActionTakeoff:
 				p := packetCreator.encodeCmd(Command(PilotingTakeOff), &Ardrone3PilotingTakeOffArguments{})
@@ -169,6 +190,8 @@ func (d *Drone) handleInputAction(packetCreator udpPacketCreator, ctx context.Co
 				p := packetCreator.encodeCmd(Command(PilotingNavigateHome), &Ardrone3PilotingNavigateHomeArguments{Start: 0})
 				d.chSendingUDPPacket <- p
 
+			// --------------emulation of rc-controller sticks
+			// using a,w,s,d and arrow keys.
 			case ActionPcmdGazInc:
 				if d.pcmd.Gaz < 0 {
 					d.pcmd.Gaz = 0
@@ -281,9 +304,55 @@ func (d *Drone) handleInputAction(packetCreator udpPacketCreator, ctx context.Co
 					Roll: d.pcmd.Roll,
 				}
 				d.chPcmdPacketScheduler <- packetCreator.encodeCmd(Command(PilotingPCMD), arg)
-
 			case ActionPcmdRepeatLastCmd:
 				d.chPcmdPacketScheduler <- packetCreator.encodeCmd(Command(PilotingPCMD), d.pcmd)
+
+			// --------------moveTo
+			// The commands below is a bit overly complicated to use, but they
+			// are implemented to manually be able to test out the moveTo feature.
+			case ActionMoveToLatInc:
+				if d.gps.latitudeMoveTo != 500 {
+					d.gps.latitudeMoveTo = d.gps.latitudeMoveTo + 0.00001
+					log.Printf("moveTo: %#v\n", d.gps)
+				} else {
+					log.Printf("ActionMoveToLatInc: failed, no connection with GPS: %v\n", d.gps.latitude)
+				}
+			case ActionMoveToLatDec:
+				if d.gps.latitudeMoveTo != 500 {
+					d.gps.latitudeMoveTo = d.gps.latitudeMoveTo - 0.00001
+					log.Printf("moveTo: %#v\n", d.gps)
+				} else {
+					log.Printf("ActionMoveToLatDec: failed, no connection with GPS: %v\n", d.gps.latitude)
+				}
+			case ActionMoveToLonDec:
+				if d.gps.longitudeMoveTo != 500 {
+					d.gps.latitudeMoveTo = d.gps.latitudeMoveTo - 0.00001
+					log.Printf("moveTo: %#v\n", d.gps)
+				} else {
+					log.Printf("ActionMoveToLatDec: failed, no connection with GPS: %v\n", d.gps.latitude)
+				}
+			case ActionMoveToLonInc:
+				if d.gps.longitudeMoveTo != 500 {
+					d.gps.latitudeMoveTo = d.gps.latitudeMoveTo + 0.00001
+					log.Printf("moveTo: %#v\n", d.gps)
+				} else {
+					log.Printf("ActionMoveToLatInc: failed, no connection with GPS: %v\n", d.gps.latitude)
+				}
+			case ActionMoveToSetBufferCurrentPosition:
+				if d.gps.latitude != 500 || d.gps.longitude != 500 {
+					d.gps.latitudeMoveTo = d.gps.latitude
+					d.gps.longitudeMoveTo = d.gps.longitude
+				} else {
+					log.Printf("ActionMoveToSetBufferCurrentPosition: failed, no connection with GPS: %v\n", d.gps.latitude)
+				}
+			case ActionMoveToExecute:
+				// TODO:
+				// The idea here is to use this action with a moveTo command to the drone,
+				// and giving the current moveTo variables as arguments to the moveTo
+				// command.
+				log.Printf("*************************************************************\n")
+				log.Printf("ActionMoveToExecute: current value of buffer: %#v\n", d.gps)
+				log.Printf("*************************************************************\n")
 			}
 		}
 

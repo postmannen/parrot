@@ -196,6 +196,17 @@ func newMoveToBuffer() *moveToBuffer {
 func (s *moveToBuffer) start() {
 	for {
 		wp := <-s.chNewWayPoint
+		// Check if the values are to big, which means no GPS connection
+		// where available for calculation, and drop the data if it is
+		// an not allowed value
+		switch {
+		case wp.latitude > 91 || wp.latitude < -91:
+			log.Printf("moveToBuffer: not allowed value received: %v\n", wp)
+			continue
+		case wp.longitude > 181 || wp.longitude < -181:
+			log.Printf("moveToBuffer: not allowed value received: %v\n", wp)
+			continue
+		}
 		s.push(wp)
 	}
 }
