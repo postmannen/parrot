@@ -9,6 +9,7 @@ import (
 	"log"
 	"net"
 	"os"
+	"sync"
 	"time"
 )
 
@@ -110,7 +111,7 @@ func NewDrone() *Drone {
 			altitudeMoveto:    500,
 		},
 
-		moveToBuffer: newMoveToBuffer(),
+		moveToBuffer: newMoveToHandler(),
 	}
 
 	go func() {
@@ -159,11 +160,20 @@ type GPS struct {
 	// and it should be set to false when a message from the drone
 	// of type Ardrone3PilotingStatemoveToChanged are received.
 	doingMoveTo bool
+	// Initiate an execution of a moveTo to the next position in buffer.
+	chMoveToExecute chan struct{}
+	// Cancel the execution of a moveTo command
+	chMoveToCancel chan struct{}
+	// When a moveTo command is succesful a Ardrone3PilotingStatePositionChanged
+	// command is sent from the drone. In the actionsD2C we will check
+	// for such commands and send a signal here, so we know that we
+	// can pull the next waypoint.
+	chMoveToPositionDone chan struct{}
 }
 
 // StartHandling, start handling incomming gps packages, and fill
 // the registers with the current location values.
-func (g *GPS) StartHandling() {
+func (g *GPS) StartReadingPosition() {
 	for v := range g.chCurrentLocation {
 		if v.latitude == 500 || v.longitude == 500 || v.altitude == 500 {
 			g.connected = false
@@ -176,31 +186,157 @@ func (g *GPS) StartHandling() {
 	}
 }
 
+// startMoveToExecutor
+// The plan here is to receive a signal for when to execute a
+// moveTo command to the drone, or to cancel it.
+//
+// When a moveto signal is reveived we will pull one waypoint
+// at a time from the moveTo buffer, but before pulling a new
+// waypoint we will wait for a positiosChanged command from
+// the drone, since that will indicate that the last moveTo
+// command was executed and done by the drone, and we can pull
+// a new value and send another  moveTo package to the drone.
+//
+// When a cancel signal is received we should immediately send
+// a moveTo cancel package to the drone, and also stop any moveTo
+// processes.
+func (d *Drone) startMoveToExecutor(packetCreator *udpPacketCreator, ctx context.Context) {
+	for {
+		<-d.gps.chMoveToExecute
+		ctx, cancel := context.WithCancel(ctx)
+		var wg sync.WaitGroup
+		wg.Add(1)
+
+		go func(ctx context.Context) {
+			for {
+
+				ticker := time.NewTicker(time.Second * 5)
+
+				select {
+				case <-ctx.Done():
+					return
+				case <-d.gps.chMoveToCancel:
+					p := packetCreator.encodeCmd(Command(PilotingCancelMoveTo), &Ardrone3PilotingCancelMoveToArguments{})
+					d.chSendingUDPPacket <- p
+					wg.Done()
+				case wp := <-d.moveToBuffer.chNewWayPointOut:
+					// Get a new wp, create the argument, and send the udp packet.
+					arg := &Ardrone3PilotingmoveToArguments{
+						Latitude:  wp.latitude,
+						Longitude: wp.longitude,
+						Altitude:  wp.altitude,
+					}
+
+					p := packetCreator.encodeCmd(Command(PilotingmoveTo), arg)
+					d.chSendingUDPPacket <- p
+
+					// Check if the waypoint was reached, and we got a confirmation
+					// from the drone. If a waypoint is not received we break out,
+					// loop and pick a new waypoint.
+					select {
+					case <-d.gps.chMoveToPositionDone:
+						log.Printf("moveToPositionDone received, breaking out and looping")
+						break
+					case <-ticker.C:
+						log.Printf("moveToPositionDone not received, ticker occured, looping")
+						break
+					}
+
+				}
+			}
+		}(ctx)
+
+		wg.Wait()
+		cancel()
+
+	}
+
+	// for {
+	// 	wp, err := d.moveToBuffer.pullWayPointNext()
+	// 	if err != nil {
+	// 		log.Printf("info: moveToBufferEmpty, breaking out\n")
+	// 		break
+	// 	}
+	//
+	// 	arg := &Ardrone3PilotingmoveToArguments{
+	// 		Latitude:  wp.latitude,
+	// 		Longitude: wp.longitude,
+	// 		Altitude:  wp.altitude,
+	// 	}
+	//
+	// 	p := packetCreator.encodeCmd(Command(PilotingmoveTo), arg)
+	// 	d.chSendingUDPPacket <- p
+	// }
+
+	//------------------------------------------
+
+	// for {
+	// 	select {
+	// 	case <-d.gps.chMoveToCancel:
+	//
+	// 		p := packetCreator.encodeCmd(Command(PilotingCancelMoveTo), &// Ardrone3PilotingCancelMoveToArguments{})
+	// 		d.chSendingUDPPacket <- p
+	// 		log.Printf("*************************************************************\n")
+	// 		log.Printf("startMoveToExecutor: chMoveToCancel received\n")
+	// 		log.Printf("*************************************************************\n")
+	// 	case <-d.gps.chMoveToExecute:
+	// 		// TODO:
+	// 		log.Printf("*************************************************************\n")
+	// 		log.Printf("startMoveToExecutor: chMoveToExecute received\n")
+	// 		log.Printf("*************************************************************\n")
+	// 	}
+	// }
+}
+
 // --------------------------------------------------------------------
 
-// moveToBuffer holds the data of the buffer,
+// moveToBuffer holds the buffer of all the waypoints
+// and the logic to receive, push and pull waypoints.
 type moveToBuffer struct {
-	data          []gpsLatLonAlt
-	chNewWayPoint chan gpsLatLonAlt
+	// all the waypoints registered
+	waypoints        []gpsLatLonAlt
+	chNewWayPointIn  chan gpsLatLonAlt
+	chNewWayPointOut chan gpsLatLonAlt
 }
 
 // newmoveToBuffer is a push/pop storage for values.
-func newMoveToBuffer() *moveToBuffer {
+func newMoveToHandler() *moveToBuffer {
 	b := moveToBuffer{
-		chNewWayPoint: make(chan gpsLatLonAlt),
+		chNewWayPointIn: make(chan gpsLatLonAlt),
 	}
 
 	// Start the moveToBuffer listener, which basically will start
 	// listening on the channel for moveTo messages, and add them
 	// to the moveTo buffer
-	go b.start()
+	go b.startWayPointReceiver()
+
+	go func() {
+		for {
+			wp, err := b.pullWayPointNext()
+			if err != nil {
+				log.Printf("info: no way point in buffer, waiting 1 sec, and continue\n")
+				time.Sleep(time.Second * 1)
+				continue
+			}
+
+			// TODO: Might need to add a select with default here
+			// incase the channel is not listening
+			// or..maybe not since that would cause the wp to be dropped.
+			// Need to check this out.
+			b.chNewWayPointOut <- wp
+		}
+	}()
 
 	return &b
 }
 
-func (s *moveToBuffer) start() {
+// startWayPointReceiver will check if the wp received
+// are within the allowed limits. If OK put it on the
+// waypoint buffer, if not we just discard the value
+// and wait for the next one.
+func (s *moveToBuffer) startWayPointReceiver() {
 	for {
-		wp := <-s.chNewWayPoint
+		wp := <-s.chNewWayPointIn
 		// Check if the values are to big, which means no GPS connection
 		// where available for calculation, and drop the data if it is
 		// an not allowed value
@@ -212,24 +348,24 @@ func (s *moveToBuffer) start() {
 			log.Printf("moveToBuffer: not allowed value received: %v\n", wp)
 			continue
 		}
-		s.push(wp)
+		s.pushWayPointNew(wp)
 	}
 }
 
 // push will add another item to the end of the buffer with a normal append
-func (s *moveToBuffer) push(d gpsLatLonAlt) {
-	s.data = append(s.data, d)
+func (s *moveToBuffer) pushWayPointNew(d gpsLatLonAlt) {
+	s.waypoints = append(s.waypoints, d)
 }
 
 // pop will remove and return the first element of the buffer,
 // and will return io.EOF if buffer is empty.
-func (s *moveToBuffer) pop() (gpsLatLonAlt, error) {
-	if len(s.data) == 0 {
+func (s *moveToBuffer) pullWayPointNext() (gpsLatLonAlt, error) {
+	if len(s.waypoints) == 0 {
 		return gpsLatLonAlt{}, io.EOF
 	}
 
-	v := s.data[0]
-	s.data = append(s.data[0:0], s.data[1:]...)
+	v := s.waypoints[0]
+	s.waypoints = append(s.waypoints[0:0], s.waypoints[1:]...)
 
 	return v, nil
 }
@@ -240,7 +376,7 @@ func (d *Drone) Start() {
 
 	// Start handling incomming gps packages, and fill the registers with
 	// the current location values.
-	go d.gps.StartHandling()
+	go d.gps.StartReadingPosition()
 
 	for {
 		var err error
@@ -305,6 +441,8 @@ func (d *Drone) Start() {
 		go d.writeNetworkUDPPacketsC2D(ctx)
 
 		go d.handleReadPackages(packetCreator, ctx)
+
+		go d.startMoveToExecutor(packetCreator, ctx)
 
 		// Wait here until receiving on quit channel. Trigger by pressing
 		// 'q' on the keyboard.

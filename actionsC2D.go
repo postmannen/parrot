@@ -35,11 +35,12 @@ const (
 	ActionStartPilotedPOI                inputAction = iota
 	ActionStopPilotedPOI                 inputAction = iota
 	ActionCancelMoveBy                   inputAction = iota
-	ActionMoveToLatInc                   inputAction = iota // Direction North
-	ActionMoveToLatDec                   inputAction = iota // Direction South
-	ActionMoveToLonInc                   inputAction = iota // Direction East
-	ActionMoveToLonDec                   inputAction = iota // Direction West
+	ActionMoveToSetLatInc                inputAction = iota // Direction North
+	ActionMoveToSetLatDec                inputAction = iota // Direction South
+	ActionMoveToSetLonInc                inputAction = iota // Direction East
+	ActionMoveToSetLonDec                inputAction = iota // Direction West
 	ActionMoveToExecute                  inputAction = iota // Execute moveTo next waypoint
+	ActionMoveToCancel                   inputAction = iota // Cancel all moveTo operation
 	ActionMoveToSetBufferCurrentPosition inputAction = iota // Set buffer to current position
 
 	// Custom actions.
@@ -138,17 +139,19 @@ func (d *Drone) readKeyBoardEvent() {
 				checkChOpen(d.chInputActions, ActionPcmdRepeatLastCmd)
 
 			case event.Key == keyboard.KeyCtrlW:
-				checkChOpen(d.chInputActions, ActionMoveToLatInc)
+				checkChOpen(d.chInputActions, ActionMoveToSetLatInc)
 			case event.Key == keyboard.KeyCtrlS:
-				checkChOpen(d.chInputActions, ActionMoveToLatDec)
+				checkChOpen(d.chInputActions, ActionMoveToSetLatDec)
 			case event.Key == keyboard.KeyCtrlA:
-				checkChOpen(d.chInputActions, ActionMoveToLonDec)
+				checkChOpen(d.chInputActions, ActionMoveToSetLonDec)
 			case event.Key == keyboard.KeyCtrlD:
-				checkChOpen(d.chInputActions, ActionMoveToLonInc)
+				checkChOpen(d.chInputActions, ActionMoveToSetLonInc)
 			case event.Key == keyboard.KeyCtrlX:
 				checkChOpen(d.chInputActions, ActionMoveToSetBufferCurrentPosition)
 			case event.Key == keyboard.KeyCtrlSpace:
 				checkChOpen(d.chInputActions, ActionMoveToExecute)
+			case event.Key == keyboard.KeyCtrlQ:
+				checkChOpen(d.chInputActions, ActionMoveToCancel)
 
 			case event.Rune == 'h':
 				checkChOpen(d.chInputActions, ActionPcmdHover)
@@ -310,28 +313,28 @@ func (d *Drone) handleInputAction(packetCreator udpPacketCreator, ctx context.Co
 			// --------------moveTo
 			// The commands below is a bit overly complicated to use, but they
 			// are implemented to manually be able to test out the moveTo feature.
-			case ActionMoveToLatInc:
+			case ActionMoveToSetLatInc:
 				if d.gps.latitudeMoveTo != 500 {
 					d.gps.latitudeMoveTo = d.gps.latitudeMoveTo + 0.00001
 					log.Printf("moveTo: %#v\n", d.gps)
 				} else {
 					log.Printf("ActionMoveToLatInc: failed, no connection with GPS: %v\n", d.gps.latitude)
 				}
-			case ActionMoveToLatDec:
+			case ActionMoveToSetLatDec:
 				if d.gps.latitudeMoveTo != 500 {
 					d.gps.latitudeMoveTo = d.gps.latitudeMoveTo - 0.00001
 					log.Printf("moveTo: %#v\n", d.gps)
 				} else {
 					log.Printf("ActionMoveToLatDec: failed, no connection with GPS: %v\n", d.gps.latitude)
 				}
-			case ActionMoveToLonDec:
+			case ActionMoveToSetLonDec:
 				if d.gps.longitudeMoveTo != 500 {
 					d.gps.latitudeMoveTo = d.gps.latitudeMoveTo - 0.00001
 					log.Printf("moveTo: %#v\n", d.gps)
 				} else {
 					log.Printf("ActionMoveToLatDec: failed, no connection with GPS: %v\n", d.gps.latitude)
 				}
-			case ActionMoveToLonInc:
+			case ActionMoveToSetLonInc:
 				if d.gps.longitudeMoveTo != 500 {
 					d.gps.latitudeMoveTo = d.gps.latitudeMoveTo + 0.00001
 					log.Printf("moveTo: %#v\n", d.gps)
@@ -350,11 +353,16 @@ func (d *Drone) handleInputAction(packetCreator udpPacketCreator, ctx context.Co
 				// The idea here is to use this action with a moveTo command to the drone,
 				// and giving the current moveTo variables as arguments to the moveTo
 				// command.
+
 				d.gps.doingMoveTo = true
+				d.gps.chMoveToExecute <- struct{}{}
 				// TODO: send the moveTo command here!!!
 				log.Printf("*************************************************************\n")
 				log.Printf("ActionMoveToExecute: current value of buffer: %#v\n", d.gps)
 				log.Printf("*************************************************************\n")
+			case ActionMoveToCancel:
+				d.gps.doingMoveTo = false
+				d.gps.chMoveToCancel <- struct{}{}
 			}
 		}
 

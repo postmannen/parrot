@@ -24,7 +24,9 @@ func (d *Drone) checkCmdFromDrone(cmd protocolARCommands, cmdArgs interface{}) {
 		}
 	case Ardrone3PilotingStatemoveToChanged:
 		// Indicated that the drone have moved to the asked position.
-		d.gps.doingMoveTo = false
+		// We send a signal to the moveTo handling here to indicate
+		// that it can pick the next available position in the buffer.
+		d.gps.chMoveToPositionDone <- struct{}{}
 	}
 	fmt.Printf("-----------------------------------------------------------\r\n")
 
