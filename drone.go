@@ -5,7 +5,6 @@ package parrotbebop
 
 import (
 	"context"
-	"io"
 	"log"
 	"net"
 	"os"
@@ -52,9 +51,9 @@ type Drone struct {
 	pcmd Ardrone3PilotingPCMDArguments
 	// gps Data
 	gps GPS
-	// moveToBuffer is a FIFO buffer for storing the gps positions
+	// waypointBuffer is a FIFO buffer for storing the gps positions
 	// of the route to fly.
-	moveToBuffer *moveToBuffer
+	waypointBuffer *waypointBuffer
 }
 
 // TODO:
@@ -111,7 +110,7 @@ func NewDrone() *Drone {
 			altitudeMoveto:    500,
 		},
 
-		moveToBuffer: newMoveToBuffer(),
+		waypointBuffer: newWaypointBuffer(),
 	}
 
 	go func() {
@@ -219,7 +218,7 @@ func (d *Drone) startMoveToExecutor(packetCreator *udpPacketCreator, ctx context
 					p := packetCreator.encodeCmd(Command(PilotingCancelMoveTo), &Ardrone3PilotingCancelMoveToArguments{})
 					d.packetToDroneCh <- p
 					wg.Done()
-				case wp := <-d.moveToBuffer.NewWayPointOutCh:
+				case wp := <-d.waypointBuffer.waypointOutCh:
 					// Get a new wp, create the argument, and send the udp packet.
 					arg := &Ardrone3PilotingmoveToArguments{
 						Latitude:  wp.latitude,
@@ -252,9 +251,9 @@ func (d *Drone) startMoveToExecutor(packetCreator *udpPacketCreator, ctx context
 	}
 
 	// for {
-	// 	wp, err := d.moveToBuffer.pullWayPointNext()
+	// 	wp, err := d.waypointBuffer.pullWayPointNext()
 	// 	if err != nil {
-	// 		log.Printf("info: moveToBufferEmpty, breaking out\n")
+	// 		log.Printf("info: waypointBufferEmpty, breaking out\n")
 	// 		break
 	// 	}
 	//
@@ -286,89 +285,6 @@ func (d *Drone) startMoveToExecutor(packetCreator *udpPacketCreator, ctx context
 	// 		log.Printf("*************************************************************\n")
 	// 	}
 	// }
-}
-
-// --------------------------------------------------------------------
-
-// moveToBuffer holds the buffer of all the waypoints
-// and the logic to receive, push and pull waypoints.
-type moveToBuffer struct {
-	// all the waypoints registered
-	waypoints        []gpsLatLonAlt
-	NewWayPointInCh  chan gpsLatLonAlt
-	NewWayPointOutCh chan gpsLatLonAlt
-}
-
-// newMoveToBuffer is a push/pop storage for values for where to
-// move to.
-func newMoveToBuffer() *moveToBuffer {
-	b := moveToBuffer{
-		NewWayPointInCh: make(chan gpsLatLonAlt),
-	}
-
-	// Start the moveToBuffer listener, which basically will start
-	// listening on the channel for moveTo messages, and add them
-	// to the moveTo buffer
-	go b.startWayPointReceiver()
-
-	go func() {
-		for {
-			wp, err := b.pullWayPointNext()
-			if err != nil {
-				log.Printf("info: no way point in buffer, waiting 1 sec, and continue\n")
-				time.Sleep(time.Second * 1)
-				continue
-			}
-
-			// TODO: Might need to add a select with default here
-			// incase the channel is not listening
-			// or..maybe not since that would cause the wp to be dropped.
-			// Need to check this out.
-			b.NewWayPointOutCh <- wp
-		}
-	}()
-
-	return &b
-}
-
-// startWayPointReceiver will check if the wp received
-// are within the allowed limits. If OK put it on the
-// waypoint buffer, if not we just discard the value
-// and wait for the next one.
-func (s *moveToBuffer) startWayPointReceiver() {
-	for {
-		wp := <-s.NewWayPointInCh
-		// Check if the values are to big, which means no GPS connection
-		// where available for calculation, and drop the data if it is
-		// an not allowed value
-		switch {
-		case wp.latitude > 91 || wp.latitude < -91:
-			log.Printf("moveToBuffer: not allowed value received: %v\n", wp)
-			continue
-		case wp.longitude > 181 || wp.longitude < -181:
-			log.Printf("moveToBuffer: not allowed value received: %v\n", wp)
-			continue
-		}
-		s.pushWayPointNew(wp)
-	}
-}
-
-// push will add another item to the end of the buffer with a normal append
-func (s *moveToBuffer) pushWayPointNew(d gpsLatLonAlt) {
-	s.waypoints = append(s.waypoints, d)
-}
-
-// pop will remove and return the first element of the buffer,
-// and will return io.EOF if buffer is empty.
-func (s *moveToBuffer) pullWayPointNext() (gpsLatLonAlt, error) {
-	if len(s.waypoints) == 0 {
-		return gpsLatLonAlt{}, io.EOF
-	}
-
-	v := s.waypoints[0]
-	s.waypoints = append(s.waypoints[0:0], s.waypoints[1:]...)
-
-	return v, nil
 }
 
 func (d *Drone) Start() {
