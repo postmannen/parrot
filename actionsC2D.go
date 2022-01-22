@@ -355,14 +355,14 @@ func (d *Drone) handleInputAction(packetCreator udpPacketCreator, ctx context.Co
 				// command.
 
 				d.gps.doingMoveTo = true
-				d.gps.chMoveToExecute <- struct{}{}
+				d.gps.moveToExecuteCh <- struct{}{}
 				// TODO: send the moveTo command here!!!
 				log.Printf("*************************************************************\n")
 				log.Printf("ActionMoveToExecute: current value of buffer: %#v\n", d.gps)
 				log.Printf("*************************************************************\n")
 			case ActionMoveToCancel:
 				d.gps.doingMoveTo = false
-				d.gps.chMoveToCancel <- struct{}{}
+				d.gps.moveToCancelCh <- struct{}{}
 			}
 		}
 

@@ -17,7 +17,7 @@ func (d *Drone) checkCmdFromDrone(cmd protocolARCommands, cmdArgs interface{}) {
 	case Ardrone3PilotingStateAttitudeChangedArguments:
 		//log.Printf("** EXECUTING ACTION FOR TYPE, Ardrone3PilotingStateAttitudeChangedArguments\r\n")
 	case Ardrone3PilotingStateGpsLocationChangedArguments:
-		d.gps.chCurrentLocation <- gpsLatLonAlt{
+		d.gps.currentLocationCh <- gpsLatLonAlt{
 			latitude:  cmdArgs.Latitude,
 			longitude: cmdArgs.Longitude,
 			altitude:  cmdArgs.Altitude,
@@ -26,7 +26,7 @@ func (d *Drone) checkCmdFromDrone(cmd protocolARCommands, cmdArgs interface{}) {
 		// Indicated that the drone have moved to the asked position.
 		// We send a signal to the moveTo handling here to indicate
 		// that it can pick the next available position in the buffer.
-		d.gps.chMoveToPositionDone <- struct{}{}
+		d.gps.movedToPositionCh <- struct{}{}
 	}
 	fmt.Printf("-----------------------------------------------------------\r\n")
 
