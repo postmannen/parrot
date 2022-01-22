@@ -25,8 +25,8 @@ func (d *Drone) Discover() error {
 
 	//const addr = "192.168.42.1:44444"
 
-	nd := net.Dialer{Timeout: time.Second * 3, Cancel: d.chQuit}
-	discoverConn, err := nd.Dial("tcp", d.addressDrone+":"+d.portDiscover)
+	nd := net.Dialer{Timeout: time.Second * 3, Cancel: d.quitCh}
+	discoverConn, err := nd.Dial("tcp", d.ipAddress+":"+d.portDiscover)
 	if err != nil {
 		return err
 	}
@@ -148,7 +148,7 @@ func (d *Drone) readNetworkUDPPacketsD2C(ctx context.Context) {
 			n, addr, err := d.connUDPRead.ReadFrom(p)
 			if err != nil {
 				if errors.Is(err, os.ErrDeadlineExceeded) {
-					d.chNetworkConnect <- struct{}{}
+					d.networkReconnectCh <- struct{}{}
 					return
 				}
 				log.Printf("error: failed ReadFrom: %v %v\n", addr, err)
@@ -167,7 +167,7 @@ func (d *Drone) readNetworkUDPPacketsD2C(ctx context.Context) {
 			}
 
 			// send the packet received over a channel to later parse out ARNetworkAL/frames.
-			d.chReceivedUDPPacket <- packet
+			d.packetFromDroneCh <- packet
 
 		}
 	}
@@ -190,7 +190,7 @@ func (d *Drone) writeNetworkUDPPacketsC2D(ctx context.Context) {
 		case <-ctx.Done():
 			log.Printf("info: exiting writeNetworkUDPPacketsC2D\n")
 			return
-		case v := <-d.chSendingUDPPacket:
+		case v := <-d.packetToDroneCh:
 
 			fmt.Printf("sending to Drone, v = %v\r\n", v.data)
 
@@ -219,7 +219,7 @@ func (d *Drone) handleReadPackages(packetCreator *udpPacketCreator, ctx context.
 			return fmt.Errorf("error: context.Done() for handleReadPackages")
 		default:
 			// Get a packet
-			udpPacket := <-d.chReceivedUDPPacket
+			udpPacket := <-d.packetFromDroneCh
 
 			var lastFrame bool
 			// An UDP Packet can consist of several frames, loop over each
@@ -254,7 +254,7 @@ func (d *Drone) handleReadPackages(packetCreator *udpPacketCreator, ctx context.
 				if frameARNetworkAL.targetBufferID == 0 || frameARNetworkAL.targetBufferID == 1 {
 					{
 						p := packetCreator.encodePong(frameARNetworkAL)
-						d.chSendingUDPPacket <- p
+						d.packetToDroneCh <- p
 					}
 
 					if lastFrame {
@@ -268,7 +268,7 @@ func (d *Drone) handleReadPackages(packetCreator *udpPacketCreator, ctx context.
 				if frameARNetworkAL.dataType == 4 {
 					{
 						p := packetCreator.encodeAck(frameARNetworkAL.targetBufferID, uint8(frameARNetworkAL.sequenceNR))
-						d.chSendingUDPPacket <- p
+						d.packetToDroneCh <- p
 					}
 				}
 
@@ -313,8 +313,8 @@ func (d *Drone) PcmdPacketScheduler(ctx context.Context) {
 			return
 		case <-time.After(duration1):
 			select {
-			case p := <-d.chPcmdPacketScheduler:
-				d.chSendingUDPPacket <- p
+			case p := <-d.pcmdPacketSchedulerCh:
+				d.packetToDroneCh <- p
 			default:
 				// log.Printf("No packets to send, or buffer full\n")
 			}

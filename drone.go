@@ -16,7 +16,7 @@ import (
 // Drone holds the data and methods specific for the drone.
 type Drone struct {
 	// The ip address of the drone
-	addressDrone string
+	ipAddress string
 	// Used for initializing the connection to the drone over TCP.
 	portDiscover string
 	// Controller to drone, port the controller wil send the drone messages on.
@@ -26,23 +26,23 @@ type Drone struct {
 	portRTPStream  string
 	portRTPControl string
 	// Channel to put the raw UDP packages from the drone.
-	chReceivedUDPPacket chan networkUDPPacket
+	packetFromDroneCh chan networkUDPPacket
 	// Channel to put the raw UDP packages to be sent to the drone.
-	chSendingUDPPacket chan networkUDPPacket
+	packetToDroneCh chan networkUDPPacket
 	// Channel to put the inputAction type send to the drone when
 	// for example a key is pressed on the keyboard.
-	chInputActions chan inputAction
+	inputActionsCh chan inputAction
 	// Sending to this channel will quit the controller program.
-	chQuit chan struct{}
+	quitCh chan struct{}
 	// Sending to this channel will disconnect all network related
 	// go routines, and then reconnect to the drone.
-	chNetworkConnect chan struct{}
-	// chPcmdPacketScheduler is used to set the frequency of PcmdPacket's
+	networkReconnectCh chan struct{}
+	// pcmdPacketSchedulerCh is used to set the frequency of PcmdPacket's
 	// that will be sent from the controller to the drone.
 	// All Pcmd packets from the controller should go through here to not
 	// overwhelm the drone with to many commands which can interupt
 	// other commands.
-	chPcmdPacketScheduler chan networkUDPPacket
+	pcmdPacketSchedulerCh chan networkUDPPacket
 	// The conn object for the UDP network listener
 	connUDPRead net.PacketConn
 	// The conn object for the UDP connection to send commands to
@@ -72,19 +72,19 @@ type Drone struct {
 // like ports used, ip adresses, etc.
 func NewDrone() *Drone {
 	d := &Drone{
-		addressDrone: "192.168.42.1",
+		ipAddress:    "192.168.42.1",
 		portDiscover: "44444",
 		//portC2D:        "54321", // This one is now assigned via discovery
 		portD2C:        "43210",
 		portRTPStream:  "55004",
 		portRTPControl: "55005",
 
-		chReceivedUDPPacket:   make(chan networkUDPPacket),
-		chSendingUDPPacket:    make(chan networkUDPPacket),
-		chInputActions:        make(chan inputAction),
-		chQuit:                make(chan struct{}),
-		chNetworkConnect:      make(chan struct{}),
-		chPcmdPacketScheduler: make(chan networkUDPPacket),
+		packetFromDroneCh:     make(chan networkUDPPacket),
+		packetToDroneCh:       make(chan networkUDPPacket),
+		inputActionsCh:        make(chan inputAction),
+		quitCh:                make(chan struct{}),
+		networkReconnectCh:    make(chan struct{}),
+		pcmdPacketSchedulerCh: make(chan networkUDPPacket),
 
 		pcmd: Ardrone3PilotingPCMDArguments{
 			Flag:               0,
@@ -111,11 +111,11 @@ func NewDrone() *Drone {
 			altitudeMoveto:    500,
 		},
 
-		moveToBuffer: newMoveToHandler(),
+		moveToBuffer: newMoveToBuffer(),
 	}
 
 	go func() {
-		<-d.chQuit
+		<-d.quitCh
 		log.Printf("Operator asked to stop driver.\n")
 		os.Exit(0)
 	}()
@@ -217,9 +217,9 @@ func (d *Drone) startMoveToExecutor(packetCreator *udpPacketCreator, ctx context
 					return
 				case <-d.gps.chMoveToCancel:
 					p := packetCreator.encodeCmd(Command(PilotingCancelMoveTo), &Ardrone3PilotingCancelMoveToArguments{})
-					d.chSendingUDPPacket <- p
+					d.packetToDroneCh <- p
 					wg.Done()
-				case wp := <-d.moveToBuffer.chNewWayPointOut:
+				case wp := <-d.moveToBuffer.NewWayPointOutCh:
 					// Get a new wp, create the argument, and send the udp packet.
 					arg := &Ardrone3PilotingmoveToArguments{
 						Latitude:  wp.latitude,
@@ -228,7 +228,7 @@ func (d *Drone) startMoveToExecutor(packetCreator *udpPacketCreator, ctx context
 					}
 
 					p := packetCreator.encodeCmd(Command(PilotingmoveTo), arg)
-					d.chSendingUDPPacket <- p
+					d.packetToDroneCh <- p
 
 					// Check if the waypoint was reached, and we got a confirmation
 					// from the drone. If a waypoint is not received we break out,
@@ -295,14 +295,15 @@ func (d *Drone) startMoveToExecutor(packetCreator *udpPacketCreator, ctx context
 type moveToBuffer struct {
 	// all the waypoints registered
 	waypoints        []gpsLatLonAlt
-	chNewWayPointIn  chan gpsLatLonAlt
-	chNewWayPointOut chan gpsLatLonAlt
+	NewWayPointInCh  chan gpsLatLonAlt
+	NewWayPointOutCh chan gpsLatLonAlt
 }
 
-// newmoveToBuffer is a push/pop storage for values.
-func newMoveToHandler() *moveToBuffer {
+// newMoveToBuffer is a push/pop storage for values for where to
+// move to.
+func newMoveToBuffer() *moveToBuffer {
 	b := moveToBuffer{
-		chNewWayPointIn: make(chan gpsLatLonAlt),
+		NewWayPointInCh: make(chan gpsLatLonAlt),
 	}
 
 	// Start the moveToBuffer listener, which basically will start
@@ -323,7 +324,7 @@ func newMoveToHandler() *moveToBuffer {
 			// incase the channel is not listening
 			// or..maybe not since that would cause the wp to be dropped.
 			// Need to check this out.
-			b.chNewWayPointOut <- wp
+			b.NewWayPointOutCh <- wp
 		}
 	}()
 
@@ -336,7 +337,7 @@ func newMoveToHandler() *moveToBuffer {
 // and wait for the next one.
 func (s *moveToBuffer) startWayPointReceiver() {
 	for {
-		wp := <-s.chNewWayPointIn
+		wp := <-s.NewWayPointInCh
 		// Check if the values are to big, which means no GPS connection
 		// where available for calculation, and drop the data if it is
 		// an not allowed value
@@ -387,8 +388,7 @@ func (d *Drone) Start() {
 		// All UDP packet encoding methods are tied to this type.
 		packetCreator := newUdpPacketCreator()
 
-		ctxBg := context.Background()
-		ctx, cancel := context.WithCancel(ctxBg)
+		ctx, cancel := context.WithCancel(context.Background())
 
 		// Will handle all the events generated by input actions from keyboard etc.
 		go d.handleInputAction(*packetCreator, ctx)
@@ -410,7 +410,7 @@ func (d *Drone) Start() {
 			break
 		}
 
-		// create an 'empty' UDP listener.
+		// create an 'empty' UDP listener for receiving data from the drone.
 		d.connUDPRead, err = net.ListenPacket("udp", ":"+d.portD2C)
 		if err != nil {
 			log.Println("error: failed to start listener", err)
@@ -421,7 +421,7 @@ func (d *Drone) Start() {
 		go d.readNetworkUDPPacketsD2C(ctx)
 
 		// Prepare and dial the UDP connection from controller to drone.
-		udpAddr, err := net.ResolveUDPAddr("udp", d.addressDrone+":"+d.portC2D)
+		udpAddr, err := net.ResolveUDPAddr("udp", d.ipAddress+":"+d.portC2D)
 		if err != nil {
 			log.Printf("error: failed to resolveUDPAddr: %v", err)
 		}
@@ -446,7 +446,7 @@ func (d *Drone) Start() {
 
 		// Wait here until receiving on quit channel. Trigger by pressing
 		// 'q' on the keyboard.
-		<-d.chNetworkConnect
+		<-d.networkReconnectCh
 		cancel()
 		time.Sleep(time.Second * 3)
 		continue

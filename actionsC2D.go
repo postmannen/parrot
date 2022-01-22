@@ -102,59 +102,59 @@ func (d *Drone) readKeyBoardEvent() {
 
 			switch {
 			case event.Key == keyboard.KeyEsc:
-				d.chQuit <- struct{}{}
+				d.quitCh <- struct{}{}
 			case event.Rune == 'q':
 				// Initiate a reconnect of the network.
 				select {
-				case d.chNetworkConnect <- struct{}{}:
+				case d.networkReconnectCh <- struct{}{}:
 				default:
 				}
 			case event.Rune == 't':
-				checkChOpen(d.chInputActions, ActionTakeoff)
+				checkChOpen(d.inputActionsCh, ActionTakeoff)
 			case event.Rune == 'l':
-				checkChOpen(d.chInputActions, ActionLanding)
+				checkChOpen(d.inputActionsCh, ActionLanding)
 			case event.Rune == 'r':
-				checkChOpen(d.chInputActions, ActionNavigateHomeStart)
+				checkChOpen(d.inputActionsCh, ActionNavigateHomeStart)
 			case event.Rune == 'R':
-				checkChOpen(d.chInputActions, ActionNavigateHomeStop)
+				checkChOpen(d.inputActionsCh, ActionNavigateHomeStop)
 
 			case event.Rune == 'w':
-				checkChOpen(d.chInputActions, ActionPcmdGazInc)
+				checkChOpen(d.inputActionsCh, ActionPcmdGazInc)
 			case event.Rune == 's':
-				checkChOpen(d.chInputActions, ActionPcmdGazDec)
+				checkChOpen(d.inputActionsCh, ActionPcmdGazDec)
 			case event.Rune == 'a':
-				checkChOpen(d.chInputActions, ActionPcmdYawCounterClockwise)
+				checkChOpen(d.inputActionsCh, ActionPcmdYawCounterClockwise)
 			case event.Rune == 'd':
-				checkChOpen(d.chInputActions, ActionPcmdYawClockwise)
+				checkChOpen(d.inputActionsCh, ActionPcmdYawClockwise)
 
 			case event.Key == keyboard.KeyArrowUp:
-				checkChOpen(d.chInputActions, ActionPcmdPitchForward)
+				checkChOpen(d.inputActionsCh, ActionPcmdPitchForward)
 			case event.Key == keyboard.KeyArrowDown:
-				checkChOpen(d.chInputActions, ActionPcmdPitchBackward)
+				checkChOpen(d.inputActionsCh, ActionPcmdPitchBackward)
 			case event.Key == keyboard.KeyArrowLeft:
-				checkChOpen(d.chInputActions, ActionPcmdRollLeft)
+				checkChOpen(d.inputActionsCh, ActionPcmdRollLeft)
 			case event.Key == keyboard.KeyArrowRight:
-				checkChOpen(d.chInputActions, ActionPcmdRollRight)
+				checkChOpen(d.inputActionsCh, ActionPcmdRollRight)
 			case event.Key == keyboard.KeySpace:
-				checkChOpen(d.chInputActions, ActionPcmdRepeatLastCmd)
+				checkChOpen(d.inputActionsCh, ActionPcmdRepeatLastCmd)
 
 			case event.Key == keyboard.KeyCtrlW:
-				checkChOpen(d.chInputActions, ActionMoveToSetLatInc)
+				checkChOpen(d.inputActionsCh, ActionMoveToSetLatInc)
 			case event.Key == keyboard.KeyCtrlS:
-				checkChOpen(d.chInputActions, ActionMoveToSetLatDec)
+				checkChOpen(d.inputActionsCh, ActionMoveToSetLatDec)
 			case event.Key == keyboard.KeyCtrlA:
-				checkChOpen(d.chInputActions, ActionMoveToSetLonDec)
+				checkChOpen(d.inputActionsCh, ActionMoveToSetLonDec)
 			case event.Key == keyboard.KeyCtrlD:
-				checkChOpen(d.chInputActions, ActionMoveToSetLonInc)
+				checkChOpen(d.inputActionsCh, ActionMoveToSetLonInc)
 			case event.Key == keyboard.KeyCtrlX:
-				checkChOpen(d.chInputActions, ActionMoveToSetBufferCurrentPosition)
+				checkChOpen(d.inputActionsCh, ActionMoveToSetBufferCurrentPosition)
 			case event.Key == keyboard.KeyCtrlSpace:
-				checkChOpen(d.chInputActions, ActionMoveToExecute)
+				checkChOpen(d.inputActionsCh, ActionMoveToExecute)
 			case event.Key == keyboard.KeyCtrlQ:
-				checkChOpen(d.chInputActions, ActionMoveToCancel)
+				checkChOpen(d.inputActionsCh, ActionMoveToCancel)
 
 			case event.Rune == 'h':
-				checkChOpen(d.chInputActions, ActionPcmdHover)
+				checkChOpen(d.inputActionsCh, ActionPcmdHover)
 
 			}
 		}
@@ -169,7 +169,7 @@ func (d *Drone) readKeyBoardEvent() {
 // The reason we have this function and don't encode the packets directly
 // in readKeyBoardEvent, is that we might want to have other input methods
 // then the keyboard to control the drone.
-// This function will execute the commands that arrives on the d.chInputActions.
+// This function will execute the commands that arrives on the d.inputActionsCh.
 func (d *Drone) handleInputAction(packetCreator udpPacketCreator, ctx context.Context) {
 	for {
 		select {
@@ -177,21 +177,21 @@ func (d *Drone) handleInputAction(packetCreator udpPacketCreator, ctx context.Co
 			log.Println("info: exiting handleInputAction")
 			return
 
-		case action := <-d.chInputActions:
+		case action := <-d.inputActionsCh:
 			// --------------Standard actions
 			switch action {
 			case ActionTakeoff:
 				p := packetCreator.encodeCmd(Command(PilotingTakeOff), &Ardrone3PilotingTakeOffArguments{})
-				d.chSendingUDPPacket <- p
+				d.packetToDroneCh <- p
 			case ActionLanding:
 				p := packetCreator.encodeCmd(Command(PilotingLanding), &Ardrone3PilotingLandingArguments{})
-				d.chSendingUDPPacket <- p
+				d.packetToDroneCh <- p
 			case ActionNavigateHomeStart:
 				p := packetCreator.encodeCmd(Command(PilotingNavigateHome), &Ardrone3PilotingNavigateHomeArguments{Start: 1})
-				d.chSendingUDPPacket <- p
+				d.packetToDroneCh <- p
 			case ActionNavigateHomeStop:
 				p := packetCreator.encodeCmd(Command(PilotingNavigateHome), &Ardrone3PilotingNavigateHomeArguments{Start: 0})
-				d.chSendingUDPPacket <- p
+				d.packetToDroneCh <- p
 
 			// --------------emulation of rc-controller sticks
 			// using a,w,s,d and arrow keys.
@@ -206,7 +206,7 @@ func (d *Drone) handleInputAction(packetCreator udpPacketCreator, ctx context.Co
 					Flag: 1,
 					Gaz:  d.pcmd.Gaz,
 				}
-				d.chPcmdPacketScheduler <- packetCreator.encodeCmd(Command(PilotingPCMD), arg)
+				d.pcmdPacketSchedulerCh <- packetCreator.encodeCmd(Command(PilotingPCMD), arg)
 			case ActionPcmdGazDec:
 				if d.pcmd.Gaz > 0 {
 					d.pcmd.Gaz = 0
@@ -218,7 +218,7 @@ func (d *Drone) handleInputAction(packetCreator udpPacketCreator, ctx context.Co
 					Flag: 1,
 					Gaz:  d.pcmd.Gaz,
 				}
-				d.chPcmdPacketScheduler <- packetCreator.encodeCmd(Command(PilotingPCMD), arg)
+				d.pcmdPacketSchedulerCh <- packetCreator.encodeCmd(Command(PilotingPCMD), arg)
 
 			case ActionPcmdYawCounterClockwise:
 				if d.pcmd.Yaw > 0 {
@@ -231,7 +231,7 @@ func (d *Drone) handleInputAction(packetCreator udpPacketCreator, ctx context.Co
 					Flag: 1,
 					Yaw:  d.pcmd.Yaw,
 				}
-				d.chPcmdPacketScheduler <- packetCreator.encodeCmd(Command(PilotingPCMD), arg)
+				d.pcmdPacketSchedulerCh <- packetCreator.encodeCmd(Command(PilotingPCMD), arg)
 			case ActionPcmdYawClockwise:
 				if d.pcmd.Yaw < 0 {
 					d.pcmd.Yaw = 0
@@ -243,7 +243,7 @@ func (d *Drone) handleInputAction(packetCreator udpPacketCreator, ctx context.Co
 					Flag: 1,
 					Yaw:  d.pcmd.Yaw,
 				}
-				d.chPcmdPacketScheduler <- packetCreator.encodeCmd(Command(PilotingPCMD), arg)
+				d.pcmdPacketSchedulerCh <- packetCreator.encodeCmd(Command(PilotingPCMD), arg)
 
 			case ActionPcmdHover:
 				d.pcmd = Ardrone3PilotingPCMDArguments{
@@ -256,7 +256,7 @@ func (d *Drone) handleInputAction(packetCreator udpPacketCreator, ctx context.Co
 				}
 
 				arg := d.pcmd
-				d.chPcmdPacketScheduler <- packetCreator.encodeCmd(Command(PilotingPCMD), arg)
+				d.pcmdPacketSchedulerCh <- packetCreator.encodeCmd(Command(PilotingPCMD), arg)
 
 			case ActionPcmdPitchForward:
 				if d.pcmd.Pitch < 0 {
@@ -269,7 +269,7 @@ func (d *Drone) handleInputAction(packetCreator udpPacketCreator, ctx context.Co
 					Flag:  1,
 					Pitch: d.pcmd.Pitch,
 				}
-				d.chPcmdPacketScheduler <- packetCreator.encodeCmd(Command(PilotingPCMD), arg)
+				d.pcmdPacketSchedulerCh <- packetCreator.encodeCmd(Command(PilotingPCMD), arg)
 			case ActionPcmdPitchBackward:
 				if d.pcmd.Pitch > 0 {
 					d.pcmd.Pitch = 0
@@ -281,7 +281,7 @@ func (d *Drone) handleInputAction(packetCreator udpPacketCreator, ctx context.Co
 					Flag:  1,
 					Pitch: d.pcmd.Pitch,
 				}
-				d.chPcmdPacketScheduler <- packetCreator.encodeCmd(Command(PilotingPCMD), arg)
+				d.pcmdPacketSchedulerCh <- packetCreator.encodeCmd(Command(PilotingPCMD), arg)
 
 			case ActionPcmdRollLeft:
 				if d.pcmd.Roll > 0 {
@@ -294,7 +294,7 @@ func (d *Drone) handleInputAction(packetCreator udpPacketCreator, ctx context.Co
 					Flag: 1,
 					Roll: d.pcmd.Roll,
 				}
-				d.chPcmdPacketScheduler <- packetCreator.encodeCmd(Command(PilotingPCMD), arg)
+				d.pcmdPacketSchedulerCh <- packetCreator.encodeCmd(Command(PilotingPCMD), arg)
 			case ActionPcmdRollRight:
 				if d.pcmd.Roll < 0 {
 					d.pcmd.Roll = 0
@@ -306,9 +306,9 @@ func (d *Drone) handleInputAction(packetCreator udpPacketCreator, ctx context.Co
 					Flag: 1,
 					Roll: d.pcmd.Roll,
 				}
-				d.chPcmdPacketScheduler <- packetCreator.encodeCmd(Command(PilotingPCMD), arg)
+				d.pcmdPacketSchedulerCh <- packetCreator.encodeCmd(Command(PilotingPCMD), arg)
 			case ActionPcmdRepeatLastCmd:
-				d.chPcmdPacketScheduler <- packetCreator.encodeCmd(Command(PilotingPCMD), d.pcmd)
+				d.pcmdPacketSchedulerCh <- packetCreator.encodeCmd(Command(PilotingPCMD), d.pcmd)
 
 			// --------------moveTo
 			// The commands below is a bit overly complicated to use, but they
