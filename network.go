@@ -1,4 +1,4 @@
-package parrotbebop
+package parrot
 
 import (
 	"bytes"

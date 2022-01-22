@@ -1,7 +1,7 @@
 // The latest version of the ardrone3.xml document can be found at
 // https://github.com/Parrot-Developers/arsdk-xml/tree/master/xml
 
-package parrotbebop
+package parrot
 
 import (
 	"context"

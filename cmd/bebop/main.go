@@ -1,9 +1,9 @@
 package main
 
-import "github.com/postmannen/parrotbebop"
+import "github.com/postmannen/parrot"
 
 func main() {
-	drone := parrotbebop.NewDrone()
+	drone := parrot.NewDrone()
 
 	drone.Start()
 }

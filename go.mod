@@ -1,4 +1,4 @@
-module github.com/postmannen/parrotbebop
+module github.com/postmannen/parrot
 
 go 1.15
 
