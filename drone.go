@@ -24,8 +24,6 @@ type Drone struct {
 	portD2C        string
 	portRTPStream  string
 	portRTPControl string
-	// Channel to put the raw UDP packages from the drone.
-	packetFromDroneCh chan networkUDPPacket
 	// Channel to put the raw UDP packages to be sent to the drone.
 	packetToDroneCh chan networkUDPPacket
 	// Channel to put the inputAction type send to the drone when
@@ -78,7 +76,6 @@ func NewDrone() *Drone {
 		portRTPStream:  "55004",
 		portRTPControl: "55005",
 
-		packetFromDroneCh:     make(chan networkUDPPacket),
 		packetToDroneCh:       make(chan networkUDPPacket),
 		inputActionsCh:        make(chan inputAction),
 		quitCh:                make(chan struct{}),
@@ -235,7 +232,7 @@ func (d *Drone) Start() {
 
 		// Start the reading of whole UDP packets from the network,
 		// and put them on the Drone.chReceivedUDPPacket channel.
-		go d.readNetworkUDPPacketsD2C(ctx)
+		go d.readNetworkUDPPacketsD2C(ctx, packetCreator)
 
 		// Prepare and dial the UDP connection from controller to drone.
 		udpAddr, err := net.ResolveUDPAddr("udp", d.ipAddress+":"+d.portC2D)
@@ -256,8 +253,6 @@ func (d *Drone) Start() {
 		// will send UDP packets received at the Drone.packetToDroneCh
 		// channel.
 		go d.writeNetworkUDPPacketsC2D(ctx)
-
-		go d.handleReadPackages(packetCreator, ctx)
 
 		go d.startMoveToExecutor(packetCreator, ctx)
 

@@ -127,7 +127,7 @@ func (d *Drone) Discover() error {
 // getNetworkPacketsD2C gets the raw UDP packets from the drone sent to the controller.
 // Will read the raw UDP packets from the network, and put them on a channel to be
 // picked up by the frame decoder.
-func (d *Drone) readNetworkUDPPacketsD2C(ctx context.Context) {
+func (d *Drone) readNetworkUDPPacketsD2C(ctx context.Context, packetCreator *udpPacketCreator) {
 
 	defer func() {
 		err := d.connUDPRead.Close()
@@ -166,8 +166,8 @@ func (d *Drone) readNetworkUDPPacketsD2C(ctx context.Context) {
 				framePos: 0,
 			}
 
-			// send the packet received over a channel to later parse out ARNetworkAL/frames.
-			d.packetFromDroneCh <- packet
+			// decode the packet
+			d.handleReadPackages(packetCreator, packet)
 
 		}
 	}
@@ -210,87 +210,79 @@ func (d *Drone) writeNetworkUDPPacketsC2D(ctx context.Context) {
 // packet is receied and what to do based on the content of the package.
 // This means sending a pong for a received package, or do some action
 // if a state command where received from the drone.
-func (d *Drone) handleReadPackages(packetCreator *udpPacketCreator, ctx context.Context) error {
+func (d *Drone) handleReadPackages(packetCreator *udpPacketCreator, udpPacket networkUDPPacket) error {
 	// Loop, get a recieved UDP packet from the channel, and decode it.
+
+	var lastFrame bool
+	// An UDP Packet can consist of several frames, loop over each
+	// frame found in the packet. If last frame is found, break out.
 	for {
-		select {
-		case <-ctx.Done():
-			log.Printf("info: exiting handleReadPAclages\n")
-			return fmt.Errorf("error: context.Done() for handleReadPackages")
-		default:
-			// Get a packet
-			udpPacket := <-d.packetFromDroneCh
+		// decode will decode a whole UDP packet given as input,
+		// and return a frame of the ARNetworkAL protocol, it will
+		// return error== io.EOF when decoding of the whole packet
+		// is done. If the there are more than one ARNetworkAL frame
+		// in the UDP packet the method will return error == nil,
+		// and the method should be run over again until io.EOF is
+		// received.
+		frameARNetworkAL, err := udpPacket.decode()
 
-			var lastFrame bool
-			// An UDP Packet can consist of several frames, loop over each
-			// frame found in the packet. If last frame is found, break out.
-			for {
-				// decode will decode a whole UDP packet given as input,
-				// and return a frame of the ARNetworkAL protocol, it will
-				// return error== io.EOF when decoding of the whole packet
-				// is done. If the there are more than one ARNetworkAL frame
-				// in the UDP packet the method will return error == nil,
-				// and the method should be run over again until io.EOF is
-				// received.
-				frameARNetworkAL, err := udpPacket.decode()
+		// Check if it was the last frame in the UDP packet.
+		if err == io.EOF {
+			lastFrame = true
+		}
 
-				// Check if it was the last frame in the UDP packet.
-				if err == io.EOF {
-					lastFrame = true
-				}
+		// • Ack(1): Acknowledgment of previously received data
+		// • Data(2): Normal data (no ack requested)
+		// • Low latency data(3): Treated as normal data on the network, but are
+		//   given higher priority internally
+		// • Data with ack(4): Data requesting an ack. The receiver must send an
+		//   ack for this data !
 
-				// • Ack(1): Acknowledgment of previously received data
-				// • Data(2): Normal data (no ack requested)
-				// • Low latency data(3): Treated as normal data on the network, but are
-				//   given higher priority internally
-				// • Data with ack(4): Data requesting an ack. The receiver must send an
-				//   ack for this data !
+		// The drone will send out ping packets each second where we will need to
+		// reply with a pong. The drone will assume the connection is broken if a
+		// pong is not received within 5 seconds.
+		// Check if it is a ping packet from drone, and incase
+		// it is, reply with a pong.
+		if frameARNetworkAL.targetBufferID == 0 || frameARNetworkAL.targetBufferID == 1 {
+			{
+				p := packetCreator.encodePong(frameARNetworkAL)
+				d.packetToDroneCh <- p
+			}
 
-				// The drone will send out ping packets each second where we will need to
-				// reply with a pong. The drone will assume the connection is broken if a
-				// pong is not received within 5 seconds.
-				// Check if it is a ping packet from drone, and incase
-				// it is, reply with a pong.
-				if frameARNetworkAL.targetBufferID == 0 || frameARNetworkAL.targetBufferID == 1 {
-					{
-						p := packetCreator.encodePong(frameARNetworkAL)
-						d.packetToDroneCh <- p
-					}
+			if lastFrame {
+				break
+			}
 
-					if lastFrame {
-						break
-					}
+			continue
+		}
 
-					continue
-				}
-
-				// Send an ACK packet if the dataType == 4
-				if frameARNetworkAL.dataType == 4 {
-					{
-						p := packetCreator.encodeAck(frameARNetworkAL.targetBufferID, uint8(frameARNetworkAL.sequenceNR))
-						d.packetToDroneCh <- p
-					}
-				}
-
-				// Try to figure out what kind of command that where received.
-				// Based on the type of cmdArgs we can execute som action.
-				cmd, cmdArgs, err := frameARNetworkAL.decode()
-				if err != nil {
-					log.Println("error: frame.decode: ", err)
-					break
-				}
-				// Check the type of the command received from drone, and do
-				// some action.
-				d.checkCmdFromDrone(cmd, cmdArgs)
-
-				// If no more frames, break out of for loop to read
-				// the next package received.
-				if lastFrame {
-					break
-				}
+		// Send an ACK packet if the dataType == 4
+		if frameARNetworkAL.dataType == 4 {
+			{
+				p := packetCreator.encodeAck(frameARNetworkAL.targetBufferID, uint8(frameARNetworkAL.sequenceNR))
+				d.packetToDroneCh <- p
 			}
 		}
+
+		// Try to figure out what kind of command that where received.
+		// Based on the type of cmdArgs we can execute som action.
+		cmd, cmdArgs, err := frameARNetworkAL.decode()
+		if err != nil {
+			log.Println("error: frame.decode: ", err)
+			return err
+		}
+		// Check the type of the command received from drone, and do
+		// some action.
+		d.checkCmdFromDrone(cmd, cmdArgs)
+
+		// If no more frames, break out of for loop to read
+		// the next package received.
+		if lastFrame {
+			break
+		}
 	}
+
+	return nil
 }
 
 // actions, the idea here is to send the actions on a keypress,
