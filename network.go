@@ -173,39 +173,6 @@ func (d *Drone) readNetworkUDPPacketsD2C(ctx context.Context, packetCreator *udp
 	}
 }
 
-// writeNetworkPacketsC2D writes the raw UDP packets from the controller to the drone.
-// Will receive []byte packet to write on an incomming channel for the function.
-func (d *Drone) writeNetworkUDPPacketsC2D(ctx context.Context) {
-
-	defer func() {
-		err := d.connUDPWrite.Close()
-		if err != nil {
-			log.Printf("error:failed to close connUDPWrite: %v\r\n", err)
-		}
-		fmt.Printf("...connUDPWrite closed\r\n")
-	}()
-
-	for {
-		select {
-		case <-ctx.Done():
-			log.Printf("info: exiting writeNetworkUDPPacketsC2D\n")
-			return
-		case v := <-d.packetToDroneCh:
-
-			fmt.Printf("sending to Drone, v = %v\r\n", v.data)
-
-			n, err := d.connUDPWrite.Write(v.data)
-			if err != nil {
-				log.Printf("error: failed conn.Write while sending: %v", err)
-			}
-
-			fmt.Printf("*** while sending to Drone, n = %v\r\n", n)
-			fmt.Printf("--------------------\r\n")
-			//time.Sleep(time.Millisecond * 200)
-		}
-	}
-}
-
 // handleReadPackages holds the logic for what action to do when an UDP
 // packet is receied and what to do based on the content of the package.
 // This means sending a pong for a received package, or do some action
@@ -246,7 +213,7 @@ func (d *Drone) handleReadPackages(packetCreator *udpPacketCreator, udpPacket ne
 		if frameARNetworkAL.targetBufferID == 0 || frameARNetworkAL.targetBufferID == 1 {
 			{
 				p := packetCreator.encodePong(frameARNetworkAL)
-				d.packetToDroneCh <- p
+				d.pcmdPacketSchedulerCh <- p
 			}
 
 			if lastFrame {
@@ -260,7 +227,7 @@ func (d *Drone) handleReadPackages(packetCreator *udpPacketCreator, udpPacket ne
 		if frameARNetworkAL.dataType == 4 {
 			{
 				p := packetCreator.encodeAck(frameARNetworkAL.targetBufferID, uint8(frameARNetworkAL.sequenceNR))
-				d.packetToDroneCh <- p
+				d.pcmdPacketSchedulerCh <- p
 			}
 		}
 
@@ -296,6 +263,14 @@ func (d *Drone) handleReadPackages(packetCreator *udpPacketCreator, udpPacket ne
 // we just nothing and loop again. It will also drop packets
 // if the chSendingUDPPacket channel is congested.
 func (d *Drone) PcmdPacketScheduler(ctx context.Context) {
+	defer func() {
+		err := d.connUDPWrite.Close()
+		if err != nil {
+			log.Printf("error:failed to close connUDPWrite: %v\r\n", err)
+		}
+		fmt.Printf("...connUDPWrite closed\r\n")
+	}()
+
 	duration1 := time.Duration(50) * time.Millisecond
 
 	for {
@@ -306,7 +281,16 @@ func (d *Drone) PcmdPacketScheduler(ctx context.Context) {
 		case <-time.After(duration1):
 			select {
 			case p := <-d.pcmdPacketSchedulerCh:
-				d.packetToDroneCh <- p
+				fmt.Printf("sending to Drone, v = %v\r\n", p.data)
+
+				n, err := d.connUDPWrite.Write(p.data)
+				if err != nil {
+					log.Printf("error: failed conn.Write while sending: %v", err)
+				}
+
+				fmt.Printf("*** while sending to Drone, n = %v\r\n", n)
+				fmt.Printf("--------------------\r\n")
+				//time.Sleep(time.Millisecond * 200)
 			default:
 				// log.Printf("No packets to send, or buffer full\n")
 			}

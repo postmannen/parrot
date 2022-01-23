@@ -103,7 +103,7 @@ func (d *Drone) readKeyBoardEvent() {
 
 			switch {
 			case event.Key == keyboard.KeyCtrlC:
-				log.Printf("info: ctrl+c pressed\n")
+				log.Printf("info: ctrl+c pressed, forcing shutdown of all threads\n")
 				os.Exit(1)
 			case event.Key == keyboard.KeyEsc:
 				d.quitCh <- struct{}{}
@@ -186,16 +186,16 @@ func (d *Drone) handleInputAction(packetCreator udpPacketCreator, ctx context.Co
 			switch action {
 			case ActionTakeoff:
 				p := packetCreator.encodeCmd(Command(PilotingTakeOff), &Ardrone3PilotingTakeOffArguments{})
-				d.packetToDroneCh <- p
+				d.pcmdPacketSchedulerCh <- p
 			case ActionLanding:
 				p := packetCreator.encodeCmd(Command(PilotingLanding), &Ardrone3PilotingLandingArguments{})
-				d.packetToDroneCh <- p
+				d.pcmdPacketSchedulerCh <- p
 			case ActionNavigateHomeStart:
 				p := packetCreator.encodeCmd(Command(PilotingNavigateHome), &Ardrone3PilotingNavigateHomeArguments{Start: 1})
-				d.packetToDroneCh <- p
+				d.pcmdPacketSchedulerCh <- p
 			case ActionNavigateHomeStop:
 				p := packetCreator.encodeCmd(Command(PilotingNavigateHome), &Ardrone3PilotingNavigateHomeArguments{Start: 0})
-				d.packetToDroneCh <- p
+				d.pcmdPacketSchedulerCh <- p
 
 			// --------------emulation of rc-controller sticks
 			// using a,w,s,d and arrow keys.

@@ -24,8 +24,6 @@ type Drone struct {
 	portD2C        string
 	portRTPStream  string
 	portRTPControl string
-	// Channel to put the raw UDP packages to be sent to the drone.
-	packetToDroneCh chan networkUDPPacket
 	// Channel to put the inputAction type send to the drone when
 	// for example a key is pressed on the keyboard.
 	inputActionsCh chan inputAction
@@ -76,7 +74,6 @@ func NewDrone() *Drone {
 		portRTPStream:  "55004",
 		portRTPControl: "55005",
 
-		packetToDroneCh:       make(chan networkUDPPacket),
 		inputActionsCh:        make(chan inputAction),
 		quitCh:                make(chan struct{}),
 		networkReconnectCh:    make(chan struct{}),
@@ -150,7 +147,7 @@ func (d *Drone) startMoveToExecutor(packetCreator *udpPacketCreator, ctx context
 					return
 				case <-d.gps.moveToCancelCh:
 					p := packetCreator.encodeCmd(Command(PilotingCancelMoveTo), &Ardrone3PilotingCancelMoveToArguments{})
-					d.packetToDroneCh <- p
+					d.pcmdPacketSchedulerCh <- p
 					wg.Done()
 				case wp := <-d.waypointBuffer.waypointOutCh:
 					// Get a new wp, create the argument, and send the udp packet.
@@ -161,7 +158,7 @@ func (d *Drone) startMoveToExecutor(packetCreator *udpPacketCreator, ctx context
 					}
 
 					p := packetCreator.encodeCmd(Command(PilotingmoveTo), arg)
-					d.packetToDroneCh <- p
+					d.pcmdPacketSchedulerCh <- p
 
 					// Check if the waypoint was reached, and we got a confirmation
 					// from the drone. If a waypoint is not received we break out,
@@ -248,11 +245,6 @@ func (d *Drone) Start() {
 		// Pcmd packets to be sent they are only sent at a fixed 50
 		// milli second interval.
 		go d.PcmdPacketScheduler(ctx)
-
-		// Start the sender of UDP packets,
-		// will send UDP packets received at the Drone.packetToDroneCh
-		// channel.
-		go d.writeNetworkUDPPacketsC2D(ctx)
 
 		go d.startMoveToExecutor(packetCreator, ctx)
 
