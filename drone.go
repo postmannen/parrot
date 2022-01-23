@@ -24,9 +24,6 @@ type Drone struct {
 	portD2C        string
 	portRTPStream  string
 	portRTPControl string
-	// Channel to put the inputAction type send to the drone when
-	// for example a key is pressed on the keyboard.
-	inputActionsCh chan inputAction
 	// Sending to this channel will quit the controller program.
 	quitCh chan struct{}
 	// Sending to this channel will disconnect all network related
@@ -74,7 +71,6 @@ func NewDrone() *Drone {
 		portRTPStream:  "55004",
 		portRTPControl: "55005",
 
-		inputActionsCh:        make(chan inputAction),
 		quitCh:                make(chan struct{}),
 		networkReconnectCh:    make(chan struct{}),
 		pcmdPacketSchedulerCh: make(chan networkUDPPacket),
