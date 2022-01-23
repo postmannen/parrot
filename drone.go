@@ -210,7 +210,7 @@ func (d *Drone) Start() {
 		// TODO:
 		// Make it call return-home if unable to initialize.
 		log.Println("Initializing the traffic with the drone, and starting controller UDP listener.")
-		for i := 0; i < 20; i++ {
+		for {
 			err := d.Discover()
 			if err != nil {
 				log.Printf("error: client Discover failed: %v\n", err)
