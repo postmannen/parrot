@@ -248,12 +248,12 @@ func (d *Drone) Start() {
 		}
 
 		// Start the scheduler which will make sure that if there are
-		// Pcmd packets to be sent, they are only sent at a fixed 50
+		// Pcmd packets to be sent they are only sent at a fixed 50
 		// milli second interval.
 		go d.PcmdPacketScheduler(ctx)
 
 		// Start the sender of UDP packets,
-		// will send UDP packets received at the Drone.chSendingUDPPacket
+		// will send UDP packets received at the Drone.packetToDroneCh
 		// channel.
 		go d.writeNetworkUDPPacketsC2D(ctx)
 
