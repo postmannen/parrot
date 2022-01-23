@@ -262,11 +262,10 @@ func (d *Drone) Start() {
 		go d.startMoveToExecutor(packetCreator, ctx)
 
 		// Wait here until receiving on quit channel. Trigger by pressing
-		// 'q' on the keyboard.
+		// 'q' on the keyboard, or for reconnect to drone.
 		<-d.networkReconnectCh
 		cancel()
 		time.Sleep(time.Second * 3)
 		continue
-
 	}
 }

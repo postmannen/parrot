@@ -3,6 +3,7 @@ package parrot
 import (
 	"context"
 	"log"
+	"os"
 
 	"github.com/eiannone/keyboard"
 )
@@ -101,6 +102,9 @@ func (d *Drone) readKeyBoardEvent() {
 			}
 
 			switch {
+			case event.Key == keyboard.KeyCtrlC:
+				log.Printf("info: ctrl+c pressed\n")
+				os.Exit(1)
 			case event.Key == keyboard.KeyEsc:
 				d.quitCh <- struct{}{}
 			case event.Rune == 'q':
