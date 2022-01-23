@@ -218,6 +218,7 @@ func (d *Drone) Start() {
 				continue
 			}
 
+			// Connection ok, break out of loop.
 			break
 		}
 
@@ -227,8 +228,7 @@ func (d *Drone) Start() {
 			log.Println("error: failed to start listener", err)
 		}
 
-		// Start the reading of whole UDP packets from the network,
-		// and put them on the Drone.chReceivedUDPPacket channel.
+		// Start the reading of whole UDP packets from the network.
 		go d.readNetworkUDPPacketsD2C(ctx, packetCreator)
 
 		// Prepare and dial the UDP connection from controller to drone.
@@ -241,9 +241,9 @@ func (d *Drone) Start() {
 			log.Printf("error: failed to DialUDP: %v", err)
 		}
 
-		// Start the scheduler which will make sure that if there are
-		// Pcmd packets to be sent they are only sent at a fixed 50
-		// milli second interval.
+		// Start the scheduler for writing UDP packets which will make
+		// sure that if there are Pcmd packets to be sent they are only
+		// sent at a fixed 50 milli second interval.
 		go d.PcmdPacketScheduler(ctx)
 
 		go d.startMoveToExecutor(packetCreator, ctx)
