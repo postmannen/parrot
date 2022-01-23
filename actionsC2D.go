@@ -1,7 +1,6 @@
 package parrot
 
 import (
-	"context"
 	"log"
 	"os"
 
@@ -61,7 +60,7 @@ const (
 // TODO: Make more source to create inputActions than keyboard...
 // Geofencing ?
 // Map route ?
-func (d *Drone) readKeyBoardEvent() {
+func (d *Drone) readKeyBoardEvent(packetCreator *udpPacketCreator) {
 
 	keysEvents, err := keyboard.GetKeys(10)
 	if err != nil {
@@ -73,25 +72,6 @@ func (d *Drone) readKeyBoardEvent() {
 			log.Printf("error: failed to close keyboard: %v\n", err)
 		}
 	}()
-
-	// Since we are resetting the the go routines and thus are stopping
-	// the listener of the input action channel we need to check if it
-	// is a listener available to avoid deadlock.
-	// checkChOpen is a little helper function for just that.
-	//
-	// NB: This function will drop input actions given if the channel is
-	// closed. A benefit of doing just that is that we avoid any commands
-	// that might have been given while the connection was gone to
-	// suddenly be executed when the connection comes back, but this also
-	// implies that we have mechanism's in place to handle continous
-	// flight of the drone incase there is a drop, or the connection have
-	// to be re-established for some reason
-	checkChOpen := func(ch chan inputAction, ia inputAction) {
-		select {
-		case ch <- ia:
-		default:
-		}
-	}
 
 	for {
 		select {
@@ -114,51 +94,51 @@ func (d *Drone) readKeyBoardEvent() {
 				default:
 				}
 			case event.Rune == 't':
-				checkChOpen(d.inputActionsCh, ActionTakeoff)
+				d.handleInputAction(packetCreator, ActionTakeoff)
 			case event.Rune == 'l':
-				checkChOpen(d.inputActionsCh, ActionLanding)
+				d.handleInputAction(packetCreator, ActionLanding)
 			case event.Rune == 'r':
-				checkChOpen(d.inputActionsCh, ActionNavigateHomeStart)
+				d.handleInputAction(packetCreator, ActionNavigateHomeStart)
 			case event.Rune == 'R':
-				checkChOpen(d.inputActionsCh, ActionNavigateHomeStop)
+				d.handleInputAction(packetCreator, ActionNavigateHomeStop)
 
 			case event.Rune == 'w':
-				checkChOpen(d.inputActionsCh, ActionPcmdGazInc)
+				d.handleInputAction(packetCreator, ActionPcmdGazInc)
 			case event.Rune == 's':
-				checkChOpen(d.inputActionsCh, ActionPcmdGazDec)
+				d.handleInputAction(packetCreator, ActionPcmdGazDec)
 			case event.Rune == 'a':
-				checkChOpen(d.inputActionsCh, ActionPcmdYawCounterClockwise)
+				d.handleInputAction(packetCreator, ActionPcmdYawCounterClockwise)
 			case event.Rune == 'd':
-				checkChOpen(d.inputActionsCh, ActionPcmdYawClockwise)
+				d.handleInputAction(packetCreator, ActionPcmdYawClockwise)
 
 			case event.Key == keyboard.KeyArrowUp:
-				checkChOpen(d.inputActionsCh, ActionPcmdPitchForward)
+				d.handleInputAction(packetCreator, ActionPcmdPitchForward)
 			case event.Key == keyboard.KeyArrowDown:
-				checkChOpen(d.inputActionsCh, ActionPcmdPitchBackward)
+				d.handleInputAction(packetCreator, ActionPcmdPitchBackward)
 			case event.Key == keyboard.KeyArrowLeft:
-				checkChOpen(d.inputActionsCh, ActionPcmdRollLeft)
+				d.handleInputAction(packetCreator, ActionPcmdRollLeft)
 			case event.Key == keyboard.KeyArrowRight:
-				checkChOpen(d.inputActionsCh, ActionPcmdRollRight)
+				d.handleInputAction(packetCreator, ActionPcmdRollRight)
 			case event.Key == keyboard.KeySpace:
-				checkChOpen(d.inputActionsCh, ActionPcmdRepeatLastCmd)
+				d.handleInputAction(packetCreator, ActionPcmdRepeatLastCmd)
 
 			case event.Key == keyboard.KeyCtrlW:
-				checkChOpen(d.inputActionsCh, ActionMoveToSetLatInc)
+				d.handleInputAction(packetCreator, ActionMoveToSetLatInc)
 			case event.Key == keyboard.KeyCtrlS:
-				checkChOpen(d.inputActionsCh, ActionMoveToSetLatDec)
+				d.handleInputAction(packetCreator, ActionMoveToSetLatDec)
 			case event.Key == keyboard.KeyCtrlA:
-				checkChOpen(d.inputActionsCh, ActionMoveToSetLonDec)
+				d.handleInputAction(packetCreator, ActionMoveToSetLonDec)
 			case event.Key == keyboard.KeyCtrlD:
-				checkChOpen(d.inputActionsCh, ActionMoveToSetLonInc)
+				d.handleInputAction(packetCreator, ActionMoveToSetLonInc)
 			case event.Key == keyboard.KeyCtrlX:
-				checkChOpen(d.inputActionsCh, ActionMoveToSetBufferCurrentPosition)
+				d.handleInputAction(packetCreator, ActionMoveToSetBufferCurrentPosition)
 			case event.Key == keyboard.KeyCtrlSpace:
-				checkChOpen(d.inputActionsCh, ActionMoveToExecute)
+				d.handleInputAction(packetCreator, ActionMoveToExecute)
 			case event.Key == keyboard.KeyCtrlQ:
-				checkChOpen(d.inputActionsCh, ActionMoveToCancel)
+				d.handleInputAction(packetCreator, ActionMoveToCancel)
 
 			case event.Rune == 'h':
-				checkChOpen(d.inputActionsCh, ActionPcmdHover)
+				d.handleInputAction(packetCreator, ActionPcmdHover)
 
 			}
 		}
@@ -174,201 +154,193 @@ func (d *Drone) readKeyBoardEvent() {
 // in readKeyBoardEvent, is that we might want to have other input methods
 // then the keyboard to control the drone.
 // This function will execute the commands that arrives on the d.inputActionsCh.
-func (d *Drone) handleInputAction(packetCreator udpPacketCreator, ctx context.Context) {
-	for {
-		select {
-		case <-ctx.Done():
-			log.Println("info: exiting handleInputAction")
-			return
+func (d *Drone) handleInputAction(packetCreator *udpPacketCreator, action inputAction) {
 
-		case action := <-d.inputActionsCh:
-			// --------------Standard actions
-			switch action {
-			case ActionTakeoff:
-				p := packetCreator.encodeCmd(Command(PilotingTakeOff), &Ardrone3PilotingTakeOffArguments{})
-				d.pcmdPacketSchedulerCh <- p
-			case ActionLanding:
-				p := packetCreator.encodeCmd(Command(PilotingLanding), &Ardrone3PilotingLandingArguments{})
-				d.pcmdPacketSchedulerCh <- p
-			case ActionNavigateHomeStart:
-				p := packetCreator.encodeCmd(Command(PilotingNavigateHome), &Ardrone3PilotingNavigateHomeArguments{Start: 1})
-				d.pcmdPacketSchedulerCh <- p
-			case ActionNavigateHomeStop:
-				p := packetCreator.encodeCmd(Command(PilotingNavigateHome), &Ardrone3PilotingNavigateHomeArguments{Start: 0})
-				d.pcmdPacketSchedulerCh <- p
+	// --------------Standard actions
+	switch action {
+	case ActionTakeoff:
+		p := packetCreator.encodeCmd(Command(PilotingTakeOff), &Ardrone3PilotingTakeOffArguments{})
+		d.pcmdPacketSchedulerCh <- p
+	case ActionLanding:
+		p := packetCreator.encodeCmd(Command(PilotingLanding), &Ardrone3PilotingLandingArguments{})
+		d.pcmdPacketSchedulerCh <- p
+	case ActionNavigateHomeStart:
+		p := packetCreator.encodeCmd(Command(PilotingNavigateHome), &Ardrone3PilotingNavigateHomeArguments{Start: 1})
+		d.pcmdPacketSchedulerCh <- p
+	case ActionNavigateHomeStop:
+		p := packetCreator.encodeCmd(Command(PilotingNavigateHome), &Ardrone3PilotingNavigateHomeArguments{Start: 0})
+		d.pcmdPacketSchedulerCh <- p
 
-			// --------------emulation of rc-controller sticks
-			// using a,w,s,d and arrow keys.
-			case ActionPcmdGazInc:
-				if d.pcmd.Gaz < 0 {
-					d.pcmd.Gaz = 0
-				}
-				d.pcmd.Flag = 1
-				d.pcmd.Gaz++
-				d.pcmd.Gaz = d.CheckLimitPcmdField(d.pcmd.Gaz)
-				arg := &Ardrone3PilotingPCMDArguments{
-					Flag: 1,
-					Gaz:  d.pcmd.Gaz,
-				}
-				d.pcmdPacketSchedulerCh <- packetCreator.encodeCmd(Command(PilotingPCMD), arg)
-			case ActionPcmdGazDec:
-				if d.pcmd.Gaz > 0 {
-					d.pcmd.Gaz = 0
-				}
-				d.pcmd.Flag = 1
-				d.pcmd.Gaz--
-				d.pcmd.Gaz = d.CheckLimitPcmdField(d.pcmd.Gaz)
-				arg := &Ardrone3PilotingPCMDArguments{
-					Flag: 1,
-					Gaz:  d.pcmd.Gaz,
-				}
-				d.pcmdPacketSchedulerCh <- packetCreator.encodeCmd(Command(PilotingPCMD), arg)
+	// --------------emulation of rc-controller sticks
+	// using a,w,s,d and arrow keys.
+	case ActionPcmdGazInc:
+		if d.pcmd.Gaz < 0 {
+			d.pcmd.Gaz = 0
+		}
+		d.pcmd.Flag = 1
+		d.pcmd.Gaz++
+		d.pcmd.Gaz = d.CheckLimitPcmdField(d.pcmd.Gaz)
+		arg := &Ardrone3PilotingPCMDArguments{
+			Flag: 1,
+			Gaz:  d.pcmd.Gaz,
+		}
+		d.pcmdPacketSchedulerCh <- packetCreator.encodeCmd(Command(PilotingPCMD), arg)
+	case ActionPcmdGazDec:
+		if d.pcmd.Gaz > 0 {
+			d.pcmd.Gaz = 0
+		}
+		d.pcmd.Flag = 1
+		d.pcmd.Gaz--
+		d.pcmd.Gaz = d.CheckLimitPcmdField(d.pcmd.Gaz)
+		arg := &Ardrone3PilotingPCMDArguments{
+			Flag: 1,
+			Gaz:  d.pcmd.Gaz,
+		}
+		d.pcmdPacketSchedulerCh <- packetCreator.encodeCmd(Command(PilotingPCMD), arg)
 
-			case ActionPcmdYawCounterClockwise:
-				if d.pcmd.Yaw > 0 {
-					d.pcmd.Yaw = 0
-				}
-				d.pcmd.Flag = 1
-				d.pcmd.Yaw--
-				d.pcmd.Yaw = d.CheckLimitPcmdField(d.pcmd.Yaw)
-				arg := &Ardrone3PilotingPCMDArguments{
-					Flag: 1,
-					Yaw:  d.pcmd.Yaw,
-				}
-				d.pcmdPacketSchedulerCh <- packetCreator.encodeCmd(Command(PilotingPCMD), arg)
-			case ActionPcmdYawClockwise:
-				if d.pcmd.Yaw < 0 {
-					d.pcmd.Yaw = 0
-				}
-				d.pcmd.Flag = 1
-				d.pcmd.Yaw++
-				d.pcmd.Yaw = d.CheckLimitPcmdField(d.pcmd.Yaw)
-				arg := &Ardrone3PilotingPCMDArguments{
-					Flag: 1,
-					Yaw:  d.pcmd.Yaw,
-				}
-				d.pcmdPacketSchedulerCh <- packetCreator.encodeCmd(Command(PilotingPCMD), arg)
+	case ActionPcmdYawCounterClockwise:
+		if d.pcmd.Yaw > 0 {
+			d.pcmd.Yaw = 0
+		}
+		d.pcmd.Flag = 1
+		d.pcmd.Yaw--
+		d.pcmd.Yaw = d.CheckLimitPcmdField(d.pcmd.Yaw)
+		arg := &Ardrone3PilotingPCMDArguments{
+			Flag: 1,
+			Yaw:  d.pcmd.Yaw,
+		}
+		d.pcmdPacketSchedulerCh <- packetCreator.encodeCmd(Command(PilotingPCMD), arg)
+	case ActionPcmdYawClockwise:
+		if d.pcmd.Yaw < 0 {
+			d.pcmd.Yaw = 0
+		}
+		d.pcmd.Flag = 1
+		d.pcmd.Yaw++
+		d.pcmd.Yaw = d.CheckLimitPcmdField(d.pcmd.Yaw)
+		arg := &Ardrone3PilotingPCMDArguments{
+			Flag: 1,
+			Yaw:  d.pcmd.Yaw,
+		}
+		d.pcmdPacketSchedulerCh <- packetCreator.encodeCmd(Command(PilotingPCMD), arg)
 
-			case ActionPcmdHover:
-				d.pcmd = Ardrone3PilotingPCMDArguments{
-					Flag:               0, // TODO: maybe set this one to ZERO ?
-					Gaz:                0,
-					Pitch:              0,
-					Roll:               0,
-					TimestampAndSeqNum: 0,
-					Yaw:                0,
-				}
-
-				arg := d.pcmd
-				d.pcmdPacketSchedulerCh <- packetCreator.encodeCmd(Command(PilotingPCMD), arg)
-
-			case ActionPcmdPitchForward:
-				if d.pcmd.Pitch < 0 {
-					d.pcmd.Pitch = 0
-				}
-				d.pcmd.Flag = 1
-				d.pcmd.Pitch++
-				d.pcmd.Pitch = d.CheckLimitPcmdField(d.pcmd.Pitch)
-				arg := &Ardrone3PilotingPCMDArguments{
-					Flag:  1,
-					Pitch: d.pcmd.Pitch,
-				}
-				d.pcmdPacketSchedulerCh <- packetCreator.encodeCmd(Command(PilotingPCMD), arg)
-			case ActionPcmdPitchBackward:
-				if d.pcmd.Pitch > 0 {
-					d.pcmd.Pitch = 0
-				}
-				d.pcmd.Flag = 1
-				d.pcmd.Pitch--
-				d.pcmd.Pitch = d.CheckLimitPcmdField(d.pcmd.Pitch)
-				arg := &Ardrone3PilotingPCMDArguments{
-					Flag:  1,
-					Pitch: d.pcmd.Pitch,
-				}
-				d.pcmdPacketSchedulerCh <- packetCreator.encodeCmd(Command(PilotingPCMD), arg)
-
-			case ActionPcmdRollLeft:
-				if d.pcmd.Roll > 0 {
-					d.pcmd.Roll = 0
-				}
-				d.pcmd.Flag = 1
-				d.pcmd.Roll--
-				d.pcmd.Roll = d.CheckLimitPcmdField(d.pcmd.Roll)
-				arg := &Ardrone3PilotingPCMDArguments{
-					Flag: 1,
-					Roll: d.pcmd.Roll,
-				}
-				d.pcmdPacketSchedulerCh <- packetCreator.encodeCmd(Command(PilotingPCMD), arg)
-			case ActionPcmdRollRight:
-				if d.pcmd.Roll < 0 {
-					d.pcmd.Roll = 0
-				}
-				d.pcmd.Flag = 1
-				d.pcmd.Roll--
-				d.pcmd.Roll = d.CheckLimitPcmdField(d.pcmd.Roll)
-				arg := &Ardrone3PilotingPCMDArguments{
-					Flag: 1,
-					Roll: d.pcmd.Roll,
-				}
-				d.pcmdPacketSchedulerCh <- packetCreator.encodeCmd(Command(PilotingPCMD), arg)
-			case ActionPcmdRepeatLastCmd:
-				d.pcmdPacketSchedulerCh <- packetCreator.encodeCmd(Command(PilotingPCMD), d.pcmd)
-
-			// --------------moveTo
-			// The commands below is a bit overly complicated to use, but they
-			// are implemented to manually be able to test out the moveTo feature.
-			case ActionMoveToSetLatInc:
-				if d.gps.latitudeMoveTo != 500 {
-					d.gps.latitudeMoveTo = d.gps.latitudeMoveTo + 0.00001
-					log.Printf("moveTo: %#v\n", d.gps)
-				} else {
-					log.Printf("ActionMoveToLatInc: failed, no connection with GPS: %v\n", d.gps.latitude)
-				}
-			case ActionMoveToSetLatDec:
-				if d.gps.latitudeMoveTo != 500 {
-					d.gps.latitudeMoveTo = d.gps.latitudeMoveTo - 0.00001
-					log.Printf("moveTo: %#v\n", d.gps)
-				} else {
-					log.Printf("ActionMoveToLatDec: failed, no connection with GPS: %v\n", d.gps.latitude)
-				}
-			case ActionMoveToSetLonDec:
-				if d.gps.longitudeMoveTo != 500 {
-					d.gps.latitudeMoveTo = d.gps.latitudeMoveTo - 0.00001
-					log.Printf("moveTo: %#v\n", d.gps)
-				} else {
-					log.Printf("ActionMoveToLatDec: failed, no connection with GPS: %v\n", d.gps.latitude)
-				}
-			case ActionMoveToSetLonInc:
-				if d.gps.longitudeMoveTo != 500 {
-					d.gps.latitudeMoveTo = d.gps.latitudeMoveTo + 0.00001
-					log.Printf("moveTo: %#v\n", d.gps)
-				} else {
-					log.Printf("ActionMoveToLatInc: failed, no connection with GPS: %v\n", d.gps.latitude)
-				}
-			case ActionMoveToSetBufferCurrentPosition:
-				if d.gps.latitude != 500 || d.gps.longitude != 500 {
-					d.gps.latitudeMoveTo = d.gps.latitude
-					d.gps.longitudeMoveTo = d.gps.longitude
-				} else {
-					log.Printf("ActionMoveToSetBufferCurrentPosition: failed, no connection with GPS: %v\n", d.gps.latitude)
-				}
-			case ActionMoveToExecute:
-				// TODO:
-				// The idea here is to use this action with a moveTo command to the drone,
-				// and giving the current moveTo variables as arguments to the moveTo
-				// command.
-
-				d.gps.doingMoveTo = true
-				d.gps.moveToExecuteCh <- struct{}{}
-				// TODO: send the moveTo command here!!!
-				log.Printf("*************************************************************\n")
-				log.Printf("ActionMoveToExecute: current value of buffer: %#v\n", d.gps)
-				log.Printf("*************************************************************\n")
-			case ActionMoveToCancel:
-				d.gps.doingMoveTo = false
-				d.gps.moveToCancelCh <- struct{}{}
-			}
+	case ActionPcmdHover:
+		d.pcmd = Ardrone3PilotingPCMDArguments{
+			Flag:               0, // TODO: maybe set this one to ZERO ?
+			Gaz:                0,
+			Pitch:              0,
+			Roll:               0,
+			TimestampAndSeqNum: 0,
+			Yaw:                0,
 		}
 
+		arg := d.pcmd
+		d.pcmdPacketSchedulerCh <- packetCreator.encodeCmd(Command(PilotingPCMD), arg)
+
+	case ActionPcmdPitchForward:
+		if d.pcmd.Pitch < 0 {
+			d.pcmd.Pitch = 0
+		}
+		d.pcmd.Flag = 1
+		d.pcmd.Pitch++
+		d.pcmd.Pitch = d.CheckLimitPcmdField(d.pcmd.Pitch)
+		arg := &Ardrone3PilotingPCMDArguments{
+			Flag:  1,
+			Pitch: d.pcmd.Pitch,
+		}
+		d.pcmdPacketSchedulerCh <- packetCreator.encodeCmd(Command(PilotingPCMD), arg)
+	case ActionPcmdPitchBackward:
+		if d.pcmd.Pitch > 0 {
+			d.pcmd.Pitch = 0
+		}
+		d.pcmd.Flag = 1
+		d.pcmd.Pitch--
+		d.pcmd.Pitch = d.CheckLimitPcmdField(d.pcmd.Pitch)
+		arg := &Ardrone3PilotingPCMDArguments{
+			Flag:  1,
+			Pitch: d.pcmd.Pitch,
+		}
+		d.pcmdPacketSchedulerCh <- packetCreator.encodeCmd(Command(PilotingPCMD), arg)
+
+	case ActionPcmdRollLeft:
+		if d.pcmd.Roll > 0 {
+			d.pcmd.Roll = 0
+		}
+		d.pcmd.Flag = 1
+		d.pcmd.Roll--
+		d.pcmd.Roll = d.CheckLimitPcmdField(d.pcmd.Roll)
+		arg := &Ardrone3PilotingPCMDArguments{
+			Flag: 1,
+			Roll: d.pcmd.Roll,
+		}
+		d.pcmdPacketSchedulerCh <- packetCreator.encodeCmd(Command(PilotingPCMD), arg)
+	case ActionPcmdRollRight:
+		if d.pcmd.Roll < 0 {
+			d.pcmd.Roll = 0
+		}
+		d.pcmd.Flag = 1
+		d.pcmd.Roll--
+		d.pcmd.Roll = d.CheckLimitPcmdField(d.pcmd.Roll)
+		arg := &Ardrone3PilotingPCMDArguments{
+			Flag: 1,
+			Roll: d.pcmd.Roll,
+		}
+		d.pcmdPacketSchedulerCh <- packetCreator.encodeCmd(Command(PilotingPCMD), arg)
+	case ActionPcmdRepeatLastCmd:
+		d.pcmdPacketSchedulerCh <- packetCreator.encodeCmd(Command(PilotingPCMD), d.pcmd)
+
+	// --------------moveTo
+	// The commands below is a bit overly complicated to use, but they
+	// are implemented to manually be able to test out the moveTo feature.
+	case ActionMoveToSetLatInc:
+		if d.gps.latitudeMoveTo != 500 {
+			d.gps.latitudeMoveTo = d.gps.latitudeMoveTo + 0.00001
+			log.Printf("moveTo: %#v\n", d.gps)
+		} else {
+			log.Printf("ActionMoveToLatInc: failed, no connection with GPS: %v\n", d.gps.latitude)
+		}
+	case ActionMoveToSetLatDec:
+		if d.gps.latitudeMoveTo != 500 {
+			d.gps.latitudeMoveTo = d.gps.latitudeMoveTo - 0.00001
+			log.Printf("moveTo: %#v\n", d.gps)
+		} else {
+			log.Printf("ActionMoveToLatDec: failed, no connection with GPS: %v\n", d.gps.latitude)
+		}
+	case ActionMoveToSetLonDec:
+		if d.gps.longitudeMoveTo != 500 {
+			d.gps.latitudeMoveTo = d.gps.latitudeMoveTo - 0.00001
+			log.Printf("moveTo: %#v\n", d.gps)
+		} else {
+			log.Printf("ActionMoveToLatDec: failed, no connection with GPS: %v\n", d.gps.latitude)
+		}
+	case ActionMoveToSetLonInc:
+		if d.gps.longitudeMoveTo != 500 {
+			d.gps.latitudeMoveTo = d.gps.latitudeMoveTo + 0.00001
+			log.Printf("moveTo: %#v\n", d.gps)
+		} else {
+			log.Printf("ActionMoveToLatInc: failed, no connection with GPS: %v\n", d.gps.latitude)
+		}
+	case ActionMoveToSetBufferCurrentPosition:
+		if d.gps.latitude != 500 || d.gps.longitude != 500 {
+			d.gps.latitudeMoveTo = d.gps.latitude
+			d.gps.longitudeMoveTo = d.gps.longitude
+		} else {
+			log.Printf("ActionMoveToSetBufferCurrentPosition: failed, no connection with GPS: %v\n", d.gps.latitude)
+		}
+	case ActionMoveToExecute:
+		// TODO:
+		// The idea here is to use this action with a moveTo command to the drone,
+		// and giving the current moveTo variables as arguments to the moveTo
+		// command.
+
+		d.gps.doingMoveTo = true
+		d.gps.moveToExecuteCh <- struct{}{}
+		// TODO: send the moveTo command here!!!
+		log.Printf("*************************************************************\n")
+		log.Printf("ActionMoveToExecute: current value of buffer: %#v\n", d.gps)
+		log.Printf("*************************************************************\n")
+	case ActionMoveToCancel:
+		d.gps.doingMoveTo = false
+		d.gps.moveToCancelCh <- struct{}{}
 	}
+
 }
