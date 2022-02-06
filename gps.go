@@ -50,7 +50,7 @@ type GPS struct {
 	movedToPositionCh chan struct{}
 }
 
-// StartHandling, start handling incomming gps packages, and fill
+// StartHandling, start handling incomming gps location data, and fill
 // the registers with the current location values.
 func (g *GPS) StartReadingPosition() {
 	for v := range g.currentLocationCh {
