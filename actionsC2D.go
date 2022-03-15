@@ -93,13 +93,13 @@ func (d *Drone) readKeyBoardEvent(packetCreator *udpPacketCreator) {
 				case d.networkReconnectCh <- struct{}{}:
 				default:
 				}
-			case event.Rune == 't':
+			case event.Rune == '2':
 				d.handleInputAction(packetCreator, ActionTakeoff)
-			case event.Rune == 'l':
+			case event.Rune == '1':
 				d.handleInputAction(packetCreator, ActionLanding)
-			case event.Rune == 'r':
+			case event.Rune == 'h':
 				d.handleInputAction(packetCreator, ActionNavigateHomeStart)
-			case event.Rune == 'R':
+			case event.Rune == 'H':
 				d.handleInputAction(packetCreator, ActionNavigateHomeStop)
 
 			case event.Rune == 'w':
@@ -137,7 +137,7 @@ func (d *Drone) readKeyBoardEvent(packetCreator *udpPacketCreator) {
 			case event.Key == keyboard.KeyCtrlQ:
 				d.handleInputAction(packetCreator, ActionMoveToCancel)
 
-			case event.Rune == 'h':
+			case event.Rune == 'z':
 				d.handleInputAction(packetCreator, ActionPcmdHover)
 
 			}
@@ -278,7 +278,7 @@ func (d *Drone) handleInputAction(packetCreator *udpPacketCreator, action inputA
 			d.pcmd.Roll = 0
 		}
 		d.pcmd.Flag = 1
-		d.pcmd.Roll--
+		d.pcmd.Roll++
 		d.pcmd.Roll = d.CheckLimitPcmdField(d.pcmd.Roll)
 		arg := &Ardrone3PilotingPCMDArguments{
 			Flag: 1,
