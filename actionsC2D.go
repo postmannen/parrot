@@ -307,17 +307,17 @@ func (d *Drone) handleInputAction(packetCreator *udpPacketCreator, action inputA
 		}
 	case ActionMoveToSetLonDec:
 		if d.gps.longitudeMoveTo != 500 {
-			d.gps.latitudeMoveTo = d.gps.latitudeMoveTo - 0.00001
+			d.gps.longitudeMoveTo = d.gps.longitudeMoveTo - 0.00001
 			log.Printf("moveTo: %#v\n", d.gps)
 		} else {
-			log.Printf("ActionMoveToLatDec: failed, no connection with GPS: %v\n", d.gps.latitude)
+			log.Printf("ActionMoveToLonDec: failed, no connection with GPS: %v\n", d.gps.longitude)
 		}
 	case ActionMoveToSetLonInc:
 		if d.gps.longitudeMoveTo != 500 {
-			d.gps.latitudeMoveTo = d.gps.latitudeMoveTo + 0.00001
+			d.gps.longitudeMoveTo = d.gps.longitudeMoveTo + 0.00001
 			log.Printf("moveTo: %#v\n", d.gps)
 		} else {
-			log.Printf("ActionMoveToLatInc: failed, no connection with GPS: %v\n", d.gps.latitude)
+			log.Printf("ActionMoveToLonInc: failed, no connection with GPS: %v\n", d.gps.longitude)
 		}
 	case ActionMoveToSetBufferCurrentPosition:
 		if d.gps.latitude != 500 || d.gps.longitude != 500 {
