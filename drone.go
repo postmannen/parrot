@@ -236,7 +236,7 @@ func (d *Drone) Start() {
 
 		// Start the scheduler for writing UDP packets which will make
 		// sure that if there are Pcmd packets to be sent they are only
-		// sent at a fixed 50 milli second interval.
+		// sent at a fixed 25 milli second interval.
 		go d.PcmdPacketScheduler(ctx)
 
 		go d.startMoveToExecutor(packetCreator, ctx)

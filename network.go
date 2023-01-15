@@ -271,7 +271,8 @@ func (d *Drone) PcmdPacketScheduler(ctx context.Context) {
 		fmt.Printf("...connUDPWrite closed\r\n")
 	}()
 
-	duration1 := time.Duration(50) * time.Millisecond
+	// We should send PCMD packats with a frequenct of 40Hz.
+	duration1 := time.Duration(25) * time.Millisecond
 
 	for {
 		select {
@@ -589,9 +590,9 @@ type protocolARCommands struct {
 // - frameSize 4 Bytes (little endian) for the whole ARNetworkAL frame including 7bit header,
 // - data n bytes (this is the actual drone data ARNetwork),
 //
-//	Example of size:
-//	01 ba 27 08000000 42, 02 0b c3 0b000000 12345678
-//  --size 0x08=8byte---, --size 0x0b=11byte--------
+//		Example of size:
+//		01 ba 27 08000000 42, 02 0b c3 0b000000 12345678
+//	 --size 0x08=8byte---, --size 0x0b=11byte--------
 type protocolARNetworkAL struct {
 	//
 	// Data types
