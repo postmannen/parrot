@@ -57,7 +57,7 @@ const (
 // readKeyBoardEvent will read keys pressed on the keyboard,
 // and pass on the correct action to be executed.
 //
-// TODO: Make more source to create inputActions than keyboard...
+// TODO: Add more sources for creating inputActions than just keyboard...
 // Geofencing ?
 // Map route ?
 func (d *Drone) readKeyBoardEvent(packetCreator *udpPacketCreator) {

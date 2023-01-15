@@ -198,8 +198,6 @@ func (d *Drone) Start() {
 		ctx, cancel := context.WithCancel(context.Background())
 
 		// Initialize the network connection to the drone.
-		// If the connection fails retry 20 times before giving up.
-		//
 		// TODO:
 		// Make it call return-home if unable to initialize.
 		log.Println("Initializing the traffic with the drone, and starting controller UDP listener.")

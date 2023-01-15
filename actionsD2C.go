@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-// Try to figure out what kind of command that where received.
+// Figure out what kind of command that where received.
 // Based on the type of cmdArgs we can execute som action.
 func (d *Drone) checkCmdFromDrone(cmd protocolARCommands, cmdArgs interface{}) {
 	fmt.Printf("----------COMMAND-------------------------------------------\r\n")
@@ -17,6 +17,7 @@ func (d *Drone) checkCmdFromDrone(cmd protocolARCommands, cmdArgs interface{}) {
 	case Ardrone3PilotingStateAttitudeChangedArguments:
 		//log.Printf("** EXECUTING ACTION FOR TYPE, Ardrone3PilotingStateAttitudeChangedArguments\r\n")
 	case Ardrone3PilotingStateGpsLocationChangedArguments:
+		// Store the current GPS position of the drone.
 		d.gps.currentLocationCh <- gpsLatLonAlt{
 			latitude:  cmdArgs.Latitude,
 			longitude: cmdArgs.Longitude,
@@ -27,6 +28,8 @@ func (d *Drone) checkCmdFromDrone(cmd protocolARCommands, cmdArgs interface{}) {
 		// We send a signal to the moveTo handling here to indicate
 		// that it can pick the next available position in the buffer.
 		d.gps.movedToPositionCh <- struct{}{}
+	default:
+		fmt.Printf("* info: no registered type for cmdArgs: %v\n", cmdArgs)
 	}
 	fmt.Printf("-----------------------------------------------------------\r\n")
 
